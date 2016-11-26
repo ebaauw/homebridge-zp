@@ -19,7 +19,7 @@ With just one zone, the `On` characteristic works as Play/Pause button.  With mu
 ## Installation
 The homebridge-zp plug-in obviously needs homebridge, which, in turn needs Node.js.  I've followed these steps to set it up on my macOS server:
 
-- Install the Node.js JavaScript runtime `node`, from `https://nodejs.org`.  I'm using v6.9.1 LTS for macOS (x64), which includes the `npm` package manager.
+- Install the Node.js JavaScript runtime `node`, from [https://nodejs.org](https://nodejs.org).  I'm using v6.9.1 LTS for macOS (x64), which includes the `npm` package manager.
 - Make sure `/usr/local/bin` is in your `$PATH`, as `node`, `npm`, and, later, `homebridge` install there.
 - You might want to update `npm` through `sudo npm update -g npm`.  For me, this installs version, 3.10.9.
 - Install homebridge following the instructions on [https://github.com/nfarina/homebridge](https://github.com/nfarina/homebridge).  For me, this installs homebridge version 0.4.6 to `/usr/local/lib/node_modules`.  Make sure to create a `config.json` in `~/.homebridge`, as described.
