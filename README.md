@@ -21,7 +21,7 @@ The homebridge-zp plug-in obviously needs homebridge, which, in turn needs Node.
 
 - Install the Node.js JavaScript runtime `node`, from [https://nodejs.org](https://nodejs.org).  I'm using v6.9.1 LTS for macOS (x64), which includes the `npm` package manager.
 - Make sure `/usr/local/bin` is in your `$PATH`, as `node`, `npm`, and, later, `homebridge` install there.
-- You might want to update `npm` through `sudo npm update -g npm`.  For me, this installs version, 3.10.9.
+- You might want to update `npm` through `sudo npm update -g npm`.  For me, this installs version 3.10.9.
 - Install homebridge following the instructions on [https://github.com/nfarina/homebridge](https://github.com/nfarina/homebridge).  For me, this installs homebridge version 0.4.6 to `/usr/local/lib/node_modules`.  Make sure to create a `config.json` in `~/.homebridge`, as described.
 - Install the homebridge-zp plug-in through `sudo npm install -g homebridge-zp`.
 - Edit `~/.homebridge/config.json` and add the `ZP` platform provided by homebridge-zp, see below.
@@ -41,16 +41,15 @@ In homebridge's `config.json` you need to specify a platform for homebridge-zp;
 The homebridge-zp plug-in outputs an info message for each Homekit characteristic value it sets and for each Homekit characteristic value change notification it receives.  When homebridge is started with `-D`, homebridge-zp outputs a debug message for each request it makes to a Sonos ZonePlayer and for each ZonePlayer notification event it receives.
 
 The homebridge-zp plug-in creates a web server to receive events from the Sonos ZonePlayers.  The IP address and port number for this listener are logged in a debug message, e.g.
-
 > [ZP] listening on http://\<address\>:\<port\>/notify
-
-To check whether the listener is reachable from the network, open this URL in your web browser.
+To check whether the listener is reachable from the network, open this URL in your web browser.  You should get a reply like:
+> homebridge-zp v0.0.2, node v4.6.1, homebridge v2.1
 
 For each zone, the homebridge-zp plug-in logs a debug message with the zone name and the type, ID and IP address and port of the corresponding ZonePlayer, e.g.
-
 > Living Room: setup ZPS9 player RINCON_5CAAFDxxxxxx01400 at \<address\>:1400
-
-To check whether the ZonePlayer has accepted the subscriptions to send notification events to homebridge-zp, open `http://<address>:1400/status` in your web browser to see the ZonePlayer diagnostics.  Select `upnp` and then select `Incoming subscriptions`.  Next to the subscriptions from other ZonePlayers and from Sonos apps, you should find the subscriptions from homebridge-zp.  Note that these subscriptions remain active after homebridge has exited (see issue #5), until they timeout, 30 minutes after they were created or last renewed.
+To check whether the ZonePlayer has accepted the subscriptions to send notification events to homebridge-zp, open `http://<address>:1400/status` in your web browser to see the ZonePlayer diagnostics.  Select `upnp` and then select `Incoming subscriptions`.  Next to the subscriptions from other ZonePlayers and from Sonos apps, you should find the subscriptions from homebridge-zp.
+>	1	0	uuid:RINCON_5CAAFDxxxxxx01400_sub0000015009	http://\<address\>:\<port\>/notify/RINCON_5CAAFDxxxxxx01400/RenderingControl
+Note that these subscriptions remain active after homebridge has exited (see issue #5), until they timeout, 30 minutes after they were created or last renewed.
 
 ## Caveats
 - The homebridge-zp plug-in is a hobby project of mine, provided as-is, with no warranty whatsoever.  I've been running it successfully at my home for months, but your mileage might vary.  Please report any issues on GitHub.
