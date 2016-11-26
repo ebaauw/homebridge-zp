@@ -5,7 +5,7 @@
 (C) 2016, Erik Baauw
 
 This plug-in exposes Sonos ZonePlayers to Apple's Homekit.  It provides the following features:
-- Automatic discovery of Sonos ZonePlayers, taking into account stereo pairs and home cinema setup;
+- Automatic discovery of Sonos ZonePlayers, taking into account stereo pairs and home cinema setup.
 - ZonePlayer On/Off control from Homekit, with automatic grouping.
 - ZonePlayer volume and mute control from Homekit.
 - Monitoring ZonePlayer on/off state, volume, mute, and current track from Homekit.  Like the Sonos app, homebridge-zp subscribes to ZonePlayer events to receive notifications.
@@ -15,6 +15,16 @@ The homebridge-zp plug-in creates a `Switch` accessory per zone (room), named af
 
 ## Automatic Grouping
 With just one zone, the `On` characteristic works as Play/Pause button.  With multiple zones, the `On` characteristic also provides automatic grouping.  When `On` is set to `true`, homebridge-zp checks whether another zone is already playing.  If so, the zone joins the group of the other zone, otherwise the zone starts playing.  When `On` is set to `false`, homebridge-zp checks whether the zone is member of a group.  If so, the zone leaves the group, otherwise the zone stops playing.  Note that when the coordinator leaves the group, the music to the other zones is briefly interrupted, as the new coordinator assumes its role.
+
+## Installation
+The homebridge-zp plug-in obviously needs homebridge, which, in turn needs Node.js.  I've followed these steps to set it up on my macOS server:
+
+- Install the Node.js JavaScript runtime `node`, from `https://nodejs.org`.  I'm using v6.9.1 LTS for macOS (x64), which includes the `npm` package manager.
+- Make sure `/usr/local/bin` is in your `$PATH`, as `node`, `npm`, and, later, `homebridge` install there.
+- You might want to update `npm` through `sudo npm update -g npm`.  For me, this installs version, 3.10.9.
+- Install homebridge following the instructions on `https://github.com/nfarina/homebridge`.  For me, this installs homebridge version 0.4.6 to `/usr/local/lib/node_modules`.  Make sure to create a `config.json` in `~/.homebridge`, as described.
+- Install the homebridge-zp plug-in through `sudo npm install -g homebridge-zp`.
+- Edit `~/.homebridge/config.json` and add the `ZP` platform provided by homebridge-zp, see below.
 
 ## Configuration
 In homebridge's `config.json` you need to specify a platform for homebridge-zp;
@@ -28,7 +38,6 @@ In homebridge's `config.json` you need to specify a platform for homebridge-zp;
 ```
 
 ## Troubleshooting
-
 The homebridge-zp plug-in outputs an info message for each Homekit characteristic value it sets and for each Homekit characteristic value change notification it receives.  When homebridge is started with `-D`, homebridge-zp outputs a debug message for each request it makes to a Sonos ZonePlayer and for each ZonePlayer notification event it receives.
 
 The homebridge-zp plug-in creates a web server to receive events from the Sonos ZonePlayers.  The IP address and port number for this listener are logged in a debug message, e.g.
