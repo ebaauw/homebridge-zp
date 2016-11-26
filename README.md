@@ -44,7 +44,7 @@ The homebridge-zp plug-in creates a web server to receive events from the Sonos 
 > [ZP] listening on http://\<address\>:\<port\>/notify
 
 To check whether the listener is reachable from the network, open this URL in your web browser.  You should get a reply like:
-> homebridge-zp v0.0.2, node v4.6.1, homebridge v2.1
+> homebridge-zp v0.0.4, node v4.6.1, homebridge v2.1
 
 For each zone, the homebridge-zp plug-in logs a debug message with the zone name and the type, ID and IP address and port of the corresponding ZonePlayer, e.g.
 > Living Room: setup ZPS9 player RINCON_5CAAFDxxxxxx01400 at \<address\>:1400
