@@ -42,13 +42,16 @@ The homebridge-zp plug-in outputs an info message for each Homekit characteristi
 
 The homebridge-zp plug-in creates a web server to receive events from the Sonos ZonePlayers.  The IP address and port number for this listener are logged in a debug message, e.g.
 > [ZP] listening on http://\<address\>:\<port\>/notify
+
 To check whether the listener is reachable from the network, open this URL in your web browser.  You should get a reply like:
 > homebridge-zp v0.0.2, node v4.6.1, homebridge v2.1
 
 For each zone, the homebridge-zp plug-in logs a debug message with the zone name and the type, ID and IP address and port of the corresponding ZonePlayer, e.g.
 > Living Room: setup ZPS9 player RINCON_5CAAFDxxxxxx01400 at \<address\>:1400
-To check whether the ZonePlayer has accepted the subscriptions to send notification events to homebridge-zp, open `http://<address>:1400/status` in your web browser to see the ZonePlayer diagnostics.  Select `upnp` and then select `Incoming subscriptions`.  Next to the subscriptions from other ZonePlayers and from Sonos apps, you should find the subscriptions from homebridge-zp.
+
+To check whether the ZonePlayer has accepted the subscriptions to send notification events to homebridge-zp, open `http://<address>:1400/status` in your web browser to see the ZonePlayer diagnostics.  Select `upnp` and then select `Incoming subscriptions`.  Next to the subscriptions from other ZonePlayers and from Sonos apps, you should find the subscriptions from homebridge-zp, e.g.
 >	1	0	uuid:RINCON_5CAAFDxxxxxx01400_sub0000015009	http://\<address\>:\<port\>/notify/RINCON_5CAAFDxxxxxx01400/RenderingControl
+
 Note that these subscriptions remain active after homebridge has exited (see issue #5), until they timeout, 30 minutes after they were created or last renewed.
 
 ## Caveats
