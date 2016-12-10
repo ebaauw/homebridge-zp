@@ -3,7 +3,9 @@
   "version": "0.0.5",
   "description": "Homebridge plug-in for Sonos ZonePlayer",
   "keywords": [
-    "homebridge-plugin"
+    "homebridge-plugin",
+    "sonos",
+    "zoneplayer"
   ],
   "engines": {
     "homebridge": "^0.4.11",
