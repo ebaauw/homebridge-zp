@@ -4,7 +4,7 @@
 ## Homebridge plug-in for Sonos ZonePlayer
 (C) 2016, Erik Baauw
 
-This [homebridge](https://github.com/nfarina/homebridge) plug-in exposes [Sonos](http://www.sonos.com) ZonePlayers to Apple's HomeKit.  It provides the following features:
+This [homebridge](https://github.com/nfarina/homebridge) plug-in exposes [Sonos](http://www.sonos.com) ZonePlayers to Apple's [HomeKit](http://www.apple.com/ios/home/).  It provides the following features:
 - Automatic discovery of Sonos ZonePlayers, taking into account stereo pairs and home cinema setup.
 - ZonePlayer On/Off control from HomeKit, with automatic grouping.
 - ZonePlayer volume and mute control from HomeKit.
