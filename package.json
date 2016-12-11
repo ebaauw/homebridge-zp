@@ -12,7 +12,7 @@
     "node": "^6.9.1"
   },
   "dependencies": {
-    "sonos": "^0.12.1"
+    "sonos": "^0.8.0"
   },
   "main": "index.js",
   "scripts": {
