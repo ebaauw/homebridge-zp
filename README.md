@@ -42,7 +42,7 @@ In homebridge's `config.json` you need to specify a platform for homebridge-zp;
 ## Troubleshooting
 If you run into issues, please run homebridge with only the homebridge-zp plugin enabled in `config.sys`.  This way, you can determine whether the issue is related to the homebridge-zp plugin itself, or to the interaction of multiple homebridge plugins in your setup.  Note that disabling the other plugins from your existing homebridge setup will remove their accessories from HomeKit.  You will need to re-assign these accessories to any HomeKit rooms, groups, scenes, and rules after re-enabling their plugins.  Alternatively, you can start a different instance of homebridge just for homebridge-zp, on a different system, or from a different directory (specified by the `-U` flag).  Make sure to use a different homebridge `name`, `username`, and (if running on the same system) `port` in the `config.sys` for each instance.
 
-The homebridge-zp plugin outputs an info message for each HomeKit characteristic value it sets and for each HomeKit characteristic value change notification it receives.  When homebridge is started with `-D`, homebridge-zp outputs a debug message for each request it makes to a Sonos ZonePlayer and for each ZonePlayer notification event it receives.
+The homebridge-zp plugin outputs an info message for each HomeKit characteristic value it sets and for each HomeKit characteristic value change notification it receives.  When homebridge is started with `-D`, homebridge-zp outputs a debug message for each request it makes to a Sonos ZonePlayer and for each ZonePlayer notification event it receives.  To capture these messages into a logfile, start homebridge as `homebridge -D > logfile 2>&1`.
 
 The homebridge-zp plugin creates a web server to receive events from the Sonos ZonePlayers.  The IP address and port number for this listener are logged in a debug message, e.g.
 > [ZP] listening on http://\<address\>:\<port\>/notify
@@ -54,6 +54,8 @@ For each zone, the homebridge-zp plugin logs a debug message with the zone name 
 > Living Room: setup ZPS9 player RINCON_5CAAFDxxxxxx01400 at \<address\>:1400
 
 To check whether the ZonePlayer has accepted the subscriptions to send notification events to homebridge-zp, open `http://<address>:1400/status` in your web browser to see the ZonePlayer diagnostics.  Select `upnp` and then select `Incoming subscriptions`.  Next to the subscriptions from other ZonePlayers and from Sonos apps, you should find the subscriptions from homebridge-zp.  Note that these subscriptions remain active after homebridge has exited (see issue #5), until they timeout, 30 minutes after they were created or last renewed.
+
+If you need help, please open an issue on [GitHub](https://github.com/ebaauw/homebridge-zp/issues).  Please attach a copy of your full `config.json` (masking any sensitive info) and the debug logfile.
 
 ## Caveats
 - The homebridge-zp plugin is a hobby project of mine, provided as-is, with no warranty whatsoever.  I've been running it successfully at my home for months, but your mileage might vary.  Please report any issues on [GitHub](https://github.com/ebaauw/homebridge-zp/issues).
