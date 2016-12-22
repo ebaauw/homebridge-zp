@@ -8,11 +8,11 @@
     "zoneplayer"
   ],
   "engines": {
-    "homebridge": "^0.4.11",
+    "homebridge": "^0.4.16",
     "node": "^6.9.1"
   },
   "dependencies": {
-    "sonos": "^0.8.0"
+    "sonos": "^0.12.1"
   },
   "main": "index.js",
   "scripts": {
