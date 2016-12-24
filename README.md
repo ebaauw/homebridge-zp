@@ -21,8 +21,8 @@ The homebridge-zp plugin obviously needs homebridge, which, in turn needs Node.j
 
 - Install the Node.js JavaScript runtime `node`, from its [website](https://nodejs.org).  I'm using v6.9.2 LTS for macOS (x64), which includes the `npm` package manager.
 - Make sure `/usr/local/bin` is in your `$PATH`, as `node`, `npm`, and, later, `homebridge` install there.
-- You might want to update `npm` through `sudo npm update -g npm@latest`.  For me, this installs version 4.0.3.
-- Install homebridge following the instructions on [GitHub](https://github.com/nfarina/homebridge).  For me, this installs homebridge version 0.4.11 to `/usr/local/lib/node_modules`.  Make sure to create a `config.json` in `~/.homebridge`, as described.
+- You might want to update `npm` through `sudo npm update -g npm@latest`.  For me, this installs version 4.0.5.
+- Install homebridge following the instructions on [GitHub](https://github.com/nfarina/homebridge).  For me, this installs homebridge version 0.4.16 to `/usr/local/lib/node_modules`.  Make sure to create a `config.json` in `~/.homebridge`, as described.
 - Install the homebridge-zp plugin through `sudo npm install -g homebridge-zp`.
 - Edit `~/.homebridge/config.json` and add the `ZP` platform provided by homebridge-zp, see below.
 
