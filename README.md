@@ -38,6 +38,13 @@ In homebridge's `config.json` you need to specify a platform for homebridge-zp;
     }
   ]
 ```
+The following optional parameters can be added to modify homebridge-zp's behaviour:
+
+- `host`: The hostname or IP address for the web server homebridge-zp creates to receive notifications from Sonos ZonePlayers.  This must be the hostname or IP address of the server running homebridge-zp, reachable by the ZonePlayers.  You might need to set this on a multi-homed server, if homebridge-zp binds to the wrong network interface.  Default: not specified, discover the server's IP address automatically;
+- `port`: The port for the web server homebridge-zp creates to receive notifications from Sonos ZonePlayers.  Default: 0, use a random port.
+- `searchTimeout`: The timeout in seconds to wait for a response when searching for Sonos Zoneplayers.  Default: 2 seconds;
+- `subscriptionTimeout`: duration (in minutes) of the subscriptions homebridge-zp creates with each ZonePlayer.  Default: 30 minutes;
+- `light`: Flag whether to expose each Sonos zone as a `Lightbulb` and volume as `Brighness`, so you can tell Siri to "Set Living Room Sonos to 20%".  Default: `false`, use `Switch` service and `Volume` characteristic.  Note that when setting this, Siri will also switch off the Living Room Sonos when you tell her to "Switch off the Living Room lights".
 
 ## Troubleshooting
 If you run into issues, please run homebridge with only the homebridge-zp plugin enabled in `config.sys`.  This way, you can determine whether the issue is related to the homebridge-zp plugin itself, or to the interaction of multiple homebridge plugins in your setup.  Note that disabling the other plugins from your existing homebridge setup will remove their accessories from HomeKit.  You will need to re-assign these accessories to any HomeKit rooms, groups, scenes, and rules after re-enabling their plugins.  Alternatively, you can start a different instance of homebridge just for homebridge-zp, on a different system, or from a different directory (specified by the `-U` flag).  Make sure to use a different homebridge `name`, `username`, and (if running on the same system) `port` in the `config.sys` for each instance.
