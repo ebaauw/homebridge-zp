@@ -12,7 +12,7 @@
     "node": "^6.9.1"
   },
   "dependencies": {
-    "sonos": "^0.12.1",
+    "sonos": "^0.13.0",
     "request": "^2.67.0",
     "xml2js": "^0.4.15"
   },
