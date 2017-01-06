@@ -2,19 +2,26 @@
 [![npm](https://img.shields.io/npm/dt/homebridge-zp.svg)](https://www.npmjs.com/package/homebridge-zp) [![npm](https://img.shields.io/npm/v/homebridge-zp.svg)](https://www.npmjs.com/package/homebridge-zp)
 
 ## Homebridge plugin for Sonos ZonePlayer
-(C) 2016, Erik Baauw
+(C) 2016-2017, Erik Baauw
 
 This [homebridge](https://github.com/nfarina/homebridge) plugin exposes [Sonos](http://www.sonos.com) ZonePlayers to Apple's [HomeKit](http://www.apple.com/ios/home/).  It provides the following features:
-- Automatic discovery of Sonos ZonePlayers, taking into account stereo pairs and home cinema setup.
-- ZonePlayer On/Off control from HomeKit, with automatic grouping.
-- ZonePlayer volume and mute control from HomeKit.
-- Monitoring ZonePlayer on/off state, volume, mute, and current track from HomeKit.  Like the Sonos app, homebridge-zp subscribes to ZonePlayer events to receive notifications.
+- Automatic discovery of Sonos zones, taking into account stereo pairs and home cinema setup.
+- Control from HomeKit of play/pause, volume, and mute per Sonos group.
+- Optional control from HomeKit of grouping Sonos zones into Sonos groups.
+- Optional control from HomeKit of volume and mute per Sonos zone (in addition to control per Sonos group).
+- Real-time monitoring from Homekit of play/pause state, volume, mute, current track, and coordinator zone per Sonos group; and, optionally, of volume and mute per Sonos zone.  Like the Sonos app, homebridge-zp subscribes to ZonePlayer events to receive notifications.
 
 ## Zones
-The homebridge-zp plugin creates a `Switch` accessory per zone (room), named after the zone, e.g. "Living Room Sonos" for the "Living Room" zone.  In addition to the standard `On` characteristic, additional characterisics for `Volume`, `Mute`, and `Track` are provided.  Note that `Track` is a custom characteristic, which might not be supported by all HomeKit apps.  Also note that the iOS 10 [Home](http://www.apple.com/ios/home/) app does not support `Volume` and `Mute`, even thought these are standard HomeKit characteristics.
+The homebridge-zp plugin creates an accessory per zone (room), named after the zone, e.g. "Living Room Sonos" for the "Living Room" zone.  By default, this accessory provides a `Switch` service with the same name, corresponding to the *group* to which the zone belongs.  In addition to the standard `On` characteristic for play/pause control, additional characteristics `Volume`, `Mute`, `Track`, and `Zone Group` are provided. `Track` and `Zone Group` are custom characteristics, and might not be supported by all HomeKit apps.
 
-## Automatic Grouping
-With just one zone, the `On` characteristic works as Play/Pause button.  With multiple zones, the `On` characteristic also provides automatic grouping.  When `On` is set to `true`, homebridge-zp checks whether another zone is already playing.  If so, the zone joins the group of the other zone, otherwise the zone starts playing.  When `On` is set to `false`, homebridge-zp checks whether the zone is member of a group.  If so, the zone leaves the group, otherwise the zone stops playing.  Note that when the coordinator leaves the group, the music to the other zones is briefly interrupted, as the new coordinator assumes its role.
+Note that the neither the iOS 10 [Home](http://www.apple.com/ios/home/) app nor Siri supports `Volume` nor `Mute`, even thought these are standard HomeKit characteristics.  Because of this, the type of service, as well as the type of characteristic used for volume can be changed from config.json, see **Configuration** below and issue #10.
+
+## Groups
+When multiple Sonos zones (e.g. `Living Room` and `Kitchen`) are grouped into one Sonos group, the Sonos app shows them as a single room (e.g. `Living Room + 1`), with shared control for play/pause, volume, mute, and input.  When this group is broken, the Sonos app shows two separate rooms, with separate control per room for play/pause, volume, mute and input.  If we would mimic this behaviour in homebridge-zp, dynamically creating and deleting accessories for groups, HomeKit would lose the assignment to HomeKit rooms, scenes and triggers, every time an accessory is deleted.  Consequently, you would have to reconfigure HomeKit each time you group or ungroup Sonos zones.
+
+To overcome this, homebridge-zp creates an accessory and service per zone, which actually controls the *group* the zone is in.  When separated, the "Living Room Sonos" service controls the Living Room group, consisting of only the Living Room zone; and the "Kitchen Sonos" service controls the Kitchen group, consisting of only the Kitchen zone.  When grouped, both the "Living Room Sonos" and the "Kicthen Sonos" services control the "Living Room + 1" group, containing both zones.  The `Zone Group` characteristic shows which group the zone belongs to, or rather: the zone controlling the group, in this example: "Living Room Sonos".
+
+To control the actual Sonos *zones* rather than the Sonos *groups*, set `"zonegroups": true` in config.json.  In that case, homebridge-zp creates a second service per zone, e.g. "Living Room Sonos Zone", with `On`, `Volume` and `Mute` characteristics.  "Living Room Sonos Zone" `Volume` and `Mute` control the zone volume and mute where "Living Room Sonos" `Volume` and `Mute` control the group volume and mute.  The zone `On` characteristic is used to join or leave a group with other zones.  The first zone, for which `On` is set, becomes the group coordinator; additional zones become members.  When `On` is cleared, the zone leaves the group.  Note that when the coordinator leaves the group, the music to the other zones is briefly interrupted, as the new coordinator assumes its role.
 
 ## Installation
 The homebridge-zp plugin obviously needs homebridge, which, in turn needs Node.js.  I've followed these steps to set it up on my macOS server:
@@ -44,7 +51,25 @@ The following optional parameters can be added to modify homebridge-zp's behavio
 - `port`: The port for the web server homebridge-zp creates to receive notifications from Sonos ZonePlayers.  Default: 0, use a random port.
 - `searchTimeout`: The timeout in seconds to wait for a response when searching for Sonos Zoneplayers.  Default: 2 seconds;
 - `subscriptionTimeout`: duration (in minutes) of the subscriptions homebridge-zp creates with each ZonePlayer.  Default: 30 minutes;
-- `light`: Flag whether to expose each Sonos zone as a `Lightbulb` and volume as `Brighness`, so you can tell Siri to "Set Living Room Sonos to 20%".  Default: `false`, use `Switch` service and `Volume` characteristic.  Note that when setting this, Siri will also switch off the Living Room Sonos when you tell her to "Switch off the Living Room lights".
+- `light`: Deprecated, use `service` and `brightness` instead;
+- `service`: Defines what type of service and volume characteristic to use.  Possible values are: `"switch"` for `Switch` and `Volume`; `"speaker"` for `Speaker` and `Volume`; `"light"` for `LightBulb` and `Brightness`; and `"fan"` for `Fan` and `Rotation Speed`.  Selecting `"light"` or `"fan"` enables changing the Sonos volume from Siri.  Selecting `Speaker` is not supported by the iOS built-in Home app.
+- `brightness`: Flag whether to expose volume as `Brightness` in combination with `Switch` or `Speaker`.  Default: `false`.  Setting this flag enables volume control from Siri.
+- `zonegroups`: Flag whether to expose a second service per zone, for zone-level control from HomeKit of volume/mute and of joining/leaving groups, see **Groups** above.  Default: `false`.  You might want to change this if you have a multi-room Sonos configuration.
+
+For reference, below is an example `config.json` that includes all parameters and their default values:
+```
+  "platforms": [
+    {
+      "platform": "ZP",
+      "name": "ZP",
+      "searchTimeout": 2,
+      "subscriptionTimeout": 30,
+      "service": "switch",
+      "brightness": false,
+      "zonegroups": false
+    }
+  ]
+```
 
 ## Troubleshooting
 If you run into issues, please run homebridge with only the homebridge-zp plugin enabled in `config.sys`.  This way, you can determine whether the issue is related to the homebridge-zp plugin itself, or to the interaction of multiple homebridge plugins in your setup.  Note that disabling the other plugins from your existing homebridge setup will remove their accessories from HomeKit.  You will need to re-assign these accessories to any HomeKit rooms, groups, scenes, and rules after re-enabling their plugins.  Alternatively, you can start a different instance of homebridge just for homebridge-zp, on a different system, or from a different directory (specified by the `-U` flag).  Make sure to use a different homebridge `name`, `username`, and (if running on the same system) `port` in the `config.sys` for each instance.
@@ -55,12 +80,12 @@ The homebridge-zp plugin creates a web server to receive events from the Sonos Z
 > [ZP] listening on http://\<address\>:\<port\>/notify
 
 To check whether the listener is reachable from the network, open this URL in your web browser.  You should get a reply like:
-> homebridge-zp v0.0.4, node v4.6.1, homebridge v2.1
+> homebridge-zp v0.1.4, node v6.9.2, homebridge v2.1
 
 For each zone, the homebridge-zp plugin logs a debug message with the zone name and the type, ID and IP address and port of the corresponding ZonePlayer, e.g.
 > Living Room: setup ZPS9 player RINCON_5CAAFDxxxxxx01400 at \<address\>:1400
 
-To check whether the ZonePlayer has accepted the subscriptions to send notification events to homebridge-zp, open `http://<address>:1400/status` in your web browser to see the ZonePlayer diagnostics.  Select `upnp` and then select `Incoming subscriptions`.  Next to the subscriptions from other ZonePlayers and from Sonos apps, you should find the subscriptions from homebridge-zp.  Note that these subscriptions remain active after homebridge has exited (see issue #5), until they timeout, 30 minutes after they were created or last renewed.
+To check whether the ZonePlayer has accepted the subscriptions to send notification events to homebridge-zp, open `http://<address>:1400/status` in your web browser to see the ZonePlayer diagnostics.  Select `upnp` and then select `Incoming subscriptions`.  Next to the subscriptions from other ZonePlayers and from Sonos apps, you should find the subscriptions from homebridge-zp.  Note that these subscriptions remain active after homebridge has exited (see issue #5), until they timeout, (by default) 30 minutes after they were created or last renewed.
 
 If you need help, please open an issue on [GitHub](https://github.com/ebaauw/homebridge-zp/issues).  Please attach a copy of your full `config.json` (masking any sensitive info) and the debug logfile.
 
@@ -69,4 +94,4 @@ If you need help, please open an issue on [GitHub](https://github.com/ebaauw/hom
 - Homebridge is a great platform, but not really intented for consumers, as it requires command-line interaction.
 - HomeKit is still relatively new, and the iOS 10 built-in [Home](http://www.apple.com/ios/home/) app provides only limited support.  You might want to check some other HomeKit apps, like Elgato's [Eve](https://www.elgato.com/en/eve/eve-app) (free), Matthias Hochgatterer's [Home](http://selfcoded.com/home/) (paid), or, if you use `XCode`, Apple's [HMCatalog](https://developer.apple.com/library/content/samplecode/HomeKitCatalog/Introduction/Intro.html#//apple_ref/doc/uid/TP40015048-Intro-DontLinkElementID_2) example app.
 - The HomeKit terminology needs some getting used to.  An _accessory_ more or less corresponds to a physical device, accessible from your iOS device over WiFi or Bluetooth.  A _bridge_ (like homebridge) provides access to multiple bridged accessories.  An accessory might provide multiple _services_.  Each service corresponds to a virtual device (like a `Lightbulb`, `Switch`, `Motion Sensor`, ...).  There is also an accessory information service.  Siri interacts with services, not with accessories.  A service contains one or more _characteristics_.  A characteristic is like a service attribute, which might be read or written by HomeKit apps.  You might want to checkout Apple's [HomeKit Accessory Simulator](https://developer.apple.com/library/content/documentation/NetworkingInternet/Conceptual/HomeKitDeveloperGuide/TestingYourHomeKitApp/TestingYourHomeKitApp.html), which is distributed a an additional tool for `XCode`.
-- The Sonos terminology needs some getting used to.  A _zone_ corresponds to a room.  It contains of a single ZonePlayer, two ZonePlayers configured as stereo pair, or a home cinema setup (with separate surround and/or sub speakers).  Typically, zone setup is static; you would only change it when re-arranging your rooms.  A _group_ is a collection of zones/rooms, playing the same music in sync.  A group is controlled by its _coordinator_.  Typically, groups are dynamic, you add and/or remove zones to/from a group when listening to your music.  Play/Pause control is per group.  Volume/Mute control is per zone (and per group, but homebridge-zp currently doesn't support that, see issue #4).
+- The Sonos terminology needs some getting used to.  A _zone_ corresponds to a room.  It contains of a single ZonePlayer, two ZonePlayers configured as stereo pair, or a home cinema setup (with separate surround and/or sub speakers).  Typically, zone setup is static; you would only change it when re-arranging your rooms.  A _group_ is a collection of zones/rooms, playing the same music in sync.  A group is controlled by its _coordinator_.  Typically, groups are dynamic, you add and/or remove zones to/from a group when listening to your music.  Play/Pause control and input is per group.  Volume/Mute control is per group and per zone.
