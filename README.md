@@ -7,19 +7,19 @@
 This [homebridge](https://github.com/nfarina/homebridge) plugin exposes [Sonos](http://www.sonos.com) ZonePlayers to Apple's [HomeKit](http://www.apple.com/ios/home/).  It provides the following features:
 - Automatic discovery of Sonos zones, taking into account stereo pairs and home cinema setup;
 - Support for Sonos groups, created through the Sonos app;
-- Control from HomeKit of play/pause, volume, and mute per Sonos group;
+- Control from HomeKit of play/stop, volume, and mute per Sonos group;
 - Optional control from HomeKit of volume, mute, bass, treble, and loudness per Sonos zone;
 - Optional control from Homekit for Sonos zones leaving Sonos groups, and for Sonos zones creating/joining one Sonos group;
-- Real-time monitoring from Homekit of play/pause state, volume, mute, current track, and coordinator per Sonos Group; and, optionally, of volume, mute, bass, treble, loudness per Sonos zone.  Like the Sonos app, homebridge-zp subscribes to ZonePlayer events to receive notifications.
+- Real-time monitoring from Homekit of play/stop state, volume, mute, current track, and coordinator per Sonos Group; and, optionally, of volume, mute, bass, treble, loudness per Sonos zone.  Like the Sonos app, homebridge-zp subscribes to ZonePlayer events to receive notifications.
 
 ## Zones
-The homebridge-zp plugin creates an accessory per Sonos zone, named after the zone, e.g. *Living Room Sonos* for the *Living Room* zone.  By default, this accessory contains a single `Switch` service, with the same name as the accessory.  In addition to the standard `On` characteristic for play/pause control, additional characteristics are provided for `Volume`, `Mute`, `Track` (read-only) and `Sonos Group` (read-only).
+The homebridge-zp plugin creates an accessory per Sonos zone, named after the zone, e.g. *Living Room Sonos* for the *Living Room* zone.  By default, this accessory contains a single `Switch` service, with the same name as the accessory.  In addition to the standard `On` characteristic for play/stop control, additional characteristics are provided for `Volume`, `Mute`, `Track` (read-only) and `Sonos Group` (read-only).
 Note that `Track` and `Sonos Group` are custom characteristics.  They might not be supported by all HomeKit apps, see **Caveats** below.  
 
 Note that neither Siri nor the iOS built-in [Home](http://www.apple.com/ios/home/) app support `Volume` or `Mute`, even thought these are standard HomeKit characteristics.  Because of this, the type of the service, as well as the type of characteristic used for volume can be changed from config.json, see **Configuration** below and [issue #10](https://github.com/ebaauw/homebridge-zp/issue.
 
 ## Groups
-When multiple Sonos zones, e.g. *Living Room* and *Kitchen*, are grouped into one Sonos group, the Sonos app shows them as a single room, e.g. *Living Room + 1*, with shared control for play/pause, music source, and (group) volume and mute.  When this group is broken, each zone forms a separate standalone group, containing only that zone.  The Sonos app shows each standalone group as a separate room, with separate control per room for play/pause, music source, and (zone) volume and mute.
+When multiple Sonos zones, e.g. *Living Room* and *Kitchen*, are grouped into one Sonos group, the Sonos app shows them as a single room, e.g. *Living Room + 1*, with shared control for play/stop, music source, and (group) volume and mute.  When this group is broken, each zone forms a separate standalone group, containing only that zone.  The Sonos app shows each standalone group as a separate room, with separate control per room for play/stop, music source, and (zone) volume and mute.
 If we would mimic this behaviour in homebridge-zp, dynamically creating and deleting accessories for groups, HomeKit would lose the assignment to HomeKit rooms, scenes and triggers, every time an accessory is deleted.  Consequently, you would have to reconfigure HomeKit each time you group or ungroup Sonos zones.
 
 To overcome this, homebridge-zp creates an accessory with corresponding service for each Sonos *zone*.  This service actually controls the Sonos *group* the zone is in rather than the *room*.  When separated, the *Living Room Sonos* service controls the standalone *Living Room* group, consisting of only the *Living Room* zone; and the *Kitchen Sonos* service controls the standalone *Kitchen* group, consisting of only the *Kitchen* zone.  When grouped, both the *Living Room Sonos* service and the *Kitchen Sonos* service control the multi-zone *Living Room + 1* group, containing both the *Living Room* and *Kitchen* zones.  The `Sonos Group` characteristic shows which group the zone belongs to, or rather: the name of the accessory that corresponds to the group coordinator zone, in this example: *Living Room Sonos*.
@@ -47,7 +47,7 @@ The homebridge-zp plugin obviously needs homebridge, which, in turn needs Node.j
 Once homebridge is up and running with the homebridge-zp plugin, you might want to daemonise it and start it automatically on login or system boot.  See the [homebridge Wiki](https://github.com/nfarina/homebridge/wiki) for more info how to do that on MacOS or on a Raspberri Pi.
 
 ## Configuration
-In homebridge's `config.json` you need to specify a platform for homebridge-zp;
+In homebridge's config.json you need to specify a platform for homebridge-zp;
 ```
   "platforms": [
     {
@@ -62,23 +62,21 @@ The following optional parameters can be added to modify homebridge-zp's behavio
 - `port`: The port for the web server homebridge-zp creates to receive notifications from Sonos ZonePlayers.  Default: 0, use a random port.
 - `searchTimeout`: The timeout in seconds to wait for a response when searching for Sonos Zoneplayers.  Default: 2 seconds;
 - `subscriptionTimeout`: duration (in minutes) of the subscriptions homebridge-zp creates with each ZonePlayer.  Default: 30 minutes;
-- `light`: Deprecated, use `service` and `brightness` instead;
+- `light`: Deprecated, use `service` or `brightness` instead;
 - `service`: Defines what type of service and volume characteristic homebridge-zp uses.  Possible values are: `"switch"` for `Switch` and `Volume`; `"speaker"` for `Speaker` and `Volume`; `"light"` for `LightBulb` and `Brightness`; and `"fan"` for `Fan` and `Rotation Speed`.  Selecting `"light"` or `"fan"` enables changing the Sonos volume from Siri and from the iOS built-in [Home](http://www.apple.com/ios/home/) app.  Selecting `"speaker"` is not supported by the iOS built-in [Home](http://www.apple.com/ios/home/) app;
 - `brightness`: Flag whether to expose volume as `Brightness` in combination with `Switch` or `Speaker`.  Default: `false`.  Setting this flag enables volume control from Siri;
 - `zonegroups`: Deprecated, use `speakers` instead.
-- `speakers`: Flag whether to expose a second *Speakers* service per zone, in addition to the standard *Sonos* service, see **Zone Revisited** above.  Default: `false`.  You might want to change this if you have a multi-zone Sonos configuration.
+- `speakers`: Flag whether to expose a second *Speakers* service per zone, in addition to the standard *Sonos* service, see **Speakers** above.  Default: `false`.  You might want to change this if you're using Sonos groups in a configuration of multiple Sonos zones.
 
-For reference, below is an example `config.json` that includes all parameters and their default values:
+Below is an example config.json that exposes the *Sonos* and *Speakers* service as a HomeKit `Speaker` and volume as `Brightness`, so it can be controlled from Siri:
 ```
   "platforms": [
     {
       "platform": "ZP",
       "name": "ZP",
-      "searchTimeout": 2,
-      "subscriptionTimeout": 30,
-      "service": "switch",
-      "brightness": false,
-      "groupvolume": false
+      "service": "speaker",
+      "brightness": true,
+      "speakers": true
     }
   ]
 ```
