@@ -9,13 +9,16 @@ This [homebridge](https://github.com/nfarina/homebridge) plugin exposes [Sonos](
 - Control from HomeKit of play/pause per Sonos group;
 - Control from HomeKit of volume, mute, bass, treble, and loudness per Sonos zone;
 - Control from HomeKit of grouping Sonos zones into one Sonos group.  Support for multiple Sonos groups created with the Sonos app;
-- Optional control from HomeKit of group volume and mute per Sonos group.
+- Optional control from HomeKit of group volume and group mute per Sonos group.
 - Real-time monitoring from Homekit of play/pause state, volume, mute, bass, treble, loudness, current track, group membership, and, optionally, group volume and group mute.  Like the Sonos app, homebridge-zp subscribes to ZonePlayer events to receive notifications.
 
 ## Zones
 The homebridge-zp plugin creates an accessory per Sonos zone, named after the zone, e.g. "Living Room Sonos" for the "Living Room" zone.  Three services are created for each accessory:
+
 1. "Living Room Sonos Group" for the group the zone is in.  This service provides play/pause control, (in future) input selection, and, optionally, group volume and group mute control.   It is tied to the Sonos AVTransport endpoint, and, optionally, to the GroupRenderingControl endpoint;
+
 2. "Living Room Sonos Zone" for the zone itself.  This service provides control for volume, mute, bass, treble, and loudness.  It is tied to the Sonos RenderingControl endpoint;
+
 3. The accessory information service.    
 
 By default, homebridge-zp creates the Group and Zone services as `Switch`.  In addition to the standard `On` characteristic for play/pause control, the Group service contains additional characteristics for `Track`, `Zone Group`, and optionally `Volume` and `Mute`. The optional `Volume` and `Mute` are linked to the group volume and mute.
@@ -29,7 +32,7 @@ Note that neither Siri nor the iOS built-in [Home](http://www.apple.com/ios/home
 ## Groups
 When multiple Sonos zones (e.g. `Living Room` and `Kitchen`) are grouped into one Sonos group, the Sonos app shows them as a single room (e.g. `Living Room + 1`), with shared control for play/pause, input, and (group) volume and mute.  When this group is broken, the Sonos app shows two separate rooms, with separate control per room for play/pause, input, and (zone) volume and mute.  If we would mimic this behaviour in homebridge-zp, dynamically creating and deleting accessories for groups, HomeKit would lose the assignment to HomeKit rooms, scenes and triggers, every time an accessory is deleted.  Consequently, you would have to reconfigure HomeKit each time you group or ungroup Sonos zones.
 
-To overcome this, homebridge-zp creates two services for each Sonos zone, one to control the Sonos group the zone is in, and one to control the zone itself.  When separated, the "Living Room Sonos Group" service controls the Living Room group, consisting of only the Living Room zone; and the "Kitchen Sonos Group" service controls the Kitchen group, consisting of only the Kitchen zone.  When grouped, both the "Living Room Sonos Group" service and the "Kitchen Sonos Group" service control the "Living Room + 1" group, containing both zones.  The `Zone Group` characteristic shows which group the zone belongs to, or rather: the zone that acts as controller for the group, in this example: "Living Room Sonos".  Of course, the Zone service always controls that zone.
+To overcome this, homebridge-zp creates two services for each Sonos zone, one to control the Sonos group the zone is in, and one to control the zone itself.  When separated, the "Living Room Sonos Group" service controls the `Living Room` group, consisting of only the `Living Room` zone; and the "Kitchen Sonos Group" service controls the `Kitchen` group, consisting of only the `Kitchen` zone.  When grouped, both the "Living Room Sonos Group" service and the "Kitchen Sonos Group" service control the `Living Room + 1` group, containing both zones.  The `Zone Group` characteristic shows which group the zone belongs to, or rather: the zone that acts as controller for the group, in this example: "Living Room Sonos".  Of course, the Zone service always controls that zone.
 
 ## Installation
 The homebridge-zp plugin obviously needs homebridge, which, in turn needs Node.js.  I've followed these steps to set it up on my macOS server:
