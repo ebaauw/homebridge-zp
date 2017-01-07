@@ -1,6 +1,6 @@
 {
   "name": "homebridge-zp",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Homebridge plugin for Sonos ZonePlayer",
   "keywords": [
     "homebridge-plugin",
