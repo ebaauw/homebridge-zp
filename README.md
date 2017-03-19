@@ -38,18 +38,18 @@ When grouping zones from the Sonos app, homebridge-zp sets the *Speakers* `On` c
 ## Installation
 The homebridge-zp plugin obviously needs homebridge, which, in turn needs Node.js.  I've followed these steps to set it up on my macOS server:
 
-- Install the Node.js JavaScript runtime `node`, from its [website](https://nodejs.org).  I'm using v6.9.4 LTS for macOS (x64), which includes the `npm` package manager.
+- Install the Node.js JavaScript runtime `node`, from its [website](https://nodejs.org).  I'm using v6.10.0 LTS for macOS (x64), which includes the `npm` package manager.
 - Make sure `/usr/local/bin` is in your `$PATH`, as `node`, `npm`, and, later, `homebridge` install there.
-- You might want to update `npm` through `sudo npm update -g npm@latest`.  For me, this installs version 4.1.1.
+- You might want to update `npm` through `sudo npm update -g npm@latest`.  For me, this installs version 4.4.1.
 - Install homebridge following the instructions on [GitHub](https://github.com/nfarina/homebridge).  For me, this installs homebridge version 0.4.16 to `/usr/local/lib/node_modules`.  Make sure to create a `config.json` in `~/.homebridge`, as described.
-- Install the homebridge-zp plugin through `sudo npm install -g homebridge-zp`.
+- Install the homebridge-zp plugin through `sudo npm install -g homebridge-zp@latest`.
 - Edit `~/.homebridge/config.json` and add the `ZP` platform provided by homebridge-zp, see below.
 
 Once homebridge is up and running with the homebridge-zp plugin, you might want to daemonise it and start it automatically on login or system boot.  See the [homebridge Wiki](https://github.com/nfarina/homebridge/wiki) for more info how to do that on MacOS or on a Raspberri Pi.
 
 ## Configuration
 In homebridge's config.json you need to specify a platform for homebridge-zp;
-```
+```json
   "platforms": [
     {
       "platform": "ZP",
@@ -70,7 +70,7 @@ The following optional parameters can be added to modify homebridge-zp's behavio
 - `speakers`: Flag whether to expose a second *Speakers* service per zone, in addition to the standard *Sonos* service, see **Speakers** above.  Default: `false`.  You might want to change this if you're using Sonos groups in a configuration of multiple Sonos zones.
 
 Below is an example config.json that exposes the *Sonos* and *Speakers* service as a HomeKit `Speaker` and volume as `Brightness`, so it can be controlled from Siri:
-```
+```json
   "platforms": [
     {
       "platform": "ZP",
