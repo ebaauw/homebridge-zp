@@ -23,7 +23,7 @@ You need a server to run homebridge.  This can be anything running [Node.js](htt
 The homebridge-zp plugin creates an accessory per Sonos zone, named after the zone, e.g. *Living Room Sonos* for the *Living Room* zone.  By default, this accessory contains a single `Switch` service, with the same name as the accessory.  In addition to the standard `Power State` characteristic for play/pause control, additional characteristics are provided for `Volume`, `Mute`, `Track` (read-only) and `Sonos Group` (read-only).
 Note that `Track` and `Sonos Group` are custom characteristics.  They might not be supported by all HomeKit apps, see **Caveats** below.  
 
-Note that neither Siri nor the iOS built-in [Home](http://www.apple.com/ios/home/) app support `Volume` or `Mute`, even thought these are standard HomeKit characteristics.  Because of this, the type of the service, as well as the type of characteristic used for volume can be changed from config.json, see **Configuration** below and [issue #10](https://github.com/ebaauw/homebridge-zp/issue).
+Note that neither Siri nor the iOS built-in Home app support `Volume` or `Mute`, even thought these are standard HomeKit characteristics.  Because of this, the type of the service, as well as the type of characteristic used for volume can be changed from config.json, see **Configuration** below and [issue #10](https://github.com/ebaauw/homebridge-zp/issues/10).
 
 ### Groups
 When multiple Sonos zones, e.g. *Living Room* and *Kitchen*, are grouped into one Sonos group, the Sonos app shows them as a single room, e.g. *Living Room + 1*, with shared control for play/pause, music source, and (group) volume and mute.  When this group is broken, each zone forms a separate standalone group, containing only that zone.  The Sonos app shows each standalone group as a separate room, with separate control per room for play/pause, music source, and (zone) volume and mute.
@@ -48,7 +48,7 @@ The homebridge-zp plugin obviously needs homebridge, which, in turn needs Node.j
 - Install the Node.js JavaScript runtime `node`, from its [website](https://nodejs.org).  I'm using v6.10.1 LTS for macOS (x64), which includes the `npm` package manager.
 - Make sure `/usr/local/bin` is in your `$PATH`, as `node`, `npm`, and, later, `homebridge` install there.
 - You might want to update `npm` through `sudo npm update -g npm@latest`.  For me, this installs version 4.4.4.
-- Install homebridge following the instructions on [GitHub](https://github.com/nfarina/homebridge).  For me, this installs homebridge version 0.4.16 to `/usr/local/lib/node_modules`.  Make sure to create a `config.json` in `~/.homebridge`, as described.
+- Install homebridge following the instructions on [GitHub](https://github.com/nfarina/homebridge#installation).  For me, this installs homebridge version 0.4.16 to `/usr/local/lib/node_modules`.  Make sure to create a `config.json` in `~/.homebridge`, as described.
 - Install the homebridge-zp plugin through `sudo npm install -g homebridge-zp@latest`.
 - Edit `~/.homebridge/config.json` and add the `ZP` platform provided by homebridge-zp, see below.
 
