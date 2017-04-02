@@ -1,12 +1,18 @@
 {
   "name": "homebridge-zp",
-  "version": "0.1.7",
   "description": "Homebridge plugin for Sonos ZonePlayer",
+  "version": "0.1.7",
+  "author": "Erik Baauw",
+  "license": "ISC",
   "keywords": [
     "homebridge-plugin",
+    "homekit"
     "sonos",
-    "zoneplayer"
+    "zoneplayer",
+    "sonos-zp",
+    "sonos-zoneplayer"
   ],
+  "main": "index.js",
   "engines": {
     "homebridge": "^0.4.16",
     "node": "^6.9.1"
@@ -16,7 +22,6 @@
     "request": "^2.67.0",
     "xml2js": "^0.4.15"
   },
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -24,8 +29,6 @@
     "type": "git",
     "url": "git+https://github.com/ebaauw/homebridge-zp.git"
   },
-  "author": "Erik Baauw",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/ebaauw/homebridge-zp/issues"
   },
