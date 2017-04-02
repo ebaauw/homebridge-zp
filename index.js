@@ -1,16 +1,16 @@
 // homebridge-zp/index.js
-// (C) 2016-2017, Erik Baauw
+// Copyright © 2016, 2017 Erik Baauw. All rights reserved.
 //
 // Homebridge plug-in for Sonos ZonePlayer.
 
-"use strict";
+'use strict';
 
 const dynamic = false;
 
-const ZPPlatformModule = require("./lib/ZPPlatform");
+const ZPPlatformModule = require('./lib/ZPPlatform');
 const ZPPlatform = ZPPlatformModule.ZPPlatform;
 
 module.exports = function(homebridge) {
   ZPPlatformModule.setHomebridge(homebridge);
-  homebridge.registerPlatform("homebridge-zp", "ZP", ZPPlatform, dynamic);
+  homebridge.registerPlatform('homebridge-zp', 'ZP', ZPPlatform, dynamic);
 };
