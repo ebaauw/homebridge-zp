@@ -6,7 +6,7 @@
   "license": "ISC",
   "keywords": [
     "homebridge-plugin",
-    "homekit"
+    "homekit",
     "sonos",
     "zoneplayer",
     "sonos-zp",
