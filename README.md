@@ -48,7 +48,7 @@ The homebridge-zp plugin obviously needs homebridge, which, in turn needs Node.j
 - Install the Node.js JavaScript runtime `node`, from its [website](https://nodejs.org).  I'm using v6.11.4 LTS for macOS (x64) and the 6.x [Debian package](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions) for Rapsberry Pi.  Both include the `npm` package manager;
 - For macOS, make sure `/usr/local/bin` is in your `$PATH`, as `node`, `npm`, and, later, `homebridge` install there.  On a Raspberry Pi, these install to `/usr/bin`;
 - You might want to update `npm` through `sudo npm update -g npm@latest`;
-- Install homebridge v0.4.28 following the instructions on [GitHub](https://github.com/nfarina/homebridge#installation).  Make sure to create a `config.json` in `~/.homebridge`, as described;
+- Install homebridge v0.4.29 following the instructions on [GitHub](https://github.com/nfarina/homebridge#installation).  Make sure to create a `config.json` in `~/.homebridge`, as described;
 - Install the homebridge-zp plugin through `sudo npm install -g homebridge-zp@latest`.
 - Edit `~/.homebridge/config.json` and add the `ZP` platform provided by homebridge-zp, see **Configuration** below.
 
@@ -59,8 +59,7 @@ In homebridge's config.json you need to specify a platform for homebridge-zp:
 ```json
   "platforms": [
     {
-      "platform": "ZP",
-      "name": "ZP"
+      "platform": "ZP"
     }
   ]
 ```
@@ -81,7 +80,6 @@ Below is an example config.json that exposes the *Sonos* and *Speakers* service 
   "platforms": [
     {
       "platform": "ZP",
-      "name": "ZP",
       "service": "speaker",
       "brightness": true,
       "speakers": true
