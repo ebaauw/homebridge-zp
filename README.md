@@ -93,14 +93,17 @@ If you run into issues, please run homebridge with only the homebridge-zp plugin
 The homebridge-zp plugin outputs an info message for each HomeKit characteristic value it sets and for each HomeKit characteristic value change notification it receives.  When homebridge is started with `-D`, homebridge-zp outputs a debug message for each request it makes to a Sonos ZonePlayer and for each ZonePlayer notification event it receives.  To capture these messages into a logfile, start homebridge as `homebridge -D > logfile 2>&1`.
 
 The homebridge-zp plugin creates a web server to receive events from the Sonos ZonePlayers.  The IP address and port number for this listener are logged in a debug message, e.g.
-> [2017-11-3 16:46:56] [ZP] listening on http://192.168.xxx.xxx:xxxxx/notify
-
+```
+[2017-11-3 16:46:56] [ZP] listening on http://192.168.xxx.xxx:xxxxx/notify
+```
 To check whether the listener is reachable from the network, open this URL in your web browser.  You should get a reply like:
-> homebridge-zp v0.2.6, node v8.9.0, homebridge v0.4.31
-
+```
+homebridge-zp v0.2.6, node v8.9.0, homebridge v0.4.31
+```
 For each zone, the homebridge-zp plugin logs a debug message with the zone name and the type, ID and IP address and port of the corresponding ZonePlayer, e.g.
-> [2017-11-3 16:46:57] [ZP] Living Room: setup ZPS9 v8.1.1 player RINCON_5CAAFDxxxxxx01400 at 192.168.xxx.xxx:1400
-
+```
+[2017-11-3 16:46:57] [ZP] Living Room: setup ZPS9 v8.1.1 player RINCON_5CAAFDxxxxxx01400 at 192.168.xxx.xxx:1400
+```
 To check whether the ZonePlayer has accepted the subscriptions to send notification events to homebridge-zp, open `http://192.168.xxx.xxx:1400/status` in your web browser to see the ZonePlayer diagnostics.  Select `upnp` and then select `Incoming subscriptions` (**Note:** this menu option no longer seems to be available on later Sonos versions).  Next to the subscriptions from other ZonePlayers and from Sonos apps, you should find the subscriptions from homebridge-zp.  Note that these subscriptions remain active after homebridge has exited (see [issue #5](https://github.com/ebaauw/homebridge-zp/issues/5)), until they timeout, (by default) 30 minutes after they were created or last renewed.
 
 If you need help, please open an issue on [GitHub](https://github.com/ebaauw/homebridge-zp/issues).  Please attach a copy of your full `config.json` (masking any sensitive info) and the debug logfile.
