@@ -13,7 +13,7 @@ This [homebridge](https://github.com/nfarina/homebridge) plugin exposes [Sonos](
 - Real-time monitoring from HomeKit of play/pause state, volume, mute, current track, and coordinator per Sonos Group; and, optionally, of volume, mute, bass, treble, loudness per Sonos zone.  Like the Sonos app, homebridge-zp subscribes to ZonePlayer events to receive notifications.
 
 ### Prerequisites
-To interact with HomeKit, you need Siri or a HomeKit app on an iPhone, Apple Watch, iPad, iPod Touch, or Apple TV (4th generation or later).  I recommend to use the latest OS versions: iOS 11.0.3, watchOS 4.0, and tvOS 11.0.  
+To interact with HomeKit, you need Siri or a HomeKit app on an iPhone, Apple Watch, iPad, iPod Touch, or Apple TV (4th generation or later).  I recommend to use the latest OS versions: iOS 11.1, watchOS 4.1, and tvOS 11.1.  
 Please note that Siri and even the iOS built-in [Home](https://support.apple.com/en-us/HT204893) app still provide only limited HomeKit support.  To use the full features of homebridge-zp, you might want to check out some other HomeKit apps, like Elgato's [Eve](https://www.elgato.com/en/eve/eve-app) app (free) or Matthias Hochgatterer's [Home](http://selfcoded.com/home/) app (paid).  
 For HomeKit automation, you need to setup an Apple TV (4th generation or later) or iPad as [Home Hub](https://support.apple.com/en-us/HT207057).
 
@@ -45,10 +45,10 @@ When grouping zones from the Sonos app, homebridge-zp sets the *Speakers* `On` c
 ### Installation
 The homebridge-zp plugin obviously needs homebridge, which, in turn needs Node.js.  I've followed these steps to set it up on my macOS server:
 
-- Install the Node.js JavaScript runtime `node`, from its [website](https://nodejs.org).  I'm using v6.11.4 LTS for macOS (x64) and the 6.x [Debian package](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions) for Rapsberry Pi.  Both include the `npm` package manager;
+- Install the Node.js JavaScript runtime `node`, from its [website](https://nodejs.org).  I'm using v8.9.0 LTS for macOS (x64) and the 8.x [Debian package](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions) for Rapsberry Pi.  Both include the `npm` package manager;
 - For macOS, make sure `/usr/local/bin` is in your `$PATH`, as `node`, `npm`, and, later, `homebridge` install there.  On a Raspberry Pi, these install to `/usr/bin`;
 - You might want to update `npm` through `sudo npm update -g npm@latest`;
-- Install homebridge v0.4.29 following the instructions on [GitHub](https://github.com/nfarina/homebridge#installation).  Make sure to create a `config.json` in `~/.homebridge`, as described;
+- Install homebridge v0.4.31 following the instructions on [GitHub](https://github.com/nfarina/homebridge#installation).  Make sure to create a `config.json` in `~/.homebridge`, as described;
 - Install the homebridge-zp plugin through `sudo npm install -g homebridge-zp@latest`.
 - Edit `~/.homebridge/config.json` and add the `ZP` platform provided by homebridge-zp, see **Configuration** below.
 
@@ -93,15 +93,15 @@ If you run into issues, please run homebridge with only the homebridge-zp plugin
 The homebridge-zp plugin outputs an info message for each HomeKit characteristic value it sets and for each HomeKit characteristic value change notification it receives.  When homebridge is started with `-D`, homebridge-zp outputs a debug message for each request it makes to a Sonos ZonePlayer and for each ZonePlayer notification event it receives.  To capture these messages into a logfile, start homebridge as `homebridge -D > logfile 2>&1`.
 
 The homebridge-zp plugin creates a web server to receive events from the Sonos ZonePlayers.  The IP address and port number for this listener are logged in a debug message, e.g.
-> [4/2/2017, 9:46:13 PM] [ZP] listening on http://\<address\>:\<port\>/notify
+> [2017-11-3 16:46:56] [ZP] listening on http://192.168.xxx.xxx:xxxxx/notify
 
 To check whether the listener is reachable from the network, open this URL in your web browser.  You should get a reply like:
-> homebridge-zp v0.1.7, node v6.10.1, homebridge api v2.1
+> homebridge-zp v0.2.6, node v8.9.0, homebridge v0.4.31
 
 For each zone, the homebridge-zp plugin logs a debug message with the zone name and the type, ID and IP address and port of the corresponding ZonePlayer, e.g.
-> [4/2/2017, 9:46:13 PM] [ZP] Living Room: setup ZPS9 player RINCON_5CAAFDxxxxxx01400 at \<address\>:1400
+> [2017-11-3 16:46:57] [ZP] Living Room: setup ZPS9 v8.1.1 player RINCON_5CAAFDxxxxxx01400 at 192.168.xxx.xxx:1400
 
-To check whether the ZonePlayer has accepted the subscriptions to send notification events to homebridge-zp, open `http://<address>:1400/status` in your web browser to see the ZonePlayer diagnostics.  Select `upnp` and then select `Incoming subscriptions`.  Next to the subscriptions from other ZonePlayers and from Sonos apps, you should find the subscriptions from homebridge-zp.  Note that these subscriptions remain active after homebridge has exited (see [issue #5](https://github.com/ebaauw/homebridge-zp/issues/5)), until they timeout, (by default) 30 minutes after they were created or last renewed.
+To check whether the ZonePlayer has accepted the subscriptions to send notification events to homebridge-zp, open `http://192.168.xxx.xxx:1400/status` in your web browser to see the ZonePlayer diagnostics.  Select `upnp` and then select `Incoming subscriptions` (**Note:** this menu option no longer seems to be available on later Sonos versions).  Next to the subscriptions from other ZonePlayers and from Sonos apps, you should find the subscriptions from homebridge-zp.  Note that these subscriptions remain active after homebridge has exited (see [issue #5](https://github.com/ebaauw/homebridge-zp/issues/5)), until they timeout, (by default) 30 minutes after they were created or last renewed.
 
 If you need help, please open an issue on [GitHub](https://github.com/ebaauw/homebridge-zp/issues).  Please attach a copy of your full `config.json` (masking any sensitive info) and the debug logfile.
 
