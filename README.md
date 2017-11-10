@@ -106,7 +106,8 @@ For each zone, the homebridge-zp plugin logs a debug message with the zone name 
 ```
 To check whether the ZonePlayer has accepted the subscriptions to send notification events to homebridge-zp, open `http://192.168.xxx.xxx:1400/status` in your web browser to see the ZonePlayer diagnostics.  Select `upnp` and then select `Incoming subscriptions` (**Note:** this menu option no longer seems to be available on later Sonos versions).  Next to the subscriptions from other ZonePlayers and from Sonos apps, you should find the subscriptions from homebridge-zp.  Note that these subscriptions remain active after homebridge has exited (see [issue #5](https://github.com/ebaauw/homebridge-zp/issues/5)), until they timeout, (by default) 30 minutes after they were created or last renewed.
 
-If you need help, please open an issue on [GitHub](https://github.com/ebaauw/homebridge-zp/issues).  Please attach a copy of your full `config.json` (masking any sensitive info) and the debug logfile.
+If you need help, please open an issue on [GitHub](https://github.com/ebaauw/homebridge-zp/issues).  Please attach a copy of your full `config.json` (masking any sensitive info) and the debug logfile.  
+For questions, you can also post a message to the **#homebridge-zp** channel of the homebridge workspace on [Slack](https://slackin-adpxqdnhge.now.sh/).
 
 ### Caveats
 The homebridge-zp plugin is a hobby project of mine, provided as-is, with no warranty whatsoever.  I've been running it successfully at my home for months, but your mileage might vary.  Please report any issues on [GitHub](https://github.com/ebaauw/homebridge-zp/issues).
