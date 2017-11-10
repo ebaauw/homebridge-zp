@@ -15,7 +15,7 @@
   "main": "index.js",
   "engines": {
     "homebridge": "^0.4.31",
-    "node": "^8.9.0"
+    "node": "^8.9.1"
   },
   "dependencies": {
     "semver": "^5.4.1",
