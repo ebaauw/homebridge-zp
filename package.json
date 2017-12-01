@@ -18,9 +18,9 @@
     "node": "^8.9.1"
   },
   "dependencies": {
-    "semver": "^5.4.1",
-    "sonos": "^0.17.0",
     "request": "^2.83.0",
+    "semver": "^5.4.1",
+    "sonos": "^0.18.0",
     "xml2js": "^0.4.19"
   },
   "scripts": {
