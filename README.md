@@ -2,7 +2,7 @@
 [![npm](https://img.shields.io/npm/dt/homebridge-zp.svg)](https://www.npmjs.com/package/homebridge-zp) [![npm](https://img.shields.io/npm/v/homebridge-zp.svg)](https://www.npmjs.com/package/homebridge-zp)
 
 ## Homebridge plugin for Sonos ZonePlayer
-Copyright © 2016, 2017 Erik Baauw. All rights reserved.
+Copyright © 2016-2018 Erik Baauw. All rights reserved.
 
 This [homebridge](https://github.com/nfarina/homebridge) plugin exposes [Sonos](http://www.sonos.com) ZonePlayers to Apple's [HomeKit](http://www.apple.com/ios/home/).  It provides the following features:
 - Automatic discovery of Sonos zones, taking into account stereo pairs and home theatre setup;
