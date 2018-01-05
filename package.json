@@ -3,7 +3,7 @@
   "description": "Homebridge plugin for Sonos ZonePlayer",
   "version": "0.2.11",
   "author": "Erik Baauw",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "keywords": [
     "homebridge-plugin",
     "homekit",
@@ -15,12 +15,12 @@
   "main": "index.js",
   "engines": {
     "homebridge": "^0.4.33",
-    "node": "^8.9.3"
+    "node": "^8.9.4"
   },
   "dependencies": {
     "request": "^2.83.0",
     "semver": "^5.4.1",
-    "sonos": "^0.18.0",
+    "sonos": "^0.21.0",
     "xml2js": "^0.4.19"
   },
   "scripts": {
