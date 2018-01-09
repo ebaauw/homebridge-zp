@@ -14,13 +14,13 @@
   ],
   "main": "index.js",
   "engines": {
-    "homebridge": "^0.4.33",
+    "homebridge": "^0.4.35",
     "node": "^8.9.4"
   },
   "dependencies": {
     "request": "^2.83.0",
     "semver": "^5.4.1",
-    "sonos": "^0.21.0",
+    "sonos": "^0.22.0",
     "xml2js": "^0.4.19"
   },
   "scripts": {
