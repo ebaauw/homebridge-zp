@@ -13,17 +13,16 @@ This [homebridge](https://github.com/nfarina/homebridge) plugin exposes [Sonos](
 - Real-time monitoring from HomeKit of play/pause state, volume, mute, current track, and coordinator per Sonos Group; and, optionally, of volume, mute, bass, treble, loudness per Sonos zone.  Like the Sonos app, homebridge-zp subscribes to ZonePlayer events to receive notifications.
 
 ### Prerequisites
-To interact with HomeKit, you need Siri or a HomeKit app on an iPhone, Apple Watch, iPad, iPod Touch, or Apple TV (4th generation or later).  I recommend to use the latest OS versions: iOS 11.2.1, watchOS 4.2, and tvOS 11.2.1.  
+To interact with HomeKit, you need Siri or a HomeKit app on an iPhone, Apple Watch, iPad, iPod Touch, or Apple TV (4th generation or later).  I recommend to use the latest released versions of iOS, watchOS, and tvOS.  
 Please note that Siri and even Apple's [Home](https://support.apple.com/en-us/HT204893) app still provide only limited HomeKit support.  To use the full features of homebridge-zp, you might want to check out some other HomeKit apps, like Elgato's [Eve](https://www.elgato.com/en/eve/eve-app) app (free) or Matthias Hochgatterer's [Home](http://selfcoded.com/home/) app (paid).  
 For HomeKit automation, you need to setup an Apple TV (4th generation or later) or iPad as [Home Hub](https://support.apple.com/en-us/HT207057).
 
 You need a server to run homebridge.  This can be anything running [Node.js](https://nodejs.org): from a Raspberri Pi, a NAS system, or an always-on PC running Linux, macOS, or Windows.  See the [homebridge Wiki](https://github.com/nfarina/homebridge/wiki) for details.  I use a Mac mini server, and, occasionally, a Raspberri Pi 3 model B.
 
 ### Zones
-The homebridge-zp plugin creates an accessory per Sonos zone, named after the zone, e.g. *Living Room Sonos* for the *Living Room* zone.  By default, this accessory contains a single `Switch` service, with the same name as the accessory.  In addition to the standard `Power State` characteristic for play/pause control, additional characteristics are provided for `Volume`, `Mute`, `Track` (read-only) and `Sonos Group` (read-only).
-Note that `Track` and `Sonos Group` are custom characteristics.  They might not be supported by all HomeKit apps, see **Caveats** below.  
+The homebridge-zp plugin creates an accessory per Sonos zone, named after the zone, e.g. *Living Room Sonos* for the *Living Room* zone.  By default, this accessory contains a single `Switch` service, with the same name as the accessory.  In addition to the standard `Power State` characteristic for play/pause control, additional characteristics are provided for `Volume`, `Mute`, `Current Track` (read-only) and `Sonos Group` (read-only). Note that `Current Track` and `Sonos Group` are custom characteristics.  They might not be supported by all HomeKit apps, see [**Caveats**](#caveats).  
 
-Note that neither Siri nor the iOS built-in Home app support `Volume` or `Mute`, even thought these are standard HomeKit characteristics.  Because of this, the type of the service, as well as the type of characteristic used for volume can be changed from `config.json`, see **Configuration** below and [issue #10](https://github.com/ebaauw/homebridge-zp/issues/10).
+Note that neither Siri nor the Apple's Home app support `Volume` or `Mute`, even thought these are standard HomeKit characteristics.  Because of this, the type of the service, as well as the type of characteristic used for volume can be changed from `config.json`, see [**Configuration**](#configuration) and [issue #10](https://github.com/ebaauw/homebridge-zp/issues/10).
 
 ### Groups
 When multiple Sonos zones, e.g. *Living Room* and *Kitchen*, are grouped into one Sonos group, the Sonos app shows them as a single room, e.g. *Living Room + 1*, with shared control for play/pause, music source, and (group) volume and mute.  When this group is broken, each zone forms a separate standalone group, containing only that zone.  The Sonos app shows each standalone group as a separate room, with separate control per room for play/pause, music source, and (zone) volume and mute.
@@ -45,12 +44,12 @@ When grouping zones from the Sonos app, homebridge-zp sets the *Speakers* `On` c
 ### Installation
 The homebridge-zp plugin obviously needs homebridge, which, in turn needs Node.js.  I've followed these steps to set it up on my macOS server:
 
-- Install the Node.js JavaScript runtime `node`, from its [website](https://nodejs.org).  I'm using v8.9.4 LTS for macOS (x64) and the 8.x [Debian package](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions) for Rapsberry Pi.  Both include the `npm` package manager;
-- For macOS, make sure `/usr/local/bin` is in your `$PATH`, as `node`, `npm`, and, later, `homebridge` install there.  On a Raspberry Pi, these install to `/usr/bin`;
+- Install the latest v8 LTS version of Node.js.  On a Raspberry Pi, use the 8.x [Debian package](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions). On other platforms, download the [8.x.x LTS](https://nodejs.org) installer.  Both installations include the `npm` package manager;
+- On macOS, make sure `/usr/local/bin` is in your `$PATH`, as `node`, `npm`, and, later, `homebridge` install there.  On a Raspberry Pi, these install to `/usr/bin`;
 - You might want to update `npm` through `sudo npm -g update npm@latest`;
-- Install homebridge v0.4.33 through `sudo npm -g install homebridge@0.4.33 --unsafe-perm`.  Then follow the instructions on [GitHub](https://github.com/nfarina/homebridge#installation) to create a `config.json` in `~/.homebridge`, as described;
-- Install the homebridge-zp plugin through `sudo npm -g install homebridge-zp@latest`.
-- Edit `~/.homebridge/config.json` and add the `ZP` platform provided by homebridge-zp, see **Configuration** below.
+- Install homebridge through `sudo npm -g install homebridge --unsafe-perm`.  Follow the instructions on [GitHub](https://github.com/nfarina/homebridge#installation) to create a `config.json` in `~/.homebridge`, as described;
+- Install the homebridge-zp plugin through `sudo npm -g install homebridge-zp`;
+- Edit `~/.homebridge/config.json` and add the `ZP` platform provided by homebridge-zp, see [**Configuration**](#configuration).
 
 Once homebridge is up and running with the homebridge-zp plugin, you might want to daemonise it and start it automatically on login or system boot.  See the [homebridge Wiki](https://github.com/nfarina/homebridge/wiki) for more info how to do that on MacOS or on a Raspberri Pi.
 
@@ -67,8 +66,8 @@ The following optional parameters can be added to modify homebridge-zp's behavio
 
 Key | Default | Description
 --- | ------- | -----------
-`speakers` | `false` | Flag whether to expose a second *Speakers* service per zone, in addition to the standard *Sonos* service, see **Speakers** above.  You might want to set this if you're using Sonos groups in a configuration of multiple Sonos zones.
-`service` | `"switch"` | Defines what type of service and volume characteristic homebridge-zp uses.  Possible values are: `"switch"` for `Switch` and `Volume`; `"speaker"` for `Speaker` and `Volume`; `"light"` for `LightBulb` and `Brightness`; and `"fan"` for `Fan` and `Rotation Speed`.  Selecting `"light"` or `"fan"` enables changing the Sonos volume from Siri and from the iOS built-in Home app.  Selecting `"speaker"` is not supported by the iOS built-in Home app.
+`speakers` | `false` | Flag whether to expose a second *Speakers* service per zone, in addition to the standard *Sonos* service, see [**Speakers**](#speakers).  You might want to set this if you're using Sonos groups in a configuration of multiple Sonos zones.
+`service` | `"switch"` | Defines what type of service and volume characteristic homebridge-zp uses.  Possible values are: `"switch"` for `Switch` and `Volume`; `"speaker"` for `Speaker` and `Volume`; `"light"` for `LightBulb` and `Brightness`; and `"fan"` for `Fan` and `Rotation Speed`.  Selecting `"light"` or `"fan"` enables changing the Sonos volume from Siri and from Apple's Home app.  Selecting `"speaker"` is not supported by Apple's Home app.
 `brightness` | `false` | Flag whether to expose volume as `Brightness` in combination with `Switch` or `Speaker`.  Setting this flag enables volume control from Siri.
 `alarms` | `false` | Flag whether to expose an additional service per Sonos alarm.
 `host` | _(discovered)_ | The hostname or IP address for the web server homebridge-zp creates to receive notifications from Sonos ZonePlayers.  This must be the hostname or IP address of the server running homebridge-zp, reachable by the ZonePlayers.  You might need to set this on a multi-homed server, if homebridge-zp binds to the wrong network interface.
