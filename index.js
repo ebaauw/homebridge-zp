@@ -3,12 +3,12 @@
 //
 // Homebridge plugin for Sonos ZonePlayer.
 
-'use strict';
+'use strict'
 
-const ZPPlatformModule = require('./lib/ZPPlatform');
-const ZPPlatform = ZPPlatformModule.ZPPlatform;
+const ZPPlatformModule = require('./lib/ZPPlatform')
+const ZPPlatform = ZPPlatformModule.ZPPlatform
 
 module.exports = (homebridge) => {
-  ZPPlatformModule.setHomebridge(homebridge);
-  homebridge.registerPlatform('homebridge-zp', 'ZP', ZPPlatform);
-};
+  ZPPlatformModule.setHomebridge(homebridge)
+  homebridge.registerPlatform('homebridge-zp', 'ZP', ZPPlatform)
+}
