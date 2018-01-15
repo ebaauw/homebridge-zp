@@ -73,7 +73,7 @@ Key | Default | Description
 `alarms` | `false` | Flag whether to expose an additional service per Sonos alarm.
 `host` | _(discovered)_ | The hostname or IP address for the web server homebridge-zp creates to receive notifications from Sonos ZonePlayers.  This must be the hostname or IP address of the server running homebridge-zp, reachable by the ZonePlayers.  You might need to set this on a multi-homed server, if homebridge-zp binds to the wrong network interface.
 `port` | `0` _(random)_ | The port for the web server homebridge-zp creates to receive notifications from Sonos ZonePlayers.
-`searchTimeout` | `2` | The timeout (in seconds) to wait for a response when searching for Sonos Zoneplayers.
+`searchTimeout` | `5` | The timeout (in seconds) to wait for a response when searching for Sonos Zoneplayers.
 `subscriptionTimeout` | `30` | The duration (in minutes) of the subscriptions homebridge-zp creates with each ZonePlayer.
 
 Below is an example `config.json` that exposes the *Sonos* and *Speakers* service as a HomeKit `Speaker` and volume as `Brightness`, so it can be controlled from Siri:
