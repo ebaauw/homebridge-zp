@@ -14,8 +14,6 @@ This [homebridge](https://github.com/nfarina/homebridge) plugin exposes [Sonos](
 - Real-time monitoring from HomeKit of play/pause state, volume, mute, current track, and coordinator per Sonos Group; and, optionally, of volume, mute, bass, treble, loudness per Sonos zone.  Like the Sonos app, homebridge-zp subscribes to ZonePlayer events to receive notifications.
 
 ### Prerequisites
-Note that homebridge-zp does _not_ work on homebridge v0.4.39, see [Issue 34](https://github.com/ebaauw/homebridge-zp/issues/34).
-
 You need a server to run homebridge.  This can be anything running [Node.js](https://nodejs.org): from a Raspberri Pi, a NAS system, or an always-on PC running Linux, macOS, or Windows.  See the [homebridge Wiki](https://github.com/nfarina/homebridge/wiki) for details.  I use a Mac mini server, and, occasionally, a Raspberri Pi 3 model B.
 
 To interact with HomeKit, you need Siri or a HomeKit app on an iPhone, Apple Watch, iPad, iPod Touch, or Apple TV (4th generation or later).  I recommend to use the latest released versions of iOS, watchOS, and tvOS.  
@@ -50,7 +48,7 @@ The homebridge-zp plugin obviously needs homebridge, which, in turn needs Node.j
 - Install the latest v8 LTS version of Node.js.  On a Raspberry Pi, use the 8.x [Debian package](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions). On other platforms, download the [8.x.x LTS](https://nodejs.org) installer.  Both installations include the `npm` package manager;
 - On macOS, make sure `/usr/local/bin` is in your `$PATH`, as `node`, `npm`, and, later, `homebridge` install there.  On a Raspberry Pi, these install to `/usr/bin`;
 - You might want to update `npm` through `sudo npm -g update npm@latest`;
-- Install homebridge through `sudo npm -g install homebridge@0.4.38 --unsafe-perm`.  Follow the instructions on [GitHub](https://github.com/nfarina/homebridge#installation) to create a `config.json` in `~/.homebridge`, as described;
+- Install homebridge through `sudo npm -g install homebridge --unsafe-perm`.  Follow the instructions on [GitHub](https://github.com/nfarina/homebridge#installation) to create a `config.json` in `~/.homebridge`, as described;
 - Install the homebridge-zp plugin through `sudo npm -g install homebridge-zp`;
 - Edit `~/.homebridge/config.json` and add the `ZP` platform provided by homebridge-zp, see [**Configuration**](#configuration).
 
