@@ -14,7 +14,7 @@ This [homebridge](https://github.com/nfarina/homebridge) plugin exposes [Sonos](
 - Real-time monitoring from HomeKit of play/pause state, volume, mute, current track, and coordinator per Sonos Group; and, optionally, of volume, mute, bass, treble, loudness per Sonos zone.  Like the Sonos app, homebridge-zp subscribes to ZonePlayer events to receive notifications.
 
 ### Prerequisites
-Note that homebridge-zp does _not_ work on homebridge v0.4.39, see #34.
+Note that homebridge-zp does _not_ work on homebridge v0.4.39, see [Issue 34](https://github.com/ebaauw/homebridge-zp/issues/34).
 
 You need a server to run homebridge.  This can be anything running [Node.js](https://nodejs.org): from a Raspberri Pi, a NAS system, or an always-on PC running Linux, macOS, or Windows.  See the [homebridge Wiki](https://github.com/nfarina/homebridge/wiki) for details.  I use a Mac mini server, and, occasionally, a Raspberri Pi 3 model B.
 
