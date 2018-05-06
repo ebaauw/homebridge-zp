@@ -14,7 +14,7 @@
   ],
   "main": "index.js",
   "engines": {
-    "homebridge": "^0.4.38",
+    "homebridge": "^0.4.42",
     "node": "^8.11.1"
   },
   "dependencies": {
