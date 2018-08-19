@@ -15,13 +15,13 @@
   "main": "index.js",
   "engines": {
     "homebridge": "^0.4.44",
-    "node": "^8.11.3"
+    "node": "^8.11.4"
   },
   "dependencies": {
     "he": "^1.1.1",
-    "homebridge-lib": "^1.0.5",
-    "request": "^2.87.0",
-    "semver": "^5.5.0",
+    "homebridge-lib": "^1.0.7",
+    "request": "^2.88.0",
+    "semver": "^5.5.1",
     "sonos": "^0.22.2",
     "xml2js": "^0.4.19"
   },
