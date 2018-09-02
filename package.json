@@ -25,9 +25,6 @@
     "sonos": "^0.22.2",
     "xml2js": "^0.4.19"
   },
-  "devDependencies": {
-    "standard": "*"
-  },
   "scripts": {
     "test": "standard && echo \"Error: no test specified\" && exit 1"
   },
