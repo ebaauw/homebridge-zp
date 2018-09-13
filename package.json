@@ -14,12 +14,12 @@
   ],
   "main": "index.js",
   "engines": {
-    "homebridge": "^0.4.44",
-    "node": "^8.11.4"
+    "homebridge": "^0.4.45",
+    "node": "^8.12.0"
   },
   "dependencies": {
     "he": "^1.1.1",
-    "homebridge-lib": "^1.0.7",
+    "homebridge-lib": "^1.0.8",
     "request": "^2.88.0",
     "semver": "^5.5.1",
     "sonos": "^0.22.2",
