@@ -20,6 +20,7 @@
   "dependencies": {
     "he": "^1.1.1",
     "homebridge-lib": "^1.0.8",
+    "nicercast": "0.1.0",
     "request": "^2.88.0",
     "semver": "^5.5.1",
     "sonos": "^0.22.2",
