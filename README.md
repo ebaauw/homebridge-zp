@@ -12,7 +12,8 @@ This [homebridge](https://github.com/nfarina/homebridge) plugin exposes [Sonos](
 - Optional control from HomeKit of volume, mute, bass, treble, and loudness per Sonos zone;
 - Optional control from HomeKit for Sonos zones leaving Sonos groups, and for Sonos zones creating/joining one Sonos group;
 - Real-time monitoring from HomeKit of play/pause state, volume, mute, current track, and coordinator per Sonos Group; and, optionally, of volume, mute, bass, treble, loudness per Sonos zone.  Like the Sonos app, homebridge-zp subscribes to ZonePlayer events to receive notifications;
-- Optional control from HomeKit for the status LED.  Note that Sonos doesn't support events for the status LED, so homebridge-zp cannot provide real-time monitoring for this.
+- Optional control from HomeKit for the status LED.  Note that Sonos doesn't support events for the status LED, so homebridge-zp cannot provide real-time monitoring for this;
+- Optionally expose Sonos group coordinators (and standalone zones) as AirTunes speakers.  Latest beta release only, see [release notes](https://github.com/ebaauw/homebridge-zp/releases).
 
 ### Prerequisites
 You need a server to run homebridge.  This can be anything running [Node.js](https://nodejs.org): from a Raspberri Pi, a NAS system, or an always-on PC running Linux, macOS, or Windows.  See the [homebridge Wiki](https://github.com/nfarina/homebridge/wiki) for details.  I use a Mac mini server, and, occasionally, a Raspberri Pi 3 model B.
@@ -68,14 +69,15 @@ The following optional parameters can be added to modify homebridge-zp's behavio
 
 Key | Default | Description
 --- | ------- | -----------
-`speakers` | `false` | Flag whether to expose a second *Speakers* service per zone, in addition to the standard *Sonos* service, see [**Speakers**](#speakers).  You might want to set this if you're using Sonos groups in a configuration of multiple Sonos zones.
-`service` | `"switch"` | Defines what type of service and volume characteristic homebridge-zp uses.  Possible values are: `"switch"` for `Switch` and `Volume`; `"speaker"` for `Speaker` and `Volume`; `"light"` for `LightBulb` and `Brightness`; and `"fan"` for `Fan` and `Rotation Speed`.  Selecting `"light"` or `"fan"` enables changing the Sonos volume from Siri and from Apple's Home app.  Selecting `"speaker"` is not supported by Apple's Home app.
+`alarms` | `false` | Flag whether to expose an additional service per Sonos alarm.
+`airplay` | `false` | _[beta version only]_ Flag whether to expose each group coordinator as AirTunes speaker.
 `brightness` | `false` | Flag whether to expose volume as `Brightness` in combination with `Switch` or `Speaker`.  Setting this flag enables volume control from Siri.
 `leds` | `false` | Flag whether to expose an additional *Lightbulb* service per zone for the status LED.
-`alarms` | `false` | Flag whether to expose an additional service per Sonos alarm.
 `host` | _(discovered)_ | The hostname or IP address for the web server homebridge-zp creates to receive notifications from Sonos ZonePlayers.  This must be the hostname or IP address of the server running homebridge-zp, reachable by the ZonePlayers.  You might need to set this on a multi-homed server, if homebridge-zp binds to the wrong network interface.
 `port` | `0` _(random)_ | The port for the web server homebridge-zp creates to receive notifications from Sonos ZonePlayers.
 `searchTimeout` | `5` | The timeout (in seconds) to wait for a response when searching for Sonos Zoneplayers.
+`service` | `"switch"` | Defines what type of service and volume characteristic homebridge-zp uses.  Possible values are: `"switch"` for `Switch` and `Volume`; `"speaker"` for `Speaker` and `Volume`; `"light"` for `LightBulb` and `Brightness`; and `"fan"` for `Fan` and `Rotation Speed`.  Selecting `"light"` or `"fan"` enables changing the Sonos volume from Siri and from Apple's Home app.  Selecting `"speaker"` is not supported by Apple's Home app.
+`speakers` | `false` | Flag whether to expose a second *Speakers* service per zone, in addition to the standard *Sonos* service, see [**Speakers**](#speakers).  You might want to set this if you're using Sonos groups in a configuration of multiple Sonos zones.
 `subscriptionTimeout` | `30` | The duration (in minutes) of the subscriptions homebridge-zp creates with each ZonePlayer.
 
 Below is an example `config.json` that exposes the *Sonos* and *Speakers* service as a HomeKit `Speaker` and volume as `Brightness`, so it can be controlled from Siri:
