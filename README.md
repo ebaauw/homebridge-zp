@@ -13,7 +13,7 @@ This [homebridge](https://github.com/nfarina/homebridge) plugin exposes [Sonos](
 - Optional control from HomeKit for Sonos zones leaving Sonos groups, and for Sonos zones creating/joining one Sonos group;
 - Real-time monitoring from HomeKit of play/pause state, volume, mute, current track, and coordinator per Sonos Group; and, optionally, of volume, mute, bass, treble, loudness per Sonos zone.  Like the Sonos app, homebridge-zp subscribes to ZonePlayer events to receive notifications;
 - Optional control from HomeKit for the status LED.  Note that Sonos doesn't support events for the status LED, so homebridge-zp cannot provide real-time monitoring for this;
-- Optionally expose Sonos group coordinators (and standalone zones) as AirTunes speakers.  Latest beta release only, see [release notes](https://github.com/ebaauw/homebridge-zp/releases).
+- Optionally expose Sonos zones as AirTunes speakers.  Latest beta release only, see [release notes](https://github.com/ebaauw/homebridge-zp/releases).
 
 ### Prerequisites
 You need a server to run homebridge.  This can be anything running [Node.js](https://nodejs.org): from a Raspberri Pi, a NAS system, or an always-on PC running Linux, macOS, or Windows.  See the [homebridge Wiki](https://github.com/nfarina/homebridge/wiki) for details.  I use a Mac mini server, and, occasionally, a Raspberri Pi 3 model B.
@@ -70,7 +70,7 @@ The following optional parameters can be added to modify homebridge-zp's behavio
 Key | Default | Description
 --- | ------- | -----------
 `alarms` | `false` | Flag whether to expose an additional service per Sonos alarm.
-`airplay` | `false` | _[beta version only]_ Flag whether to expose each group coordinator as AirTunes speaker.
+`airtunes` | `false` | _[beta version only]_ Flag whether to expose each zone as AirTunes speaker.
 `brightness` | `false` | Flag whether to expose volume as `Brightness` in combination with `Switch` or `Speaker`.  Setting this flag enables volume control from Siri.
 `leds` | `false` | Flag whether to expose an additional *Lightbulb* service per zone for the status LED.
 `host` | _(discovered)_ | The hostname or IP address for the web server homebridge-zp creates to receive notifications from Sonos ZonePlayers.  This must be the hostname or IP address of the server running homebridge-zp, reachable by the ZonePlayers.  You might need to set this on a multi-homed server, if homebridge-zp binds to the wrong network interface.
