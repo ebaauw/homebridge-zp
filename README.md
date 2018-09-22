@@ -69,8 +69,8 @@ The following optional parameters can be added to modify homebridge-zp's behavio
 
 Key | Default | Description
 --- | ------- | -----------
-`alarms` | `false` | Flag whether to expose an additional service per Sonos alarm.
 `airtunes` | `false` | _[beta version only]_ Flag whether to expose each zone as AirTunes speaker.
+`alarms` | `false` | Flag whether to expose an additional service per Sonos alarm.
 `brightness` | `false` | Flag whether to expose volume as `Brightness` in combination with `Switch` or `Speaker`.  Setting this flag enables volume control from Siri.
 `leds` | `false` | Flag whether to expose an additional *Lightbulb* service per zone for the status LED.
 `host` | _(discovered)_ | The hostname or IP address for the web server homebridge-zp creates to receive notifications from Sonos ZonePlayers.  This must be the hostname or IP address of the server running homebridge-zp, reachable by the ZonePlayers.  You might need to set this on a multi-homed server, if homebridge-zp binds to the wrong network interface.
