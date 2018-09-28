@@ -13,7 +13,6 @@ This [homebridge](https://github.com/nfarina/homebridge) plugin exposes [Sonos](
 - Optional control from HomeKit for Sonos zones leaving Sonos groups, and for Sonos zones creating/joining one Sonos group;
 - Real-time monitoring from HomeKit of play/pause state, volume, mute, current track, and coordinator per Sonos Group; and, optionally, of volume, mute, bass, treble, loudness per Sonos zone.  Like the Sonos app, homebridge-zp subscribes to ZonePlayer events to receive notifications;
 - Optional control from HomeKit for the status LED.  Note that Sonos doesn't support events for the status LED, so homebridge-zp cannot provide real-time monitoring for this;
-- Optionally expose Sonos group coordinators (including standalone zones) as AirTunes speakers.  Latest beta release only, see [release notes](https://github.com/ebaauw/homebridge-zp/releases).
 
 ### Prerequisites
 You need a server to run homebridge.  This can be anything running [Node.js](https://nodejs.org): from a Raspberri Pi, a NAS system, or an always-on PC running Linux, macOS, or Windows.  See the [homebridge Wiki](https://github.com/nfarina/homebridge/wiki) for details.  I use a Mac mini server, and, occasionally, a Raspberri Pi 3 model B.
@@ -43,13 +42,6 @@ Like the *Sonos* service, the type of the *Speakers* service can be changed in `
 Note that `Bass`, `Treble`, and `Loudness` are custom characteristics.  They might not be supported by all HomeKit apps, see **Caveats** below.
 
 When grouping zones from the Sonos app, homebridge-zp sets the *Speakers* `On` characteristic for a zone in a multi-zone group and clears it for a zone in a standalone group.  When setting the *Speakers* `On` from HomeKit, that zone will join the (first) existing multi-zone Sonos group.  When no multi-zone Sonos group yet exists, the zone is designated as coordinator for a future multi-zone group.  When `On` is cleared from HomeKit, the zone leaves its current group, forming a standalone group.  Note that when the coordinator leaves the group, the music to the other zones in that group is briefly interrupted, as the new coordinator assumes its role.
-
-### AirTunes
-The latest beta version of homebridge-zp includes a port of [Airsonos](https://github.com/stephen/airsonos), see the [release notes](https://github.com/ebaauw/homebridge-zp/releases).  By specifying `"airtunes": true` in config.json, homebridge-zp creates an AirTunes speaker for each non-member zone (standalone zones and group coordinators).  The AirTunes speaker disappears when a zone joins a group as member, and re-appears when the zone leaves or inherits the group.  Behind each AirTunes speaker is a local Internet radio station, that re-broadcasts the music sent to the speaker.
-
-When an iOS or macOS app or iTunes plays to the AirTunes speaker, homebridge-zp switches the zone to the corresponding _AirTunes_ radio station.  The zone (group) volume can be controlled from the AirTunes client, and the Sonos app and HomeKit show the track information of the music being played.
-
-Note that ZonePlayers buffer radio station broadcasts, causing a few seconds delay between the AirTunes client and the actual sound.
 
 ### Installation
 The homebridge-zp plugin obviously needs homebridge, which, in turn needs Node.js.  I've followed these steps to set it up on my macOS server:
