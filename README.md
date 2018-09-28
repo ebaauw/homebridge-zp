@@ -97,18 +97,16 @@ The homebridge-zp plugin outputs an info message for each HomeKit characteristic
 
 The homebridge-zp plugin creates a web server to receive events from the Sonos ZonePlayers.  The IP address and port number for this listener are logged in a debug message, e.g.
 ```
-[2017-12-29 10:56:38] [ZP] listening on http://192.168.xxx.xxx:xxxxx/notify
+[2018-9-28 12:36:02] [ZP] listening on http://192.168.xxx.xxx:xxxxx/notify
 ```
 To check whether the listener is reachable from the network, open this URL in your web browser.  You should get a reply like:
 ```
-homebridge-zp v0.2.11, node v8.9.3, homebridge v0.4.33
+homebridge-zp v0.2.34, node v8.12.0, homebridge v0.4.45
 ```
 For each zone, the homebridge-zp plugin logs a debug message with the zone name and the type, ID and IP address and port of the corresponding ZonePlayer, e.g.
 ```
-[2017-12-29 10:56:38] [ZP] Living Room: setup ZPS9 v8.2.2 player RINCON_5CAAFDxxxxxx01400 at 192.168.xxx.xxx:1400
+[2018-9-28 12:35:47] [ZP] Living Room: setup ZPS9 v9.1 player RINCON_5CAAFDxxxxxx01400 at 192.168.76.71:1400
 ```
-To check whether the ZonePlayer has accepted the subscriptions to send notification events to homebridge-zp, open `http://192.168.xxx.xxx:1400/status` in your web browser to see the ZonePlayer diagnostics.  Select `upnp` and then select `Incoming subscriptions` (**Note:** this menu option no longer seems to be available on later Sonos firmware versions).  Next to the subscriptions from other ZonePlayers and from Sonos apps, you should find the subscriptions from homebridge-zp.  Note that these subscriptions remain active after homebridge has exited (see [issue #5](https://github.com/ebaauw/homebridge-zp/issues/5)), until they timeout, (by default) 30 minutes after they were created or last renewed.
-
 If you need help, please open an issue on [GitHub](https://github.com/ebaauw/homebridge-zp/issues).  Please attach a copy of your full `config.json` (masking any sensitive info) and the debug logfile.  
 For questions, you can also post a message to the **#homebridge-zp** channel of the [homebridge workspace on Slack](https://github.com/nfarina/homebridge#community).
 
