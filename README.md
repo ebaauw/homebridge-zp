@@ -95,7 +95,12 @@ If you run into issues, please run homebridge with only the homebridge-zp plugin
 
 The homebridge-zp plugin outputs an info message for each HomeKit characteristic value it sets and for each HomeKit characteristic value change notification it receives.  When homebridge is started with `-D`, homebridge-zp outputs a debug message for each request it makes to a Sonos ZonePlayer and for each ZonePlayer notification event it receives.  To capture these messages into a logfile, start homebridge as `homebridge -D > logfile 2>&1`.
 
-The homebridge-zp plugin creates a web server to receive events from the Sonos ZonePlayers.  The IP address and port number for this listener are logged in a debug message, e.g.
+For each zone found, the homebridge-zp plugin logs a debug message with the zone name and the type, ID and IP address and port of the corresponding ZonePlayer, e.g.
+```
+[2018-9-28 12:35:47] [ZP] Living Room: setup ZPS9 v9.1 player RINCON_5CAAFDxxxxxx01400 at 192.168.76.71:1400
+```
+
+Like the Sonos app, homebridge-zp subscribes to the ZonePlayer events to be notified in real-time of changes.  It creates a web server to receive these notifications.  The IP address and port number for this listener are logged in a debug message, e.g.
 ```
 [2018-9-28 12:36:02] [ZP] listening on http://192.168.xxx.xxx:xxxxx/notify
 ```
@@ -103,10 +108,25 @@ To check whether the listener is reachable from the network, open this URL in yo
 ```
 homebridge-zp v0.2.34, node v8.12.0, homebridge v0.4.45
 ```
-For each zone, the homebridge-zp plugin logs a debug message with the zone name and the type, ID and IP address and port of the corresponding ZonePlayer, e.g.
+
+To make sure homebridge-zp unsubscribes from the ZonePlayers when homebridge exits, it installs a handler for uncaught exceptions, that would otherwise cause homebridge (or rather NodeJS) to crash.  The handler displays a message and sends the SIGTERM signal to homebridge, so it can exit cleanly.  Note that the uncaught exception is _not_ caused by homebridge-zp, it only handles it.  In the example below, the exception is caused by homebridge itself (it cannot start its server, because another instance of homebridge is already running):
 ```
-[2018-9-28 12:35:47] [ZP] Living Room: setup ZPS9 v9.1 player RINCON_5CAAFDxxxxxx01400 at 192.168.76.71:1400
+[2018-9-28 12:51:42] [ZP] uncaught exception
+Error: listen EADDRINUSE :::51826
+    at Server.setupListenHandle [as _listen2] (net.js:1360:14)
+    at listenInCluster (net.js:1401:12)
+    at Server.listen (net.js:1485:7)
+    at EventedHTTPServer.listen (/usr/local/lib/node_modules/homebridge/node_modules/hap-nodejs/lib/util/eventedhttp.js:60:19)
+    at HAPServer.listen (/usr/local/lib/node_modules/homebridge/node_modules/hap-nodejs/lib/HAPServer.js:158:20)
+    at Bridge.Accessory.publish (/usr/local/lib/node_modules/homebridge/node_modules/hap-nodejs/lib/Accessory.js:607:16)
+    at Server._publish (/usr/local/lib/node_modules/homebridge/lib/server.js:128:16)
+    at Server.<anonymous> (/usr/local/lib/node_modules/homebridge/lib/server.js:404:14)
+    at /usr/local/lib/node_modules/homebridge/node_modules/hap-nodejs/lib/util/once.js:16:19
+    at listen (/Users/ebaauw/GitHub/homebridge-zp/lib/ZpPlatform.js:183:14)
+[2018-9-28 12:51:42] Got SIGTERM, shutting down Homebridge...
+[2018-9-28 12:51:42] [ZP] cleaning up...
 ```
+
 If you need help, please open an issue on [GitHub](https://github.com/ebaauw/homebridge-zp/issues).  Please attach a copy of your full `config.json` (masking any sensitive info) and the debug logfile.  
 For questions, you can also post a message to the **#homebridge-zp** channel of the [homebridge workspace on Slack](https://github.com/nfarina/homebridge#community).
 
