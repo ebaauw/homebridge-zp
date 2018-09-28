@@ -68,7 +68,6 @@ The following optional parameters can be added to modify homebridge-zp's behavio
 
 Key | Default | Description
 --- | ------- | -----------
-`airtunes` | `false` | _[beta version only]_ Flag whether to expose each non-member zone as AirTunes speaker.
 `alarms` | `false` | Flag whether to expose an additional service per Sonos alarm.
 `brightness` | `false` | Flag whether to expose volume as `Brightness` in combination with `Switch` or `Speaker`.  Setting this flag enables volume control from Siri.
 `leds` | `false` | Flag whether to expose an additional *Lightbulb* service per zone for the status LED.
