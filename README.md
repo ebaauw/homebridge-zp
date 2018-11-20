@@ -77,6 +77,7 @@ Key | Default | Description
 `service` | `"switch"` | Defines what type of service and volume characteristic homebridge-zp uses.  Possible values are: `"switch"` for `Switch` and `Volume`; `"speaker"` for `Speaker` and `Volume`; `"light"` for `LightBulb` and `Brightness`; and `"fan"` for `Fan` and `Rotation Speed`.  Selecting `"light"` or `"fan"` enables changing the Sonos volume from Siri and from Apple's Home app.  Selecting `"speaker"` is not supported by Apple's Home app.
 `speakers` | `false` | Flag whether to expose a second *Speakers* service per zone, in addition to the standard *Sonos* service, see [**Speakers**](#speakers).  You might want to set this if you're using Sonos groups in a configuration of multiple Sonos zones.
 `subscriptionTimeout` | `30` | The duration (in minutes) of the subscriptions homebridge-zp creates with each ZonePlayer.
+`nameScheme` | `"% Sonos"` | The name scheme for ZonePlayers; `%` is replaced with the player name. Example: With the default name scheme, the player `Kitchen` is shown as `Kitchen Sonos` in Homekit.
 
 Below is an example `config.json` that exposes the *Sonos* and *Speakers* service as a HomeKit `Speaker` and volume as `Brightness`, so it can be controlled from Siri:
 ```json
