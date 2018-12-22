@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "he": "~1.2.0",
-    "homebridge-lib": "~2.0.0",
+    "homebridge-lib": "~3.1.2",
     "request": "~2.88.0",
     "semver": "~5.6.0",
     "sonos": "~0.22.2",
