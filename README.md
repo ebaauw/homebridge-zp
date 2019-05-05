@@ -3,7 +3,7 @@
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 ## Homebridge plugin for Sonos ZonePlayer
-Copyright © 2016-2018 Erik Baauw. All rights reserved.
+Copyright © 2016-2019 Erik Baauw. All rights reserved.
 
 This [homebridge](https://github.com/nfarina/homebridge) plugin exposes [Sonos](http://www.sonos.com) ZonePlayers to Apple's [HomeKit](http://www.apple.com/ios/home/).  It provides the following features:
 - Automatic discovery of Sonos zones, taking into account stereo pairs and home theatre setup;
@@ -17,12 +17,12 @@ This [homebridge](https://github.com/nfarina/homebridge) plugin exposes [Sonos](
 ### Prerequisites
 You need a server to run homebridge.  This can be anything running [Node.js](https://nodejs.org): from a Raspberri Pi, a NAS system, or an always-on PC running Linux, macOS, or Windows.  See the [homebridge Wiki](https://github.com/nfarina/homebridge/wiki) for details.  I use a Mac mini server, and, occasionally, a Raspberri Pi 3 model B.
 
-To interact with HomeKit, you need Siri or a HomeKit app on an iPhone, Apple Watch, iPad, iPod Touch, or Apple TV (4th generation or later).  I recommend to use the latest released versions of iOS, watchOS, and tvOS.  
-Please note that Siri and even Apple's [Home](https://support.apple.com/en-us/HT204893) app still provide only limited HomeKit support.  To use the full features of homebridge-zp, you might want to check out some other HomeKit apps, like Elgato's [Eve](https://www.elgato.com/en/eve/eve-app) app (free) or Matthias Hochgatterer's [Home](http://selfcoded.com/home/) app (paid).  
+To interact with HomeKit, you need Siri or a HomeKit app on an iPhone, Apple Watch, iPad, iPod Touch, or Apple TV (4th generation or later).  I recommend to use the latest released versions of iOS, watchOS, and tvOS.
+Please note that Siri and even Apple's [Home](https://support.apple.com/en-us/HT204893) app still provide only limited HomeKit support.  To use the full features of homebridge-zp, you might want to check out some other HomeKit apps, like Elgato's [Eve](https://www.elgato.com/en/eve/eve-app) app (free) or Matthias Hochgatterer's [Home](http://selfcoded.com/home/) app (paid).
 For HomeKit automation, you need to setup an Apple TV (4th generation or later) or iPad as [Home Hub](https://support.apple.com/en-us/HT207057).
 
 ### Zones
-The homebridge-zp plugin creates an accessory per Sonos zone, named after the zone, e.g. *Living Room Sonos* for the *Living Room* zone.  By default, this accessory contains a single `Switch` service, with the same name as the accessory.  In addition to the standard `Power State` characteristic for play/pause control, additional characteristics are provided for `Volume`, `Mute`, `Current Track` (read-only) and `Sonos Group` (read-only). Note that `Current Track` and `Sonos Group` are custom characteristics.  They might not be supported by all HomeKit apps, see [**Caveats**](#caveats).  
+The homebridge-zp plugin creates an accessory per Sonos zone, named after the zone, e.g. *Living Room Sonos* for the *Living Room* zone.  By default, this accessory contains a single `Switch` service, with the same name as the accessory.  In addition to the standard `Power State` characteristic for play/pause control, additional characteristics are provided for `Volume`, `Mute`, `Current Track` (read-only) and `Sonos Group` (read-only). Note that `Current Track` and `Sonos Group` are custom characteristics.  They might not be supported by all HomeKit apps, see [**Caveats**](#caveats).
 
 Note that neither Siri nor the Apple's Home app support `Volume` or `Mute`, even thought these are standard HomeKit characteristics.  Because of this, the type of the service, as well as the type of characteristic used for volume can be changed from `config.json`, see [**Configuration**](#configuration) and [issue #10](https://github.com/ebaauw/homebridge-zp/issues/10).
 
@@ -49,7 +49,7 @@ The homebridge-zp plugin obviously needs homebridge, which, in turn needs Node.j
 - Install the latest v10 LTS version of Node.js.  On a Raspberry Pi, use the 10.x [Debian package](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions). On other platforms, download the [10.x.x LTS](https://nodejs.org) installer.  Both installations include the `npm` package manager;
 - On macOS, make sure `/usr/local/bin` is in your `$PATH`, as `node`, `npm`, and, later, `homebridge` install there.  On a Raspberry Pi, these install to `/usr/bin`;
 - You might want to update `npm` through `sudo npm -g update npm@latest`;
-- Install homebridge through `sudo npm -g install homebridge --unsafe-perm`.  Follow the instructions on [GitHub](https://github.com/nfarina/homebridge#installation) to create a `config.json` in `~/.homebridge`, as described;
+- Install homebridge through `sudo npm -g install homebridge`.  Follow the instructions on [GitHub](https://github.com/nfarina/homebridge#installation) to create a `config.json` in `~/.homebridge`, as described;
 - Install the homebridge-zp plugin through `sudo npm -g install homebridge-zp`;
 - Edit `~/.homebridge/config.json` and add the `ZP` platform provided by homebridge-zp, see [**Configuration**](#configuration).
 
@@ -69,7 +69,7 @@ The following optional parameters can be added to modify homebridge-zp's behavio
 Key | Default | Description
 --- | ------- | -----------
 `alarms` | `false` | Flag whether to expose an additional service per Sonos alarm.
-`brightness` | `false` | Flag whether to expose volume as `Brightness` in combination with `Switch` or `Speaker`.  Setting this flag enables volume control from Siri.
+`brightness` | `false` | Flag whether to expose volume as `Brightness` when `service` is `"switch"` or `"speaker"`.  Setting this flag enables volume control from Siri, but not from Apple's Home app.
 `leds` | `false` | Flag whether to expose an additional *Lightbulb* service per zone for the status LED.
 `host` | _(discovered)_ | The hostname or IP address for the web server homebridge-zp creates to receive notifications from Sonos ZonePlayers.  This must be the hostname or IP address of the server running homebridge-zp, reachable by the ZonePlayers.  You might need to set this on a multi-homed server, if homebridge-zp binds to the wrong network interface.
 `port` | `0` _(random)_ | The port for the web server homebridge-zp creates to receive notifications from Sonos ZonePlayers.
@@ -77,7 +77,7 @@ Key | Default | Description
 `service` | `"switch"` | Defines what type of service and volume characteristic homebridge-zp uses.  Possible values are: `"switch"` for `Switch` and `Volume`; `"speaker"` for `Speaker` and `Volume`; `"light"` for `LightBulb` and `Brightness`; and `"fan"` for `Fan` and `Rotation Speed`.  Selecting `"light"` or `"fan"` enables changing the Sonos volume from Siri and from Apple's Home app.  Selecting `"speaker"` is not supported by Apple's Home app.
 `speakers` | `false` | Flag whether to expose a second *Speakers* service per zone, in addition to the standard *Sonos* service, see [**Speakers**](#speakers).  You might want to set this if you're using Sonos groups in a configuration of multiple Sonos zones.
 `subscriptionTimeout` | `30` | The duration (in minutes) of the subscriptions homebridge-zp creates with each ZonePlayer.
-`nameScheme` | `"% Sonos"` | The name scheme for ZonePlayers; `%` is replaced with the player name. Example: With the default name scheme, the player `Kitchen` is shown as `Kitchen Sonos` in Homekit.
+`nameScheme` | `"% Sonos"` | The name scheme for the HomeKit accessories.  `%` is replaced with the player name.  E.g. with the default name scheme, the accessory for the `Kitchen` zone is set to `Kitchen Sonos`.  Note that this does _not_ change the names of the HomeKit services, used by Siri.
 
 Below is an example `config.json` that exposes the *Sonos* and *Speakers* service as a HomeKit `Speaker` and volume as `Brightness`, so it can be controlled from Siri:
 ```json
@@ -107,28 +107,10 @@ Like the Sonos app, homebridge-zp subscribes to the ZonePlayer events to be noti
 ```
 To check whether the listener is reachable from the network, open this URL in your web browser.  You should get a reply like:
 ```
-homebridge-zp v0.2.34, node v8.12.0, homebridge v0.4.45
+homebridge-zp v0.3.16, node v10.15.3, homebridge v0.4.49
 ```
 
-To make sure homebridge-zp unsubscribes from the ZonePlayers when homebridge exits, it installs a handler for uncaught exceptions, that would otherwise cause homebridge (or rather NodeJS) to crash.  The handler displays a message and sends the SIGTERM signal to homebridge, so it can exit cleanly.  Note that the uncaught exception is _not_ caused by homebridge-zp, it only handles it.  In the example below, the exception is caused by homebridge itself (it cannot start its server, because another instance of homebridge is already running):
-```
-[2018-9-28 12:51:42] [ZP] uncaught exception
-Error: listen EADDRINUSE :::51826
-    at Server.setupListenHandle [as _listen2] (net.js:1360:14)
-    at listenInCluster (net.js:1401:12)
-    at Server.listen (net.js:1485:7)
-    at EventedHTTPServer.listen (/usr/local/lib/node_modules/homebridge/node_modules/hap-nodejs/lib/util/eventedhttp.js:60:19)
-    at HAPServer.listen (/usr/local/lib/node_modules/homebridge/node_modules/hap-nodejs/lib/HAPServer.js:158:20)
-    at Bridge.Accessory.publish (/usr/local/lib/node_modules/homebridge/node_modules/hap-nodejs/lib/Accessory.js:607:16)
-    at Server._publish (/usr/local/lib/node_modules/homebridge/lib/server.js:128:16)
-    at Server.<anonymous> (/usr/local/lib/node_modules/homebridge/lib/server.js:404:14)
-    at /usr/local/lib/node_modules/homebridge/node_modules/hap-nodejs/lib/util/once.js:16:19
-    at listen (/Users/ebaauw/GitHub/homebridge-zp/lib/ZpPlatform.js:183:14)
-[2018-9-28 12:51:42] Got SIGTERM, shutting down Homebridge...
-[2018-9-28 12:51:42] [ZP] cleaning up...
-```
-
-If you need help, please open an issue on [GitHub](https://github.com/ebaauw/homebridge-zp/issues).  Please attach a copy of your full `config.json` (masking any sensitive info) and the debug logfile.  
+If you need help, please open an issue on [GitHub](https://github.com/ebaauw/homebridge-zp/issues).  Please attach a copy of your full `config.json` (masking any sensitive info) and the debug logfile.
 For questions, you can also post a message to the **#homebridge-zp** channel of the [homebridge workspace on Slack](https://github.com/nfarina/homebridge#community).
 
 ### Caveats
