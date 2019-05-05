@@ -107,25 +107,7 @@ Like the Sonos app, homebridge-zp subscribes to the ZonePlayer events to be noti
 ```
 To check whether the listener is reachable from the network, open this URL in your web browser.  You should get a reply like:
 ```
-homebridge-zp v0.2.34, node v8.12.0, homebridge v0.4.45
-```
-
-To make sure homebridge-zp unsubscribes from the ZonePlayers when homebridge exits, it installs a handler for uncaught exceptions, that would otherwise cause homebridge (or rather NodeJS) to crash.  The handler displays a message and sends the SIGTERM signal to homebridge, so it can exit cleanly.  Note that the uncaught exception is _not_ caused by homebridge-zp, it only handles it.  In the example below, the exception is caused by homebridge itself (it cannot start its server, because another instance of homebridge is already running):
-```
-[2018-9-28 12:51:42] [ZP] uncaught exception
-Error: listen EADDRINUSE :::51826
-    at Server.setupListenHandle [as _listen2] (net.js:1360:14)
-    at listenInCluster (net.js:1401:12)
-    at Server.listen (net.js:1485:7)
-    at EventedHTTPServer.listen (/usr/local/lib/node_modules/homebridge/node_modules/hap-nodejs/lib/util/eventedhttp.js:60:19)
-    at HAPServer.listen (/usr/local/lib/node_modules/homebridge/node_modules/hap-nodejs/lib/HAPServer.js:158:20)
-    at Bridge.Accessory.publish (/usr/local/lib/node_modules/homebridge/node_modules/hap-nodejs/lib/Accessory.js:607:16)
-    at Server._publish (/usr/local/lib/node_modules/homebridge/lib/server.js:128:16)
-    at Server.<anonymous> (/usr/local/lib/node_modules/homebridge/lib/server.js:404:14)
-    at /usr/local/lib/node_modules/homebridge/node_modules/hap-nodejs/lib/util/once.js:16:19
-    at listen (/Users/ebaauw/GitHub/homebridge-zp/lib/ZpPlatform.js:183:14)
-[2018-9-28 12:51:42] Got SIGTERM, shutting down Homebridge...
-[2018-9-28 12:51:42] [ZP] cleaning up...
+homebridge-zp v0.3.16, node v10.15.3, homebridge v0.4.49
 ```
 
 If you need help, please open an issue on [GitHub](https://github.com/ebaauw/homebridge-zp/issues).  Please attach a copy of your full `config.json` (masking any sensitive info) and the debug logfile.
