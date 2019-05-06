@@ -1,0 +1,131 @@
+{
+  "pluginAlias": "ZP",
+  "pluginType": "platform",
+  "headerDisplay": "Homebridge plugin for Sonos ZonePlayer",
+  "footerDisplay": "",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+	"description": "Plugin name as displayed in the homebridge log.",
+        "type": "string",
+        "required": true,
+        "default": "Sonos"
+      },
+      "speakers": {
+	"description": "Create an additional Speaker service.",
+	"type": "boolean"
+      },
+      "alarms": {
+	"description": "Create an additional Switch service for each alarm.",
+	"type": "boolean"
+      },
+      "leds": {
+        "title": "LEDs",
+	"description": "Create an additional Lightbulb service for the LED.",
+	"type": "boolean"
+      },
+      "service": {
+	"description": "HomeKit service for ZonePlayer.",
+	"type": "string",
+	"required": true,
+	"default": "switch",
+	"oneOf": [
+	  {
+	    "title": "Switch",
+	    "enum": [ "switch" ]
+	  },
+	  {
+	    "title": "Lightbulb",
+	    "enum": [ "light" ]
+	  },
+	  {
+	    "title": "Speaker",
+	    "enum": [ "speaker" ]
+	  },
+	  {
+	    "title": "Fan",
+	    "enum": [ "fan" ]
+	  }
+	]
+      },
+      "brightness": {
+	"description": "Expose volume as Brightness.",
+	"type": "boolean"
+      },
+      "tv": {
+	"title": "TV",
+        "description": "Expose ZonePlayer as TV.",
+      	"type": "boolean"
+      },
+      "nameScheme": {
+	"description": "Accessory name (use '%' for Zone name).  Default: '% Sonos'.",
+	"type": "string"
+      },
+      "resetTimeout": {
+        "description": "Timeout (in milliseconds) to reset input.  Default: 500.",
+	"type": "integer"
+      },
+      "searchTimeout": {
+        "description": "Timeout (in seconds) when searching for ZonePlayers on startup.  Default: 15.",
+	"type": "integer"
+      },
+      "subscriptionTimeout": {
+        "description": "Duration (in minutes) of subscriptions to ZonePlayer notifications.  Default: 30.",
+	"type": "integer"
+      },
+      "host": {
+	"description": "IPv4 address to use for webserver receiving ZonePlayer notifications.  Default: automatically discovered.",
+        "type": "string",
+	"format": "ipv4"
+      },
+      "port": {
+	"description": "Port to use for webserver receiving ZonePlayer notifications.  Default: random.",
+        "type": "integer",
+	"maximum": 65535
+      }
+    }
+  },
+  "form": [
+    "name",
+    {
+      "type": "fieldset",
+      "expandable": true,
+      "title": "What",
+      "description": "Select what to expose to HomeKit for each ZonePlayer.",
+      "items": [
+        "speakers",
+	"alarms",
+	"leds"
+      ]
+    },
+    {
+      "type": "fieldset",
+      "expandable": true,
+      "title": "How",
+      "description": "Select how to expose a ZonePlayer to HomeKit.",
+      "items": [
+        "service",
+	{
+	  "key": "brightness",
+	  "condition": { "functionBody": "return model.service === 'switch' || model.service === 'speaker'" }
+	},
+	"tv",
+	"nameScheme"
+      ]
+    },
+    {
+      "type": "fieldset",
+      "expandable": true,
+      "title": "Advanced Settings",
+      "description": "Don't change these, unless you understand what you're doing.",
+      "items": [
+        "resetTimeout",
+	"searchTimeout",
+	"subscriptionTimeout",
+	"host",
+	"port"
+      ]
+    }
+  ]
+}
