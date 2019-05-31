@@ -26,6 +26,11 @@
         "description": "Create an additional Lightbulb service for the LED.",
         "type": "boolean"
       },
+      "excludeAirPlay": {
+        "title": "Exclude AirPlay 2",
+        "description": "Exclude AirPlay 2 zoneplayers that are already exposed to Apple's Home app.",
+        "type": "boolean"
+      },
       "service": {
         "description": "HomeKit service for ZonePlayer.",
         "type": "string",
@@ -97,7 +102,8 @@
       "items": [
         "speakers",
         "alarms",
-        "leds"
+        "leds",
+        "excludeAirPlay"
       ]
     },
     {
