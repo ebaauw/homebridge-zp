@@ -30,7 +30,7 @@ Parameters:
   Print version and exit.
 
   ${b('-d')}, ${b('--daemon')}
-  Run as daemon.  Log ZonePlayer events on stdout.
+  Run as daemon.  Log ZonePlayer events.
 
   ${b('-n')}, ${b('--noWhiteSpace')}
   Do not include spaces nor newlines in JSON output.
@@ -39,7 +39,7 @@ Parameters:
   Include service control point definitions in device description.
 
   ${b('-s')}, ${b('--service')}
-  Run as service.  Log ZonePlayer events to stdout, without timestamps.
+  Run as service.  Log ZonePlayer events, without timestamps.
 
   ${b('-t')} ${u('timeout')}, ${b('--timeout=')}${u('timeout')}
   Wait for ${u('timeout')} seconds instead of default ${b('15')}.
