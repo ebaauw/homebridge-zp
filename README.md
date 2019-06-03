@@ -43,6 +43,9 @@ Note that `Bass`, `Treble`, and `Loudness` are custom characteristics.  They mig
 
 When grouping zones from the Sonos app, homebridge-zp sets the *Speakers* `On` characteristic for a zone in a multi-zone group and clears it for a zone in a standalone group.  When setting the *Speakers* `On` from HomeKit, that zone will join the (first) existing multi-zone Sonos group.  When no multi-zone Sonos group yet exists, the zone is designated as coordinator for a future multi-zone group.  When `On` is cleared from HomeKit, the zone leaves its current group, forming a standalone group.  Note that when the coordinator leaves the group, the music to the other zones in that group is briefly interrupted, as the new coordinator assumes its role.
 
+### Command-Line Tool
+The `homebridge-zp` plugin comes with a command-line tool, `zpinfo`, for retrieving information from a Sonos ZonePlayer.  It takes a `-h` or `--help` argument to provide a brief overview of its functionality and command-line arguments.
+
 ### Installation
 The homebridge-zp plugin obviously needs homebridge, which, in turn needs Node.js.  I've followed these steps to set it up on my macOS server:
 
