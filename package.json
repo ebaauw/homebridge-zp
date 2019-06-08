@@ -24,6 +24,7 @@
     "hblib": "~0.0.0"
   },
   "dependencies": {
+    "chalk": "^2.4.2",
     "he": "~1.2.0",
     "request": "~2.88.0",
     "semver": "~6.1.1",
