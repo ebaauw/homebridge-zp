@@ -52,8 +52,8 @@ The homebridge-zp plugin obviously needs homebridge, which, in turn needs Node.j
 - Install the latest v10 LTS version of Node.js.  On a Raspberry Pi, use the 10.x [Debian package](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions). On other platforms, download the [10.x.x LTS](https://nodejs.org) installer.  Both installations include the `npm` package manager;
 - On macOS, make sure `/usr/local/bin` is in your `$PATH`, as `node`, `npm`, and, later, `homebridge` install there.  On a Raspberry Pi, these install to `/usr/bin`;
 - You might want to update `npm` through `sudo npm -g update npm@latest`;
-- Install homebridge through `sudo npm -g install homebridge`.  Follow the instructions on [GitHub](https://github.com/nfarina/homebridge#installation) to create a `config.json` in `~/.homebridge`, as described;
-- Install the homebridge-zp plugin through `sudo npm -g install homebridge-zp`;
+- Install homebridge through `sudo npm -g i homebridge`.  Follow the instructions on [GitHub](https://github.com/nfarina/homebridge#installation) to create a `config.json` in `~/.homebridge`, as described;
+- Install the homebridge-zp plugin through `sudo npm -g i hblib homebridge-zp`;
 - Edit `~/.homebridge/config.json` and add the `ZP` platform provided by homebridge-zp, see [**Configuration**](#configuration).
 
 Once homebridge is up and running with the homebridge-zp plugin, you might want to daemonise it and start it automatically on login or system boot.  See the [homebridge Wiki](https://github.com/nfarina/homebridge/wiki) for more info how to do that on MacOS or on a Raspberri Pi.
