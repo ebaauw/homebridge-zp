@@ -17,14 +17,12 @@
     "zpinfo": "cli/zpinfo.js"
   },
   "engines": {
-    "homebridge": "^0.4.50",
+    "homebridge": "^0.4.49",
     "node": "^10.16.0"
-  },
-  "peerDependencies": {
-    "hblib": "~0.0.0"
   },
   "dependencies": {
     "he": "~1.2.0",
+    "homebridge-lib": "~4.2.5",
     "request": "~2.88.0",
     "semver": "~6.1.1",
     "sonos": "~0.22.2",
