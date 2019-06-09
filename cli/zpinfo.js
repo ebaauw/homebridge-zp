@@ -8,7 +8,7 @@
 'use strict'
 
 const chalk = require('chalk')
-const homebridgeLib = require('hblib')
+const homebridgeLib = require('homebridge-lib')
 const ZpClient = require('../lib/ZpClient')
 const packageJson = require('../package.json')
 
