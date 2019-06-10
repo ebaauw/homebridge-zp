@@ -54,8 +54,9 @@ class Main extends homebridgeLib.CommandLineTool {
     this.usage = usage
     this.options = {
       noWhiteSpace: false,
-      timeout: 15
+      timeout: 5
     }
+    this.clients = []
   }
 
   parseArguments () {
@@ -69,26 +70,19 @@ class Main extends homebridgeLib.CommandLineTool {
     parser.option('t', 'timeout', (value, key) => {
       this.options.timeout = homebridgeLib.OptionParser.toInt(value, 1, 60, true)
     })
-    parser.parameter('ip', (value) => {
-      this.options.ipAddress = value
-    })
+    // parser.parameter('hostname', (value) => { this.options.hostname = value })
+    parser.remaining((value) => { this.options.hostnames = value })
     parser.parse()
-  }
-
-  async services (device) {
-    for (const service of device.serviceList) {
-      service.scpd = await this.zpClient.deviceDescription(service.scpdUrl)
-    }
   }
 
   async shutdown (signal) {
     this.log('Got %s, shutting down', signal)
-    try {
-      if (this.zpClient != null) {
-        await this.zpClient.close()
+    for (const zpClient of this.clients) {
+      try {
+        await zpClient.close()
+      } catch (error) {
+        this.error(error)
       }
-    } catch (error) {
-      this.fatal(error)
     }
     process.exit(0)
   }
@@ -100,13 +94,6 @@ class Main extends homebridgeLib.CommandLineTool {
       const jsonOptions = { noWhiteSpace: this.options.noWhiteSpace }
       const jsonFormatter = new homebridgeLib.JsonFormatter(jsonOptions)
 
-      const zpClientOptions = {
-        ipAddress: this.options.ipAddress,
-        timeout: this.options.timeout
-      }
-      this.zpClient = new ZpClient(zpClientOptions)
-      const description = await this.zpClient.deviceDescription()
-
       if (this.options.mode) {
         this.setOptions({ mode: this.options.mode })
         process.on('SIGINT', () => { this.shutdown('SIGINT') })
@@ -115,23 +102,43 @@ class Main extends homebridgeLib.CommandLineTool {
         this.zpListener.on('listening', (url) => {
           this.log('listening on %s', url)
         })
-        this.zpListener.on('error', (error) => { this.error(error) })
-        this.zpClient.on('error', (error) => { this.error(error) })
-        this.zpClient.on('event', (device, service, event) => {
-          this.log(
-            '%s: %s %s event: %s', this.options.ipAddress,
-            device, service, jsonFormatter.format(event)
-          )
+        this.zpListener.on('close', (url) => {
+          this.log('closed %s', url)
         })
-        await this.zpClient.open(this.zpListener)
-      } else {
-        if (this.options.scdp) {
-          await this.services(description.device)
-          for (const device of description.device.deviceList) {
-            await this.services(device)
-          }
+        this.zpListener.on('error', (error) => { this.error(error) })
+      }
+
+      for (const hostname of this.options.hostnames) {
+        const zpClientOptions = {
+          hostname: hostname,
+          timeout: this.options.timeout
         }
-        this.print(jsonFormatter.format(description))
+        const zpClient = new ZpClient(zpClientOptions)
+        this.clients.push(zpClient)
+        const description = await zpClient.deviceDescription()
+        if (this.options.mode) {
+          zpClient.on('error', (error) => {
+            this.error('%s: %s', zpClient.ip, error)
+          })
+          zpClient.on('event', (device, service, event) => {
+            this.log('%s: %s %s event', zpClient.ip, device, service)
+            // this.log(
+            //   '%s: %s %s event: %s', zpClient.ip,
+            //   device, service, jsonFormatter.format(event)
+            // )
+          })
+          await zpClient.open(this.zpListener)
+        } else {
+          if (this.options.scdp) {
+            const devices = [description.device].concat(description.device.deviceList)
+            for (const device of devices) {
+              for (const service of device.serviceList) {
+                service.scpd = await zpClient.deviceDescription(service.scpdUrl)
+              }
+            }
+          }
+          this.print(jsonFormatter.format(description))
+        }
       }
     } catch (error) {
       this.fatal(error)
