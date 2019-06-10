@@ -10,6 +10,7 @@
 const chalk = require('chalk')
 const homebridgeLib = require('homebridge-lib')
 const ZpClient = require('../lib/ZpClient')
+const ZpListener = require('../lib/ZpListener')
 const packageJson = require('../package.json')
 
 const b = chalk.bold
@@ -110,16 +111,19 @@ class Main extends homebridgeLib.CommandLineTool {
         this.setOptions({ mode: this.options.mode })
         process.on('SIGINT', () => { this.shutdown('SIGINT') })
         process.on('SIGTERM', () => { this.shutdown('SIGTERM') })
-        this.zpClient.on('error', (error) => {
-          this.error(error)
+        this.zpListener = new ZpListener()
+        this.zpListener.on('listening', (url) => {
+          this.log('listening on %s', url)
         })
+        this.zpListener.on('error', (error) => { this.error(error) })
+        this.zpClient.on('error', (error) => { this.error(error) })
         this.zpClient.on('event', (device, service, event) => {
           this.log(
             '%s: %s %s event: %s', this.options.ipAddress,
             device, service, jsonFormatter.format(event)
           )
         })
-        await this.zpClient.open()
+        await this.zpClient.open(this.zpListener)
       } else {
         if (this.options.scdp) {
           await this.services(description.device)
