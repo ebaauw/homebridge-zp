@@ -110,17 +110,14 @@ class Main extends homebridgeLib.CommandLineTool {
         this.setOptions({ mode: this.options.mode })
         process.on('SIGINT', () => { this.shutdown('SIGINT') })
         process.on('SIGTERM', () => { this.shutdown('SIGTERM') })
-        this.zpClient.on('AVTransPortEvent', (event) => {
-          this.log('DevicePropertiesEvent: %s', jsonFormatter.format(event))
+        this.zpClient.on('error', (error) => {
+          this.error(error)
         })
-        this.zpClient.on('DevicePropertiesEvent', (event) => {
-          this.log('DevicePropertiesEvent: %s', jsonFormatter.format(event))
-        })
-        this.zpClient.on('SystemPropertiesEvent', (event) => {
-          this.log('SystemPropertiesEvent: %s', jsonFormatter.format(event))
-        })
-        this.zpClient.on('ZoneGroupTopologyEvent', (event) => {
-          this.log('ZoneGroupTopologyEvent: %s', jsonFormatter.format(event))
+        this.zpClient.on('event', (device, service, event) => {
+          this.log(
+            '%s: %s %s event: %s', this.options.ipAddress,
+            device, service, jsonFormatter.format(event)
+          )
         })
         await this.zpClient.open()
       } else {
