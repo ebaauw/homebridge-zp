@@ -121,11 +121,11 @@ class Main extends homebridgeLib.CommandLineTool {
             this.error('%s: %s', zpClient.ip, error)
           })
           zpClient.on('event', (device, service, event) => {
-            this.log('%s: %s %s event', zpClient.ip, device, service)
-            // this.log(
-            //   '%s: %s %s event: %s', zpClient.ip,
-            //   device, service, jsonFormatter.format(event)
-            // )
+            // this.log('%s: %s %s event', zpClient.ip, device, service)
+            this.log(
+              '%s: %s %s event: %s', zpClient.ip,
+              device, service, jsonFormatter.format(event)
+            )
           })
           await zpClient.open(this.zpListener)
         } else {
@@ -138,6 +138,9 @@ class Main extends homebridgeLib.CommandLineTool {
             }
           }
           this.print(jsonFormatter.format(description))
+          // this.print('alarms: %s', jsonFormatter.format(await zpClient.listAlarms()))
+          // this.print('volume: %s', jsonFormatter.format(await zpClient.getVolume()))
+          // this.print('balance: %s', jsonFormatter.format(await zpClient.getBalance()))
         }
       }
     } catch (error) {
