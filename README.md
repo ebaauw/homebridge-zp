@@ -86,11 +86,12 @@ Key | Default | Description
 `leds` | `false` | Flag whether to expose an additional *Lightbulb* service per zone for the status LED.
 `host` | _(discovered)_ | The hostname or IP address for the web server homebridge-zp creates to receive notifications from Sonos ZonePlayers.  This must be the hostname or IP address of the server running homebridge-zp, reachable by the ZonePlayers.  You might need to set this on a multi-homed server, if homebridge-zp binds to the wrong network interface.
 `port` | `0` _(random)_ | The port for the web server homebridge-zp creates to receive notifications from Sonos ZonePlayers.
+`nameScheme` | `"% Sonos"` | The name scheme for the HomeKit accessories.  `%` is replaced with the player name.  E.g. with the default name scheme, the accessory for the `Kitchen` zone is set to `Kitchen Sonos`.  Note that this does _not_ change the names of the HomeKit services, used by Siri.
 `searchTimeout` | `15` | The timeout (in seconds) to wait for a response when searching for Sonos Zoneplayers.
 `service` | `"switch"` | Defines what type of service and volume characteristic homebridge-zp uses.  Possible values are: `"switch"` for `Switch` and `Volume`; `"speaker"` for `Speaker` and `Volume`; `"light"` for `LightBulb` and `Brightness`; and `"fan"` for `Fan` and `Rotation Speed`.  Selecting `"light"` or `"fan"` enables changing the Sonos volume from Siri and from Apple's Home app.  Selecting `"speaker"` is not supported by Apple's Home app.
 `speakers` | `false` | Flag whether to expose a second *Speakers* service per zone, in addition to the standard *Sonos* service, see [**Speakers**](#speakers).  You might want to set this if you're using Sonos groups in a configuration of multiple Sonos zones.
+`timeout` | `15` | The timeout (in seconds) to wait for a response from a Sonos ZonePlayer.
 `subscriptionTimeout` | `30` | The duration (in minutes) of the subscriptions homebridge-zp creates with each ZonePlayer.
-`nameScheme` | `"% Sonos"` | The name scheme for the HomeKit accessories.  `%` is replaced with the player name.  E.g. with the default name scheme, the accessory for the `Kitchen` zone is set to `Kitchen Sonos`.  Note that this does _not_ change the names of the HomeKit services, used by Siri.
 
 Below is an example `config.json` that exposes the *Sonos* and *Speakers* service as a HomeKit `Speaker` and volume as `Brightness`, so it can be controlled from Siri:
 ```json
