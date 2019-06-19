@@ -13,12 +13,17 @@
         "required": true,
         "default": "Sonos"
       },
-      "speakers": {
-	      "description": "Create an additional Speaker service.",
-        "type": "boolean"
-      },
       "alarms": {
         "description": "Create an additional Switch service for each alarm.",
+        "type": "boolean"
+      },
+      "brightness": {
+        "description": "Expose volume as Brightness.",
+        "type": "boolean"
+      },
+      "excludeAirPlay": {
+        "title": "Exclude AirPlay 2",
+        "description": "Exclude AirPlay 2 zoneplayers that are already exposed to Apple's Home app.",
         "type": "boolean"
       },
       "leds": {
@@ -26,10 +31,27 @@
         "description": "Create an additional Lightbulb service for the LED.",
         "type": "boolean"
       },
-      "excludeAirPlay": {
-        "title": "Exclude AirPlay 2",
-        "description": "Exclude AirPlay 2 zoneplayers that are already exposed to Apple's Home app.",
-        "type": "boolean"
+      "host": {
+        "description": "IPv4 address to use for webserver receiving ZonePlayer notifications.  Default: automatically discovered.",
+        "type": "string",
+        "format": "ipv4"
+      },
+      "nameScheme": {
+        "description": "Accessory name (use '%' for Zone name).  Default: '% Sonos'.",
+        "type": "string"
+      },
+      "port": {
+        "description": "Port to use for webserver receiving ZonePlayer notifications.  Default: random.",
+        "type": "integer",
+        "maximum": 65535
+      },
+      "resetTimeout": {
+        "description": "Timeout (in milliseconds) to reset input.  Default: 500.",
+        "type": "integer"
+      },
+      "searchTimeout": {
+        "description": "Timeout (in seconds) when searching for ZonePlayers on startup.  Default: 15.",
+        "type": "integer"
       },
       "service": {
         "description": "HomeKit service for ZonePlayer.",
@@ -55,40 +77,22 @@
           }
         ]
       },
-      "brightness": {
-        "description": "Expose volume as Brightness.",
+      "speakers": {
+	      "description": "Create an additional Speaker service.",
         "type": "boolean"
-      },
-      "tv": {
-        "title": "TV",
-        "description": "Expose ZonePlayer as TV.",
-      	"type": "boolean"
-      },
-      "nameScheme": {
-        "description": "Accessory name (use '%' for Zone name).  Default: '% Sonos'.",
-        "type": "string"
-      },
-      "resetTimeout": {
-        "description": "Timeout (in milliseconds) to reset input.  Default: 500.",
-        "type": "integer"
-      },
-      "searchTimeout": {
-        "description": "Timeout (in seconds) when searching for ZonePlayers on startup.  Default: 15.",
-        "type": "integer"
       },
       "subscriptionTimeout": {
         "description": "Duration (in minutes) of subscriptions to ZonePlayer notifications.  Default: 30.",
         "type": "integer"
       },
-      "host": {
-        "description": "IPv4 address to use for webserver receiving ZonePlayer notifications.  Default: automatically discovered.",
-        "type": "string",
-        "format": "ipv4"
+      "timeout": {
+        "description": "Timeout (in seconds) to wait for a response from a Sonos ZonePlayer.  Default: 15.",
+        "type": "integer"
       },
-      "port": {
-        "description": "Port to use for webserver receiving ZonePlayer notifications.  Default: random.",
-        "type": "integer",
-        "maximum": 65535
+      "tv": {
+        "title": "TV",
+        "description": "Expose ZonePlayer as TV.",
+      	"type": "boolean"
       }
     }
   },
@@ -130,6 +134,7 @@
         "resetTimeout",
         "searchTimeout",
         "subscriptionTimeout",
+        "timeout",
         "host",
         "port"
       ]
