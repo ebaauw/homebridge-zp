@@ -434,7 +434,7 @@ Parameters:
 
 const unsupportedServices = [
   'ConnectionManager', // No useful information.
-  'ContentDirectory', // Not supported by homebridge-zp.
+  // 'ContentDirectory', // Not supported by homebridge-zp.
   'MusicServices', // Not supported by homebridge-zp.
   'QPlay', // Doesn't support SUBSCRIBE.
   'Queue', // Not supported by homebridge-zp.
@@ -688,7 +688,7 @@ class Main extends homebridgeLib.CommandLineTool {
       coordinator = value
     })
     parser.parse(...args)
-    const zones = await this.zpClient.getTopology()
+    const zones = this.zpClient.zones
     if (zones[coordinator] == null) {
       throw new Error(`${coordinator}: zone not found`)
     }
