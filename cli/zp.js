@@ -28,21 +28,22 @@ const usage = {
   pause: `${b('pause')} [${b('-h')}]`,
   stop: `${b('stop')} [${b('-h')}]`,
   next: `${b('next')} [${b('-h')}]`,
-  previous: `${b('previous')}`,
+  previous: `${b('previous')} [${b('-h')}]`,
+  sleepTimer: `${b('sleepTimer')} [${b('-h')}] [${u('time')}|${b('off')}]`,
   groupVolume: `${b('groupVolume')} [${b('-h')}] [${u('volume')}]`,
-  groupMute: `${b('groupMute')} [${b('-h')}] [${b('true')}|${b('false')}]`,
+  groupMute: `${b('groupMute')} [${b('-h')}] [${b('on')}|${b('off')}]`,
   join: `${b('join')} [${b('-h')}] ${u('zone')}`,
   leave: `${b('leave')} [${b('-h')}]`,
   volume: `${b('volume')} [${b('-h')}] [${u('volume')}]`,
-  mute: `${b('mute')} [${b('-h')}] [${b('true')}|${b('false')}]`,
+  mute: `${b('mute')} [${b('-h')}] [${b('on')}|${b('off')}]`,
   bass: `${b('bass')} [${b('-h')}] [${b('--')}] [${u('bass')}]`,
   treble: `${b('treble')} [${b('-h')}] [${b('--')}] [${u('treble')}]`,
-  loudness: `${b('loudness')} [${b('-h')}] [${b('true')}|${b('false')}]`,
+  loudness: `${b('loudness')} [${b('-h')}] [${b('on')}|${b('off')}]`,
   balance: `${b('balance')} [${b('-h')}] [${b('--')}] [${u('balance')}]`,
-  nightSound: `${b('nightSound')} [${b('-h')}] [${b('true')}|${b('false')}]`,
-  speechEnhancement: `${b('speechEnhancement')} [${b('-h')}] [${b('true')}|${b('false')}]`,
-  led: `${b('led')} [${b('-h')}] [${b('true')}|${b('false')}]`,
-  buttonLock: `${b('buttonLock')} [${b('-h')}] [${b('true')}|${b('false')}]`
+  nightSound: `${b('nightSound')} [${b('-h')}] [${b('on')}|${b('off')}]`,
+  speechEnhancement: `${b('speechEnhancement')} [${b('-h')}] [${b('on')}|${b('off')}]`,
+  led: `${b('led')} [${b('-h')}] [${b('on')}|${b('off')}]`,
+  buttonLock: `${b('buttonLock')} [${b('-h')}] [${b('on')}|${b('off')}]`
 }
 
 const description = {
@@ -56,6 +57,7 @@ const description = {
   stop: 'Stop.',
   next: 'Go to next track.',
   previous: 'Go to previous track.',
+  sleepTimer: 'Get/set/clear sleep timer.',
   groupVolume: 'Get/set group volume.',
   groupMute: 'Get/set/clear group mute.',
   join: 'Join ZoneGroup.',
@@ -118,6 +120,9 @@ Commands:
 
   ${usage.previous}
   ${description.previous}
+
+  ${usage.sleepTimer}
+  ${description.sleepTimer}
 
   ${usage.groupVolume}
   ${description.groupVolume}
@@ -254,6 +259,19 @@ Usage: ${b('zp')} ${usage.previous}
 Parameters:
   ${b('-h')}, ${b('--help')}
   Print this help and exit.`,
+  sleepTimer: `${description.sleepTimer}
+
+Usage: ${b('zp')} ${usage.sleepTimer}
+
+Parameters:
+  ${b('-h')}, ${b('--help')}
+  Print this help and exit.
+
+  ${u('time')}
+  Set sleep timer to ${u('time')} (from ${b('00:00:00')} to ${b('23:59:59')}).
+
+  ${b('off')}
+  Clear sleep timer.`,
   groupVolume: `${description.groupVolume}
 
 Usage: ${b('zp')} ${usage.groupVolume}
@@ -272,10 +290,10 @@ Parameters:
   ${b('-h')}, ${b('--help')}
   Print this help and exit.
 
-  ${b('true')}
+  ${b('on')}
   Set group mute.
 
-  ${b('false')}
+  ${b('off')}
   Clear group mute.`,
   join: `${description.join}
 
@@ -312,10 +330,10 @@ Parameters:
   ${b('-h')}, ${b('--help')}
   Print this help and exit.
 
-  ${b('true')}
+  ${b('on')}
   Set mute.
 
-  ${b('false')}
+  ${b('off')}
   Clear mute.`,
   bass: `${description.bass}
 
@@ -345,10 +363,10 @@ Parameters:
   ${b('-h')}, ${b('--help')}
   Print this help and exit.
 
-  ${b('true')}
+  ${b('on')}
   Set loudness.
 
-  ${b('false')}
+  ${b('off')}
   Clear loudness.`,
   balance: `${description.balance}
 
@@ -368,10 +386,10 @@ Parameters:
   ${b('-h')}, ${b('--help')}
   Print this help and exit.
 
-  ${b('true')}
+  ${b('on')}
   Set night sound.
 
-  ${b('false')}
+  ${b('off')}
   Clear night sound.`,
   speechEnhancement: `${description.speechEnhancement}
 
@@ -381,10 +399,10 @@ Parameters:
   ${b('-h')}, ${b('--help')}
   Print this help and exit.
 
-  ${b('true')}
+  ${b('on')}
   Set speech enhancement.
 
-  ${b('false')}
+  ${b('off')}
   Clear speech enhancement.`,
   led: `${description.led}
 
@@ -394,10 +412,10 @@ Parameters:
   ${b('-h')}, ${b('--help')}
   Print this help and exit.
 
-  ${b('true')}
+  ${b('on')}
   Set ZonePlayer LED on.
 
-  ${b('false')}
+  ${b('off')}
   Set ZonePlayer LED off.`,
   buttonLock: `${description.buttonLock}
 
@@ -407,10 +425,10 @@ Parameters:
   ${b('-h')}, ${b('--help')}
   Print this help and exit.
 
-  ${b('true')}
+  ${b('on')}
   Set ZonePlayer button lock state (i.e. disable ZonePlayer buttons).
 
-  ${b('false')}
+  ${b('off')}
   Clear ZonePlayer button lock state (i.e. enable ZonePlayer buttons).`
 }
 
@@ -632,6 +650,33 @@ class Main extends homebridgeLib.CommandLineTool {
   async stop (...args) { return this.simpleCommand('stop', ...args) }
   async next (...args) { return this.simpleCommand('next', ...args) }
   async previous (...args) { return this.simpleCommand('previous', ...args) }
+
+  async sleepTimer (...args) {
+    const parser = new homebridgeLib.CommandLineParser()
+    let duration
+    parser.help('h', 'help', this.help)
+    parser.remaining((list) => {
+      if (list.length > 1) {
+        throw new UsageError('too many arguments')
+      }
+      if (list.length === 1) {
+        if (/^(:?2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]$/.test(list[0])) {
+          duration = list[0]
+        } else if (list[0] === 'off') {
+          duration = ''
+        } else {
+          throw new UsageError(`${list[0]}: invalid duration`)
+        }
+      }
+    })
+    parser.parse(...args)
+    if (duration != null) {
+      await this.zpClient.setSleepTimer(duration)
+    }
+    const timer = await this.zpClient.getSleepTimer()
+    this.print(timer === '' ? 'off' : timer)
+  }
+
   async groupVolume (...args) { return this.valueCommand('GroupVolume', 0, 100, ...args) }
   async groupMute (...args) { return this.onOffCommand('GroupMute', ...args) }
 
@@ -651,8 +696,8 @@ class Main extends homebridgeLib.CommandLineTool {
     const master = zone.zonePlayers[zone.master]
     return this.zpClient.setAvTransportUri('x-rincon:' + master.id)
   }
-  async leave (...args) { return this.simpleCommand('becomeCoordinatorOfStandaloneGroup', ...args) }
 
+  async leave (...args) { return this.simpleCommand('becomeCoordinatorOfStandaloneGroup', ...args) }
   async volume (...args) { return this.valueCommand('Volume', 0, 100, ...args) }
   async mute (...args) { return this.onOffCommand('Mute', ...args) }
   async bass (...args) { return this.valueCommand('Bass', -10, 10, ...args) }
@@ -709,7 +754,7 @@ class Main extends homebridgeLib.CommandLineTool {
     if (value != null) {
       await this.zpClient['set' + command](value)
     }
-    this.print(await this.zpClient['get' + command]())
+    this.print((await this.zpClient['get' + command]()) ? 'on' : 'off')
   }
 }
 
