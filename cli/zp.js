@@ -8,6 +8,7 @@
 'use strict'
 
 const chalk = require('chalk')
+const he = require('he')
 const homebridgeLib = require('homebridge-lib')
 const ZpClient = require('../lib/ZpClient')
 const ZpListener = require('../lib/ZpListener')
@@ -24,7 +25,8 @@ const usage = {
   description: `${b('description')} [${b('-hnSs')}]`,
   topology: `${b('topology')} [${b('-hnpv')}]`,
   eventlog: `${b('eventlog')} [${b('-hns')}]`,
-  play: `${b('play')} [${b('-h')}]`,
+  browse: `${b('browse')} [${b('-hn')}] [${u('object')}]`,
+  play: `${b('play')} [${b('-h')}] [${u('uri')} [${u('meta')}]]`,
   pause: `${b('pause')} [${b('-h')}]`,
   stop: `${b('stop')} [${b('-h')}]`,
   next: `${b('next')} [${b('-h')}]`,
@@ -52,6 +54,7 @@ const description = {
   description: 'Print zone player device description.',
   topology: 'Print zones and zone players known by the zone player.',
   eventlog: 'Log zone player events.',
+  browse: 'Browse media.',
   play: 'Play.',
   pause: 'Pause.',
   stop: 'Stop.',
@@ -105,6 +108,9 @@ Commands:
 
   ${usage.eventlog}
   ${description.eventlog}
+
+  ${usage.browse}
+  ${description.browse}
 
   ${usage.play}
   ${description.play}
@@ -224,13 +230,36 @@ Parameters:
 
   ${b('-s')}, ${b('--service')}
   Do not output timestamps (useful when running as service).`,
+  browse: `${description.browse}
+Returns a list of media items with ${u('object')} for browsing or ${u('uri')} for playing.
+
+Usage: ${b('zp')} ${usage.browse}
+
+Parameters:
+  ${b('-h')}, ${b('--help')}
+  Print this help and exit.
+
+  ${b('-n')}, ${b('--noWhiteSpace')}
+  Do not include spaces nor newlines in JSON output.
+
+  ${u('object')}
+  Browse ${u('object')} instead of default (top level).
+  Use ${b('zp browse')} to obtain the value for ${u('object')}.`,
   play: `${description.play}
 
 Usage: ${b('zp')} ${usage.play}
 
 Parameters:
   ${b('-h')}, ${b('--help')}
-  Print this help and exit.`,
+  Print this help and exit.
+
+  ${u('uri')}
+  Set source to ${u('uri')}.
+  Use ${b('zp browse')} to obtain the value for ${u('uri')}.
+
+  ${u('meta')}
+  Set meta data for source to ${u('meta')}.
+  Use ${b('zp browse')} to obtain the value for ${u('meta')}.`,
   pause: `${description.pause}
 
 Usage: ${b('zp')} ${usage.pause}
@@ -645,7 +674,104 @@ class Main extends homebridgeLib.CommandLineTool {
     }
   }
 
-  async play (...args) { return this.simpleCommand('play', ...args) }
+  async browse (...args) {
+    const clargs = { options: {} }
+    const parser = new homebridgeLib.CommandLineParser()
+    parser.help('h', 'help', this.help)
+    parser.flag('n', 'noWhiteSpace', () => {
+      clargs.options.noWhiteSpace = true
+    })
+    parser.remaining((list) => {
+      if (list.length > 1) {
+        throw new UsageError('too many arguments')
+      }
+      clargs.object = list[0]
+    })
+    parser.parse(...args)
+    const jsonFormatter = new homebridgeLib.JsonFormatter(clargs.options)
+    let result
+    if (clargs.object == null) {
+      result = {
+        'Music Library': { browse: 'A:' },
+        'Music Library Servers': { browse: 'S:' },
+        'Sonos Favorites': { browse: 'FV:' },
+        'Sonos Playlists': { browse: 'SQ:' },
+        'Sonos Queues': { browse: 'Q:' }
+      }
+      if (this.zpClient.airPlay) {
+        result['AirPlay'] = {
+          play: 'x-sonosapi-vli:' + this.zpClient.id
+        }
+      }
+      if (this.zpClient.audioIn) {
+        result['Audio In'] = {
+          play: 'x-rincon-stream:' + this.zpClient.id
+        }
+      }
+      if (this.zpClient.tvIn) {
+        result['TV'] = {
+          play: 'x-sonos-htastream:' + this.zpClient.id + ':spdif'
+        }
+      }
+    } else {
+      result = await this.zpClient.browse(clargs.object)
+      // this.print(jsonFormatter.format(result))
+      if (result.result != null) {
+        result = result.result
+      }
+      let container
+      if (result.container != null) {
+        container = true
+        result = result.container
+      }
+      if (!Array.isArray(result)) {
+        if (Object.keys(result).length > 0) {
+          result = [ result ]
+        } else {
+          result = []
+        }
+      }
+      const obj = {}
+      result.forEach((element) => {
+        obj[element.title] = {}
+        if (container) {
+          obj[element.title].browse = element.id
+        }
+        if (element.description != null) {
+          obj[element.title].description = element.description
+        }
+        if (element.res != null && element.res._ != null) {
+          obj[element.title].play = he.escape(element.res._)
+        }
+        if (element.resMD != null && element.description === 'TuneIn Station') {
+          obj[element.title].meta = ZpClient.meta(element)
+        }
+      })
+      result = obj
+    }
+    const json = jsonFormatter.stringify(result)
+    this.print(json)
+  }
+
+  async play (...args) {
+    let uri
+    let meta
+    const parser = new homebridgeLib.CommandLineParser()
+    parser.help('h', 'help', this.help)
+    parser.remaining((list) => {
+      if (list.length > 2) {
+        throw new UsageError('too many arguments')
+      }
+      uri = list[0]
+      meta = list[1]
+    })
+    parser.parse(...args)
+    if (uri != null) {
+      await this.zpClient.setAvTransportUri(uri, meta)
+    }
+    await this.zpClient.play()
+  }
+
   async pause (...args) { return this.simpleCommand('pause', ...args) }
   async stop (...args) { return this.simpleCommand('stop', ...args) }
   async next (...args) { return this.simpleCommand('next', ...args) }
