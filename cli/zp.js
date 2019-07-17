@@ -744,7 +744,9 @@ class Main extends homebridgeLib.CommandLineTool {
           obj[element.title].play = he.escape(element.res._)
         }
         if (element.resMD != null && element.description === 'TuneIn Station') {
-          obj[element.title].meta = ZpClient.meta(element)
+          obj[element.title].meta = ZpClient.meta(
+            element.resMD, element.albumArtUri, element.description
+          )
         }
       })
       result = obj
