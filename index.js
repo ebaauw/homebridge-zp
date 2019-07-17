@@ -5,10 +5,9 @@
 
 'use strict'
 
-const ZpPlatformModule = require('./lib/ZpPlatform')
-const ZpPlatform = ZpPlatformModule.ZpPlatform
+const ZpPlatform = require('./lib/ZpPlatform')
+const packageJson = require('./package.json')
 
 module.exports = (homebridge) => {
-  ZpPlatformModule.setHomebridge(homebridge)
-  homebridge.registerPlatform('homebridge-zp', 'ZP', ZpPlatform)
+  ZpPlatform.loadPlatform(homebridge, packageJson, 'ZP', ZpPlatform)
 }
