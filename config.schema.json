@@ -26,15 +26,19 @@
         "description": "Exclude AirPlay 2 zoneplayers that are already exposed to Apple's Home app.",
         "type": "boolean"
       },
-      "leds": {
-        "title": "LEDs",
-        "description": "Create an additional Lightbulb service for the LED.",
-        "type": "boolean"
+      "heartrate": {
+        "description": "Inteval (in seconds) to poll zone player.  Default: disabled.",
+        "type": "integer"
       },
       "host": {
         "description": "IPv4 address to use for webserver receiving ZonePlayer notifications.  Default: automatically discovered.",
         "type": "string",
         "format": "ipv4"
+      },
+      "leds": {
+        "title": "LEDs",
+        "description": "Create an additional Lightbulb service for the LED.",
+        "type": "boolean"
       },
       "nameScheme": {
         "description": "Accessory name (use '%' for Zone name).  Default: '% Sonos'.",
@@ -107,6 +111,10 @@
         "speakers",
         "alarms",
         "leds",
+        {
+          "key": "heartrate",
+          "condition": { "functionBody": "return model.leds" }
+        },
         "excludeAirPlay"
       ]
     },
