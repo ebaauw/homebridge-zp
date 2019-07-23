@@ -14,21 +14,21 @@
   ],
   "main": "index.js",
   "bin": {
+    "hap": "node_modules/homebridge-lib/cli/hap.js",
+    "json": "node_modules/homebridge-lib/cli/json.js",
+    "upnp": "node_modules/homebridge-lib/cli/upnp.js",
     "zpinfo": "cli/zp.js"
   },
   "engines": {
     "homebridge": "^0.4.50",
     "node": "^10.16.0"
   },
-  "peerDependencies": {
-    "homebridge-lib": "~4.2.9"
-  },
   "dependencies": {
     "chalk": "~2.4.2",
     "debug": "~4.1.1",
     "he": "~1.2.0",
+    "homebridge-lib": "~4.3.3",
     "request": "~2.88.0",
-    "semver": "~6.2.0",
     "xml2js": "~0.4.19"
   },
   "scripts": {
