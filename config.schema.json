@@ -23,21 +23,21 @@
       },
       "excludeAirPlay": {
         "title": "Exclude AirPlay 2",
-        "description": "Exclude AirPlay 2 zoneplayers that are already exposed to Apple's Home app.",
+        "description": "Exclude AirPlay 2 zone players that are already exposed to Apple's Home app.",
         "type": "boolean"
       },
       "heartrate": {
-        "description": "Inteval (in seconds) to poll zone player.  Default: disabled.",
+        "description": "Interval (in seconds) to poll zone player.  Default: disabled.",
         "type": "integer"
       },
       "host": {
-        "description": "IPv4 address to use for webserver receiving ZonePlayer notifications.  Default: automatically discovered.",
+        "description": "IPv4 address to use for webserver receiving zone player notifications.  Default: automatically discovered.",
         "type": "string",
         "format": "ipv4"
       },
       "leds": {
         "title": "LEDs",
-        "description": "Create an additional Lightbulb service for the LED.",
+        "description": "Create an additional Lightbulb service for the LED.  Also create an accessory for each slave zone player.",
         "type": "boolean"
       },
       "nameScheme": {
@@ -53,12 +53,8 @@
         "description": "Timeout (in milliseconds) to reset input.  Default: 500.",
         "type": "integer"
       },
-      "searchTimeout": {
-        "description": "Timeout (in seconds) when searching for ZonePlayers on startup.  Default: 15.",
-        "type": "integer"
-      },
       "service": {
-        "description": "HomeKit service for ZonePlayer.",
+        "description": "HomeKit service type for Sonos and Switch services.",
         "type": "string",
         "required": true,
         "default": "switch",
@@ -82,7 +78,7 @@
         ]
       },
       "speakers": {
-	      "description": "Create an additional Speaker service.",
+	      "description": "Create an additional Speaker service for each zone.",
         "type": "boolean"
       },
       "subscriptionTimeout": {
@@ -95,8 +91,13 @@
       },
       "tv": {
         "title": "TV",
-        "description": "Expose ZonePlayer as TV.",
+        "description": "Create an additional, non-bridged TV accessory for each zone.",
       	"type": "boolean"
+      },
+      "tvIdPrefix": {
+        "title": "TV ID Prefix",
+        "description": "Prefix for serial number of TV accessories.  Default: 'TV'",
+        "type": "string"
       }
     }
   },
@@ -106,7 +107,7 @@
       "type": "fieldset",
       "expandable": true,
       "title": "What",
-      "description": "Select what to expose to HomeKit for each ZonePlayer.",
+      "description": "Select what to expose to HomeKit for each zone.",
       "items": [
         "speakers",
         "alarms",
@@ -122,7 +123,7 @@
       "type": "fieldset",
       "expandable": true,
       "title": "How",
-      "description": "Select how to expose a ZonePlayer to HomeKit.",
+      "description": "Select how to expose a zone to HomeKit.",
       "items": [
         "service",
 	      {
@@ -140,11 +141,11 @@
       "description": "Don't change these, unless you understand what you're doing.",
       "items": [
         "resetTimeout",
-        "searchTimeout",
         "subscriptionTimeout",
         "timeout",
         "host",
-        "port"
+        "port",
+        "tvIdPrefix"
       ]
     }
   ]
