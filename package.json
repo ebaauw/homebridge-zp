@@ -1,7 +1,7 @@
 {
   "name": "homebridge-zp",
   "description": "Homebridge plugin for Sonos ZonePlayer",
-  "version": "1.0.2-2",
+  "version": "1.0.2-3",
   "author": "Erik Baauw",
   "license": "Apache-2.0",
   "keywords": [
@@ -15,8 +15,8 @@
   "main": "index.js",
   "bin": {
     "hap": "node_modules/.bin/hap",
-    "json": "node_modules/homebridge-lib/cli/json.js",
-    "upnp": "node_modules/homebridge-lib/cli/upnp.js",
+    "json": "node_modules/.bin/json",
+    "upnp": "node_modules/.bin/upnp",
     "zpinfo": "cli/zp.js"
   },
   "engines": {
