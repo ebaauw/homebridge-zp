@@ -14,7 +14,7 @@
   ],
   "main": "index.js",
   "bin": {
-    "zpinfo": "cli/zp.js"
+    "zp": "cli/zp.js"
   },
   "engines": {
     "homebridge": "^0.4.50",
