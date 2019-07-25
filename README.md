@@ -62,7 +62,7 @@ The homebridge-zp plugin obviously needs homebridge, which, in turn needs Node.j
   Follow the instructions on [GitHub](https://github.com/nfarina/homebridge#installation) to create a `config.json` in `~/.homebridge`, as described;
 - Install the homebridge-zp plugin through:
   ```
-  sudo npm -g i homebridge-lib homebridge-zp
+  sudo npm -g i homebridge-zp
   ```
 - Edit `~/.homebridge/config.json` and add the `ZP` platform provided by homebridge-zp, see [**Configuration**](#configuration).
 
