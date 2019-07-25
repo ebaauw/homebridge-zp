@@ -44,7 +44,7 @@ Note that `Bass`, `Treble`, and `Loudness` are custom characteristics.  They mig
 When grouping zones from the Sonos app, homebridge-zp sets the *Speakers* `On` characteristic for a zone in a multi-zone group and clears it for a zone in a standalone group.  When setting the *Speakers* `On` from HomeKit, that zone will join the (first) existing multi-zone Sonos group.  When no multi-zone Sonos group yet exists, the zone is designated as coordinator for a future multi-zone group.  When `On` is cleared from HomeKit, the zone leaves its current group, forming a standalone group.  Note that when the coordinator leaves the group, the music to the other zones in that group is briefly interrupted, as the new coordinator assumes its role.
 
 ### Command-Line Tool
-The `homebridge-zp` plugin comes with a command-line tool, `zpinfo`, for retrieving information from a Sonos ZonePlayer.  It takes a `-h` or `--help` argument to provide a brief overview of its functionality and command-line arguments.
+The `homebridge-zp` plugin comes with a command-line tool, `zp`, for retrieving information from a Sonos ZonePlayer.  It takes a `-h` or `--help` argument to provide a brief overview of its functionality and command-line arguments.
 
 ### Installation
 The homebridge-zp plugin obviously needs homebridge, which, in turn needs Node.js.  I've followed these steps to set it up on my macOS server:
@@ -83,15 +83,19 @@ Key | Default | Description
 --- | ------- | -----------
 `alarms` | `false` | Flag whether to expose an additional service per Sonos alarm.
 `brightness` | `false` | Flag whether to expose volume as `Brightness` when `service` is `"switch"` or `"speaker"`.  Setting this flag enables volume control from Siri, but not from Apple's Home app.
-`leds` | `false` | Flag whether to expose an additional *Lightbulb* service per zone for the status LED.
+`excludeAirPlay` | `false` | Flag whether not to expose zone players that support Airplay, since the natively show up in HomeKit.
+`heartrate` | (disabled) | Interval (in seconds) to poll zone player when `leds` is set.
 `host` | _(discovered)_ | The hostname or IP address for the web server homebridge-zp creates to receive notifications from Sonos ZonePlayers.  This must be the hostname or IP address of the server running homebridge-zp, reachable by the ZonePlayers.  You might need to set this on a multi-homed server, if homebridge-zp binds to the wrong network interface.
-`port` | `0` _(random)_ | The port for the web server homebridge-zp creates to receive notifications from Sonos ZonePlayers.
+`leds` | `false` | Flag whether to expose an additional *Lightbulb* service per zone for the status LED.  This also supports locking the physical controls.
 `nameScheme` | `"% Sonos"` | The name scheme for the HomeKit accessories.  `%` is replaced with the player name.  E.g. with the default name scheme, the accessory for the `Kitchen` zone is set to `Kitchen Sonos`.  Note that this does _not_ change the names of the HomeKit services, used by Siri.
-`searchTimeout` | `15` | The timeout (in seconds) to wait for a response when searching for Sonos Zoneplayers.
+`port` | `0` _(random)_ | The port for the web server homebridge-zp creates to receive notifications from Sonos ZonePlayers.
+`resetTimeout` | `500` | Timeout (in milliseconds) to reset input (e.g. _Change Volume_).
 `service` | `"switch"` | Defines what type of service and volume characteristic homebridge-zp uses.  Possible values are: `"switch"` for `Switch` and `Volume`; `"speaker"` for `Speaker` and `Volume`; `"light"` for `LightBulb` and `Brightness`; and `"fan"` for `Fan` and `Rotation Speed`.  Selecting `"light"` or `"fan"` enables changing the Sonos volume from Siri and from Apple's Home app.  Selecting `"speaker"` is not supported by Apple's Home app.
 `speakers` | `false` | Flag whether to expose a second *Speakers* service per zone, in addition to the standard *Sonos* service, see [**Speakers**](#speakers).  You might want to set this if you're using Sonos groups in a configuration of multiple Sonos zones.
-`timeout` | `15` | The timeout (in seconds) to wait for a response from a Sonos ZonePlayer.
 `subscriptionTimeout` | `30` | The duration (in minutes) of the subscriptions homebridge-zp creates with each ZonePlayer.
+`timeout` | `15` | The timeout (in seconds) to wait for a response from a Sonos ZonePlayer.
+`tv` | `false` | Create an additional, non-bridged TV accessory for each zone.
+`tvPreFix` | `TV` | Prefix for serial number of TV accessories, to enable multiple instances of homebridge-zp on the same network.
 
 Below is an example `config.json` that exposes the *Sonos* and *Speakers* service as a HomeKit `Speaker` and volume as `Brightness`, so it can be controlled from Siri:
 ```json
@@ -119,10 +123,7 @@ Like the Sonos app, homebridge-zp subscribes to the ZonePlayer events to be noti
 ```
 [2018-9-28 12:36:02] [ZP] listening on http://192.168.xxx.xxx:xxxxx/notify
 ```
-To check whether the listener is reachable from the network, open this URL in your web browser.  You should get a reply like:
-```
-homebridge-zp v0.3.16, node v10.15.3, homebridge v0.4.49
-```
+To check whether the listener is reachable from the network, open this URL in your web browser.  You should see an overview of the active subscriptions per zone player.
 
 If you need help, please open an issue on [GitHub](https://github.com/ebaauw/homebridge-zp/issues).  Please attach a copy of your full `config.json` (masking any sensitive info) and the debug logfile.
 For questions, you can also post a message to the **#homebridge-zp** channel of the [homebridge workspace on Slack](https://github.com/nfarina/homebridge#community).
