@@ -14,9 +14,6 @@
   ],
   "main": "index.js",
   "bin": {
-    "hap": "node_modules/.bin/hap",
-    "json": "node_modules/.bin/json",
-    "upnp": "node_modules/.bin/upnp",
     "zpinfo": "cli/zp.js"
   },
   "engines": {
