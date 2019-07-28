@@ -8,7 +8,6 @@
 'use strict'
 
 const chalk = require('chalk')
-const he = require('he')
 const homebridgeLib = require('homebridge-lib')
 const ZpClient = require('../lib/ZpClient')
 const ZpListener = require('../lib/ZpListener')
@@ -27,6 +26,7 @@ const usage = {
   eventlog: `${b('eventlog')} [${b('-hns')}]`,
   browse: `${b('browse')} [${b('-hn')}] [${u('object')}]`,
   play: `${b('play')} [${b('-h')}] [${u('uri')} [${u('meta')}]]`,
+  queue: `${b('queue')} [${b('-h')}] ${u('uri')} [${u('meta')}]`,
   pause: `${b('pause')} [${b('-h')}]`,
   stop: `${b('stop')} [${b('-h')}]`,
   next: `${b('next')} [${b('-h')}]`,
@@ -56,6 +56,7 @@ const description = {
   eventlog: 'Log zone player events.',
   browse: 'Browse media.',
   play: 'Play.',
+  queue: 'Queue.',
   pause: 'Pause.',
   stop: 'Stop.',
   next: 'Go to next track.',
@@ -114,6 +115,9 @@ Commands:
 
   ${usage.play}
   ${description.play}
+
+  ${usage.queue}
+  ${description.queue}
 
   ${usage.pause}
   ${description.pause}
@@ -248,6 +252,21 @@ Parameters:
   play: `${description.play}
 
 Usage: ${b('zp')} ${usage.play}
+
+Parameters:
+  ${b('-h')}, ${b('--help')}
+  Print this help and exit.
+
+  ${u('uri')}
+  Set source to ${u('uri')}.
+  Use ${b('zp browse')} to obtain the value for ${u('uri')}.
+
+  ${u('meta')}
+  Set meta data for source to ${u('meta')}.
+  Use ${b('zp browse')} to obtain the value for ${u('meta')}.`,
+  queue: `${description.queue}
+
+Usage: ${b('zp')} ${usage.queue}
 
 Parameters:
   ${b('-h')}, ${b('--help')}
@@ -700,56 +719,21 @@ class Main extends homebridgeLib.CommandLineTool {
       }
       if (this.zpClient.airPlay) {
         result['AirPlay'] = {
-          play: 'x-sonosapi-vli:' + this.zpClient.id
+          uri: 'x-sonosapi-vli:' + this.zpClient.id
         }
       }
       if (this.zpClient.audioIn) {
         result['Audio In'] = {
-          play: 'x-rincon-stream:' + this.zpClient.id
+          uri: 'x-rincon-stream:' + this.zpClient.id
         }
       }
       if (this.zpClient.tvIn) {
         result['TV'] = {
-          play: 'x-sonos-htastream:' + this.zpClient.id + ':spdif'
+          uri: 'x-sonos-htastream:' + this.zpClient.id + ':spdif'
         }
       }
     } else {
       result = await this.zpClient.browse(clargs.object)
-      // this.print(jsonFormatter.format(result))
-      if (result.result != null) {
-        result = result.result
-      }
-      let container
-      if (result.container != null) {
-        container = true
-        result = result.container
-      }
-      if (!Array.isArray(result)) {
-        if (Object.keys(result).length > 0) {
-          result = [ result ]
-        } else {
-          result = []
-        }
-      }
-      const obj = {}
-      result.forEach((element) => {
-        obj[element.title] = {}
-        if (container) {
-          obj[element.title].browse = element.id
-        }
-        if (element.description != null) {
-          obj[element.title].description = element.description
-        }
-        if (element.res != null && element.res._ != null) {
-          obj[element.title].play = he.escape(element.res._)
-        }
-        if (element.resMD != null) {
-          obj[element.title].meta = ZpClient.meta(
-            element.resMD, element.albumArtUri, element.description
-          )
-        }
-      })
-      result = obj
     }
     const json = jsonFormatter.stringify(result)
     this.print(json)
@@ -772,6 +756,24 @@ class Main extends homebridgeLib.CommandLineTool {
       await this.zpClient.setAvTransportUri(uri, meta)
     }
     await this.zpClient.play()
+  }
+
+  async queue (...args) {
+    let uri
+    let meta
+    const parser = new homebridgeLib.CommandLineParser()
+    parser.help('h', 'help', this.help)
+    parser.parameter('uri', (value) => {
+      uri = value
+    })
+    parser.remaining((list) => {
+      if (list.length > 1) {
+        throw new UsageError('too many arguments')
+      }
+      meta = list[0]
+    })
+    parser.parse(...args)
+    await this.zpClient.setAvTransportQueue(uri, meta)
   }
 
   async pause (...args) { return this.simpleCommand('pause', ...args) }
