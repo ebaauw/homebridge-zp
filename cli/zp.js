@@ -525,11 +525,13 @@ class Main extends homebridgeLib.CommandLineTool {
     parser.help('h', 'help', help.zp)
     parser.version('V', 'version')
     parser.option('H', 'host', (value) => {
-      homebridgeLib.OptionParser.toHost(value, true)
+      homebridgeLib.OptionParser.toHost('host', value, true)
       clargs.options.host = value
     })
     parser.option('t', 'timeout', (value) => {
-      clargs.options.timeout = homebridgeLib.OptionParser.toInt(value, 1, 60, true)
+      clargs.options.timeout = homebridgeLib.OptionParser.toInt(
+        'timeout', value, 1, 60, true
+      )
     })
     parser.parameter('command', (value) => {
       if (usage[value] == null || typeof this[value] !== 'function') {
@@ -855,7 +857,9 @@ class Main extends homebridgeLib.CommandLineTool {
         throw new UsageError('too many arguments')
       }
       if (list.length === 1) {
-        value = homebridgeLib.OptionParser.toInt(list[0], min, max, true)
+        value = homebridgeLib.OptionParser.toInt(
+          command.toLowerCase(), list[0], min, max, true
+        )
       }
     })
     parser.parse(...args)
@@ -877,7 +881,9 @@ class Main extends homebridgeLib.CommandLineTool {
         throw new UsageError('too many arguments')
       }
       if (list.length === 1) {
-        value = homebridgeLib.OptionParser.toBool(list[0], true)
+        value = homebridgeLib.OptionParser.toBool(
+          command.toLowerCase(), list[0], true
+        )
       }
     })
     parser.parse(...args)
