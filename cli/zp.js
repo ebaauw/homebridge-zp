@@ -482,7 +482,6 @@ Parameters:
 
 const unsupportedServices = [
   'ConnectionManager', // No useful information.
-  // 'ContentDirectory', // Not supported by homebridge-zp.
   'MusicServices', // Not supported by homebridge-zp.
   'QPlay', // Doesn't support SUBSCRIBE.
   'Queue', // Not supported by homebridge-zp.
