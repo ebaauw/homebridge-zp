@@ -573,12 +573,12 @@ class Main extends homebridgeLib.CommandLineTool {
     parser.flag('n', 'noWhiteSpace', () => {
       clargs.options.noWhiteSpace = true
     })
-    parser.flag('S', 'scdp', () => { clargs.scdp = true })
+    parser.flag('S', 'scpd', () => { clargs.scpd = true })
     parser.flag('s', 'sortKeys', () => { clargs.options.sortKeys = true })
     parser.parse(...args)
     const jsonFormatter = new homebridgeLib.JsonFormatter(clargs.options)
     const response = await this.zpClient.get()
-    if (clargs.scdp) {
+    if (clargs.scpd) {
       const devices = [response.device]
         .concat(response.device.deviceList)
       for (const device of devices) {
@@ -594,7 +594,7 @@ class Main extends homebridgeLib.CommandLineTool {
   async topology (...args) {
     const parser = new homebridgeLib.CommandLineParser()
     const clargs = {
-      options: { sortKeys: true }
+      options: {}
     }
     parser.help('h', 'help', this.help)
     parser.flag('n', 'noWhiteSpace', () => {
@@ -604,15 +604,16 @@ class Main extends homebridgeLib.CommandLineTool {
     parser.flag('v', 'verify', () => { clargs.verify = true })
     parser.parse(...args)
     const jsonFormatter = new homebridgeLib.JsonFormatter(clargs.options)
-    let zonePlayers = {}
-    let zones = {}
+    let result = {}
     if (clargs.verify) {
-      zones = this.zpClient.zones
+      const zonePlayers = this.zpClient.zonePlayers
       const jobs = []
-      for (const zoneName in zones) {
-        const zone = zones[zoneName]
-        for (const zonePlayerName in zone.zonePlayers) {
-          const zonePlayer = zone.zonePlayers[zonePlayerName]
+      for (const id in zonePlayers) {
+        if (id === this.zpClient.id) {
+          result[id] = this.zpClient.info
+        } else {
+          result[id] = undefined
+          const zonePlayer = this.zpClient.zonePlayers[id]
           const zpClient = new ZpClient({
             host: zonePlayer.address,
             id: zonePlayer.id,
@@ -620,10 +621,9 @@ class Main extends homebridgeLib.CommandLineTool {
           })
           jobs.push(zpClient.init()
             .then(() => {
-              zone.zonePlayers[zonePlayerName] = zpClient.info
-              zonePlayers[zonePlayerName] = zpClient.info
+              result[id] = zpClient.info
             }).catch((error) => {
-              delete zone.zonePlayers[zonePlayerName]
+              delete result[id]
               this.error('%s: %s', zonePlayer.address, error.message)
             })
           )
@@ -632,17 +632,15 @@ class Main extends homebridgeLib.CommandLineTool {
       for (const job of jobs) {
         await job
       }
-      for (const zoneName in zones) {
-        if (Object.keys(zones[zoneName].zonePlayers).length === 0) {
-          delete zones[zoneName]
-        }
+      if (!clargs.players) {
+        result = ZpClient.unflatten(result)
       }
     } else if (clargs.players) {
-      zonePlayers = this.zpClient.zonePlayers
+      result = this.zpClient.zonePlayers
     } else {
-      zones = this.zpClient.zones
+      result = this.zpClient.zones
     }
-    const json = jsonFormatter.stringify(clargs.players ? zonePlayers : zones)
+    const json = jsonFormatter.stringify(result)
     this.print(json)
   }
 
@@ -673,7 +671,7 @@ class Main extends homebridgeLib.CommandLineTool {
     this.zpClient.on('event', (device, service, event) => {
       this.log(
         '%s: %s %s event: %s', this.zpClient.name,
-        device, service, jsonFormatter.format(event)
+        device, service, jsonFormatter.stringify(event)
       )
     })
     await this.zpClient.open(this.zpListener)
@@ -819,13 +817,12 @@ class Main extends homebridgeLib.CommandLineTool {
       coordinator = value
     })
     parser.parse(...args)
-    const zones = this.zpClient.zones
-    if (zones[coordinator] == null) {
-      throw new Error(`${coordinator}: zone not found`)
+    for (const id in this.zpClient.zones) {
+      if (this.zpClient.zones[id].zoneName === coordinator) {
+        return this.zpClient.setAvTransportUri('x-rincon:' + id)
+      }
     }
-    const zone = zones[coordinator]
-    const master = zone.zonePlayers[zone.master]
-    return this.zpClient.setAvTransportUri('x-rincon:' + master.id)
+    throw new Error(`${coordinator}: zone not found`)
   }
 
   async leave (...args) { return this.simpleCommand('becomeCoordinatorOfStandaloneGroup', ...args) }
@@ -844,7 +841,7 @@ class Main extends homebridgeLib.CommandLineTool {
     const parser = new homebridgeLib.CommandLineParser()
     parser.help('h', 'help', this.help)
     parser.parse(...args)
-    await this.zpClient[command]()
+    return this.zpClient[command]()
   }
 
   async valueCommand (command, min, max, ...args) {
