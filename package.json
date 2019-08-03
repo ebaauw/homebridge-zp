@@ -14,17 +14,20 @@
   ],
   "main": "index.js",
   "bin": {
+    "hap": "cli/hap.js",
+    "json": "cli/json.js",
+    "upnp": "cli/upnp.js",
     "zp": "cli/zp.js"
   },
   "engines": {
     "homebridge": "^0.4.50",
-    "node": "^10.16.0"
+    "node": "^10.16.1"
   },
   "dependencies": {
     "chalk": "~2.4.2",
     "debug": "~4.1.1",
     "he": "~1.2.0",
-    "homebridge-lib": "~4.4.0",
+    "homebridge-lib": "~4.4.1-0",
     "request": "~2.88.0",
     "xml2js": "~0.4.19"
   },
