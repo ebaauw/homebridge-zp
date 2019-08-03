@@ -776,8 +776,11 @@ class Main extends homebridgeLib.CommandLineTool {
   }
 
   async pause (...args) { return this.simpleCommand('pause', ...args) }
+
   async stop (...args) { return this.simpleCommand('stop', ...args) }
+
   async next (...args) { return this.simpleCommand('next', ...args) }
+
   async previous (...args) { return this.simpleCommand('previous', ...args) }
 
   async sleepTimer (...args) {
@@ -807,6 +810,7 @@ class Main extends homebridgeLib.CommandLineTool {
   }
 
   async groupVolume (...args) { return this.valueCommand('GroupVolume', 0, 100, ...args) }
+
   async groupMute (...args) { return this.onOffCommand('GroupMute', ...args) }
 
   async join (...args) {
@@ -826,15 +830,25 @@ class Main extends homebridgeLib.CommandLineTool {
   }
 
   async leave (...args) { return this.simpleCommand('becomeCoordinatorOfStandaloneGroup', ...args) }
+
   async volume (...args) { return this.valueCommand('Volume', 0, 100, ...args) }
+
   async mute (...args) { return this.onOffCommand('Mute', ...args) }
+
   async bass (...args) { return this.valueCommand('Bass', -10, 10, ...args) }
+
   async treble (...args) { return this.valueCommand('Treble', -10, 10, ...args) }
+
   async balance (...args) { return this.valueCommand('Balance', -100, 100, ...args) }
+
   async loudness (...args) { return this.onOffCommand('Loudness', ...args) }
+
   async nightSound (...args) { return this.onOffCommand('NightSound', ...args) }
+
   async speechEnhancement (...args) { return this.onOffCommand('SpeechEnhancement', ...args) }
+
   async led (...args) { return this.onOffCommand('LedState', ...args) }
+
   async buttonLock (...args) { return this.onOffCommand('ButtonLockState', ...args) }
 
   async simpleCommand (command, ...args) {
