@@ -717,7 +717,7 @@ class Main extends homebridgeLib.CommandLineTool {
         'Sonos Queues': { browse: 'Q:' }
       }
       if (this.zpClient.airPlay) {
-        result['AirPlay'] = {
+        result.AirPlay = {
           uri: 'x-sonosapi-vli:' + this.zpClient.id
         }
       }
@@ -727,7 +727,7 @@ class Main extends homebridgeLib.CommandLineTool {
         }
       }
       if (this.zpClient.tvIn) {
-        result['TV'] = {
+        result.TV = {
           uri: 'x-sonos-htastream:' + this.zpClient.id + ':spdif'
         }
       }
