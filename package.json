@@ -29,7 +29,7 @@
     "he": "~1.2.0",
     "homebridge-lib": "~4.4.5",
     "request": "~2.88.0",
-    "xml2js": "~0.4.20"
+    "xml2js": "~0.4.22"
   },
   "scripts": {
     "prepare": "standard",
