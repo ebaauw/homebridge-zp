@@ -550,7 +550,7 @@ class Main extends homebridgeLib.CommandLineTool {
   }
 
   async info (...args) {
-    const parser = new homebridgeLib.CommandLineParser()
+    const parser = new homebridgeLib.CommandLineParser(packageJson)
     const clargs = {
       options: { sortKeys: true }
     }
@@ -565,7 +565,7 @@ class Main extends homebridgeLib.CommandLineTool {
   }
 
   async description (...args) {
-    const parser = new homebridgeLib.CommandLineParser()
+    const parser = new homebridgeLib.CommandLineParser(packageJson)
     const clargs = {
       options: {}
     }
@@ -592,7 +592,7 @@ class Main extends homebridgeLib.CommandLineTool {
   }
 
   async topology (...args) {
-    const parser = new homebridgeLib.CommandLineParser()
+    const parser = new homebridgeLib.CommandLineParser(packageJson)
     const clargs = {
       options: {}
     }
@@ -645,7 +645,7 @@ class Main extends homebridgeLib.CommandLineTool {
   }
 
   async eventlog (...args) {
-    const parser = new homebridgeLib.CommandLineParser()
+    const parser = new homebridgeLib.CommandLineParser(packageJson)
     const clargs = {
       mode: 'daemon',
       options: {}
@@ -694,7 +694,7 @@ class Main extends homebridgeLib.CommandLineTool {
 
   async browse (...args) {
     const clargs = { options: {} }
-    const parser = new homebridgeLib.CommandLineParser()
+    const parser = new homebridgeLib.CommandLineParser(packageJson)
     parser.help('h', 'help', this.help)
     parser.flag('n', 'noWhiteSpace', () => {
       clargs.options.noWhiteSpace = true
@@ -741,7 +741,7 @@ class Main extends homebridgeLib.CommandLineTool {
   async play (...args) {
     let uri
     let meta
-    const parser = new homebridgeLib.CommandLineParser()
+    const parser = new homebridgeLib.CommandLineParser(packageJson)
     parser.help('h', 'help', this.help)
     parser.remaining((list) => {
       if (list.length > 2) {
@@ -760,7 +760,7 @@ class Main extends homebridgeLib.CommandLineTool {
   async queue (...args) {
     let uri
     let meta
-    const parser = new homebridgeLib.CommandLineParser()
+    const parser = new homebridgeLib.CommandLineParser(packageJson)
     parser.help('h', 'help', this.help)
     parser.parameter('uri', (value) => {
       uri = value
@@ -784,7 +784,7 @@ class Main extends homebridgeLib.CommandLineTool {
   async previous (...args) { return this.simpleCommand('previous', ...args) }
 
   async sleepTimer (...args) {
-    const parser = new homebridgeLib.CommandLineParser()
+    const parser = new homebridgeLib.CommandLineParser(packageJson)
     let duration
     parser.help('h', 'help', this.help)
     parser.remaining((list) => {
@@ -815,7 +815,7 @@ class Main extends homebridgeLib.CommandLineTool {
 
   async join (...args) {
     let coordinator
-    const parser = new homebridgeLib.CommandLineParser()
+    const parser = new homebridgeLib.CommandLineParser(packageJson)
     parser.help('h', 'help', this.help)
     parser.parameter('zone', (value) => {
       coordinator = value
@@ -852,14 +852,14 @@ class Main extends homebridgeLib.CommandLineTool {
   async buttonLock (...args) { return this.onOffCommand('ButtonLockState', ...args) }
 
   async simpleCommand (command, ...args) {
-    const parser = new homebridgeLib.CommandLineParser()
+    const parser = new homebridgeLib.CommandLineParser(packageJson)
     parser.help('h', 'help', this.help)
     parser.parse(...args)
     return this.zpClient[command]()
   }
 
   async valueCommand (command, min, max, ...args) {
-    const parser = new homebridgeLib.CommandLineParser()
+    const parser = new homebridgeLib.CommandLineParser(packageJson)
     let value
     parser.help('h', 'help', this.help)
     parser.remaining((list) => {
@@ -880,7 +880,7 @@ class Main extends homebridgeLib.CommandLineTool {
   }
 
   async onOffCommand (command, ...args) {
-    const parser = new homebridgeLib.CommandLineParser()
+    const parser = new homebridgeLib.CommandLineParser(packageJson)
     let value
     if (args.length > 1) {
       throw new UsageError('too many arguments')
