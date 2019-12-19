@@ -21,15 +21,15 @@
   },
   "engines": {
     "homebridge": "^0.4.50",
-    "node": "^12.13.1"
+    "node": "^12.14.0"
   },
   "dependencies": {
     "chalk": "~3.0.0",
     "debug": "~4.1.1",
     "he": "~1.2.0",
-    "homebridge-lib": "~4.4.8",
+    "homebridge-lib": "~4.4.9",
     "request": "~2.88.0",
-    "xml2js": "~0.4.22"
+    "xml2js": "~0.4.23"
   },
   "scripts": {
     "prepare": "standard",
