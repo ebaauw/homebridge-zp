@@ -614,6 +614,11 @@ class Main extends homebridgeLib.CommandLineTool {
         } else {
           result[id] = undefined
           const zonePlayer = this.zpClient.zonePlayers[id]
+          if (zonePlayer == null) {
+            delete result[id]
+            this.error('%s: zone player not found', id)
+            continue
+          }
           const zpClient = new ZpClient({
             host: zonePlayer.address,
             id: zonePlayer.id,
