@@ -86,16 +86,9 @@ Note that `Bass`, `Treble`, and `Loudness` are custom characteristics.  They mig
 
 Like the *Sonos* service, the type of the *Speakers* service can be changed in `config.json` from the default `Switch`.
 
-### Command-Line Tools
-The `homebridge-zp` plugin comes with several command-line tools.
-Each tool takes a `-h` or `--help` argument to provide a brief overview of its functionality and command-line arguments.
-
-Tool | Description
--------- | -----------
-`hap` | Logger for Bonjour announcements by HomeKit accessories.
-`json` | JSON formatter.
-`upnp` | Logger for UPnP announcements.
-`zp` | Command-line interface to Sonos API.
+### Command-Line Tool
+The `homebridge-zp` plugin comes with the `zp` command-line tool to interact with your Sonos Zone Players from the command line.
+It takes a `-h` or `--help` argument to provide a brief overview of its functionality and command-line arguments.
 
 ### Installation
 The homebridge-zp plugin obviously needs homebridge, which, in turn needs Node.js.  I've followed these steps to set it up on my macOS server:
