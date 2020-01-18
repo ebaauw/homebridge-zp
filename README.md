@@ -1,6 +1,9 @@
 # homebridge-zp
-[![npm](https://img.shields.io/npm/dt/homebridge-zp.svg)](https://www.npmjs.com/package/homebridge-zp) [![npm](https://img.shields.io/npm/v/homebridge-zp.svg)](https://www.npmjs.com/package/homebridge-zp)
+[![npm](https://img.shields.io/npm/dt/homebridge-zp.svg)](https://www.npmjs.com/package/homebridge-zp)
+[![npm](https://img.shields.io/npm/v/homebridge-zp.svg)](https://www.npmjs.com/package/homebridge-zp)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![GitHub issues](https://img.shields.io/github/issues/ebaauw/homebridge-zp)](https://github.com/ebaauw/homebridge-zp/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/ebaauw/homebridge-zp)](https://github.com/ebaauw/homebridge-zp/pulls)
 
 ## Homebridge plugin for Sonos ZonePlayer
 Copyright © 2016-2020 Erik Baauw. All rights reserved.
