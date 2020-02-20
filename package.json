@@ -24,7 +24,7 @@
     "chalk": "~3.0.0",
     "debug": "~4.1.1",
     "he": "~1.2.0",
-    "homebridge-lib": "~4.5.0",
+    "homebridge-lib": "~4.5.1",
     "xml2js": "~0.4.23"
   },
   "scripts": {
