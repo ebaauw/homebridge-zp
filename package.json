@@ -17,14 +17,14 @@
     "zp": "cli/zp.js"
   },
   "engines": {
-    "homebridge": "^0.4.50",
+    "homebridge": "~0.4.50",
     "node": "^12.16.1"
   },
   "dependencies": {
     "chalk": "~3.0.0",
     "debug": "~4.1.1",
     "he": "~1.2.0",
-    "homebridge-lib": "~4.5.1",
+    "homebridge-lib": "~4.5.5",
     "xml2js": "~0.4.23"
   },
   "scripts": {
