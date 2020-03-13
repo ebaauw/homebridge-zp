@@ -629,7 +629,7 @@ class Main extends homebridgeLib.CommandLineTool {
               result[id] = zpClient.info
             }).catch((error) => {
               delete result[id]
-              this.error('%s: %s', zonePlayer.address, error.message)
+              this.error('%s: %s', zonePlayer.address, error)
             })
           )
         }
