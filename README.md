@@ -8,7 +8,7 @@
 ## Homebridge plugin for Sonos ZonePlayer
 Copyright © 2016-2020 Erik Baauw. All rights reserved.
 
-This [homebridge](https://github.com/nfarina/homebridge) plugin exposes [Sonos](http://www.sonos.com) ZonePlayers to Apple's [HomeKit](http://www.apple.com/ios/home/).
+This [Homebridge](https://github.com/homebridge/homebridge) plugin exposes [Sonos](http://www.sonos.com) ZonePlayers to Apple's [HomeKit](http://www.apple.com/ios/home/).
 It provides the following features:
 - Automatic discovery of Sonos zones, taking into account stereo pairs and home theatre setup;
 - Support for Sonos groups, created through the Sonos app;
@@ -24,9 +24,9 @@ Note that Sonos doesn't support events for these, so homebridge-zp cannot provid
 - Includes command-line tools, for controlling Sonos ZonePlayers and for troubleshooting.
 
 ### Prerequisites
-You need a server to run homebridge.
+You need a server to run Homebridge.
 This can be anything running [Node.js](https://nodejs.org): from a Raspberri Pi, a NAS system, or an always-on PC running Linux, macOS, or Windows.
-See the [homebridge Wiki](https://github.com/nfarina/homebridge/wiki) for details.
+See the [Homebridge Wiki](https://github.com/homebridge/homebridge/wiki) for details.
 I use a a Raspberry Pi 3B+ and, occasionally, a Mac mini server.
 
 To interact with HomeKit, you need Siri or a HomeKit app on an iPhone, iPad, Mac, Apple Watch, iPod Touch, or Apple TV (4th generation or later).
@@ -35,7 +35,7 @@ Please note that Siri and Apple's [Home](https://support.apple.com/en-us/HT20489
 To use the full features of homebridge-zp, you might want to check out some other HomeKit apps, like [Eve](https://www.evehome.com/en/eve-app) (free) or Matthias Hochgatterer's [Home+ 4](http://selfcoded.com/home/) (paid).
 For HomeKit automation, you need to setup an Apple TV (4th generation or later), HomePod, or iPad as [Home Hub](https://support.apple.com/en-us/HT207057).
 
-As Sonos uses UPnP to discover the ZonePlayers, the server running homebridge must be on the same subnet as your Sonos ZonePlayers.  As HomeKit uses Bonjour to discover homebridge, the server running homebridge must be on the same subnet as your iDevices running HomeKit.
+As Sonos uses UPnP to discover the ZonePlayers, the server running Homebridge must be on the same subnet as your Sonos ZonePlayers.  As HomeKit uses Bonjour to discover Homebridge, the server running Homebridge must be on the same subnet as your iDevices running HomeKit.
 For remote access, you you need to setup an Apple TV (4th generation or later), HomePod, or iPad as [Home Hub](https://support.apple.com/en-us/HT207057).
 
 ### Zones
@@ -47,7 +47,7 @@ However, neither Apple's Home app nor Siri support these.
 To control the volume from Apple's Home app and/or Siri, the type of the service, as well as the type of characteristic used for volume can be changed from `config.json`, see [**Configuration**](#configuration) and [issue #10](https://github.com/ebaauw/homebridge-zp/issues/10).
 Note that speaker support in Apple's Home app is based on the AirPlay2 protocol.
 Despite the "HomeKit" branding, technically, this has nothing to do with HomeKit.
-No homebridge plugin can expose speakers that look like AirPlay2 speakers in the Home app.
+No Homebridge plugin can expose speakers that look like AirPlay2 speakers in the Home app.
 Also note that these Airplay2 speakers cannot be accessed by other HomeKit apps.
 
 When `"tv": true` is set in `config.json`, homebridge-zp creates an additional *Television* accessory per zone, allowing input selection from Apple's Home app and control from the *Remote* widget.
@@ -94,7 +94,7 @@ The `homebridge-zp` plugin comes with the `zp` command-line tool to interact wit
 It takes a `-h` or `--help` argument to provide a brief overview of its functionality and command-line arguments.
 
 ### Installation
-The homebridge-zp plugin obviously needs homebridge, which, in turn needs Node.js.  I've followed these steps to set it up on my macOS server:
+The homebridge-zp plugin obviously needs Homebridge, which, in turn needs Node.js.  I've followed these steps to set it up on my macOS server:
 
 - Install the latest v12 LTS version of Node.js.  On a Raspberry Pi, install the 12.x [Package package](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions) from NodeSource. On other platforms, download and run the [12.x.x LTS](https://nodejs.org) installer.  These installations include the `npm` package manager;
 - On a Raspberry Pi, make sure `/usr/bin` is in your `$PATH`, as `node`, `npm`, and, later, `homebridge` install there.  On macOS, these install to `/usr/local/bin`;
@@ -102,21 +102,21 @@ The homebridge-zp plugin obviously needs homebridge, which, in turn needs Node.j
   ```
   $ sudo npm -g i npm@latest
   ```
-- Install homebridge through:
+- Install Homebridge through:
   ```
   $ sudo npm -g i homebridge
   ```
-  Follow the instructions on [GitHub](https://github.com/nfarina/homebridge#installation) to create a `config.json` in `~/.homebridge`, as described;
+  Follow the instructions on [GitHub](https://github.com/homebridge/homebridge#installation) to create a `config.json` in `~/.homebridge`, as described;
 - Install the homebridge-zp plugin through:
   ```
   sudo npm -g i homebridge-zp
   ```
 - Edit `~/.homebridge/config.json` and add the `ZP` platform provided by homebridge-zp, see [**Configuration**](#configuration).
 
-Once homebridge is up and running with the homebridge-zp plugin, you might want to daemonise it and start it automatically on login or system boot.  See the [homebridge Wiki](https://github.com/nfarina/homebridge/wiki) for more info how to do that.
+Once Homebridge is up and running with the homebridge-zp plugin, you might want to daemonise it and start it automatically on login or system boot.  See the [Homebridge Wiki](https://github.com/homebridge/homebridge/wiki) for more info how to do that.
 
 ### Configuration
-In homebridge's `config.json` you need to specify a platform for homebridge-zp:
+In Homebridge's `config.json` you need to specify a platform for homebridge-zp:
 ```json
   "platforms": [
     {
@@ -159,25 +159,25 @@ Below is an example `config.json` that exposes the *Sonos* and *Speakers* servic
 ### Troubleshooting
 
 #### Run homebridge-zp Solo
-If you run into issues, please run homebridge with only the homebridge-zp plugin enabled in `config.json`.
-This way, you can determine whether the issue is related to the homebridge-zp plugin itself, or to the interaction of multiple homebridge plugins in your setup.
-Note that disabling the other plugins from your existing homebridge setup will remove their accessories from HomeKit.
+If you run into issues, please run Homebridge with only the homebridge-zp plugin enabled in `config.json`.
+This way, you can determine whether the issue is related to the homebridge-zp plugin itself, or to the interaction of multiple Homebridge plugins in your setup.
+Note that disabling the other plugins from your existing Homebridge setup will remove their accessories from HomeKit.
 You will need to re-assign these accessories to any HomeKit rooms, groups, scenes, and automations after re-enabling their plugins.
-Alternatively, you can start a different instance of homebridge just for homebridge-zp, on a different system, or from a different directory (specified by the `-U` flag).
-Make sure to use a different homebridge `name`, `username`, and (if running on the same system) `port` in the `config.json` for each instance.
+Alternatively, you can start a different instance of Homebridge just for homebridge-zp, on a different system, or from a different directory (specified by the `-U` flag).
+Make sure to use a different Homebridge `name`, `username`, and (if running on the same system) `port` in the `config.json` for each instance.
 
 #### Debug Log File
-The homebridge-zp plugin outputs an info message for each HomeKit characteristic value it sets and for each HomeKit characteristic value change notification it receives.  When homebridge is started with `-D`, homebridge-zp outputs a debug message for each request it makes to a Sonos ZonePlayer and for each ZonePlayer notification event it receives.
+The homebridge-zp plugin outputs an info message for each HomeKit characteristic value it sets and for each HomeKit characteristic value change notification it receives.  When Homebridge is started with `-D`, homebridge-zp outputs a debug message for each request it makes to a Sonos ZonePlayer and for each ZonePlayer notification event it receives.
 
 To capture these messages into a log file do the following:
 
-- When running homebridge manually, start homebridge by issuing:
+- When running Homebridge manually, start Homebridge by issuing:
   ```
   $ homebridge -D 2>&1 | tee homebridge.log
   ```
-Hit interrupt (ctrl-C) to stop homebridge.
+Hit interrupt (ctrl-C) to stop Homebridge.
 
-- When running homebridge as a service, add `-D` to the `ExecStart` line of the service definition file, typically `/etc/systemd/system/homebridge.service`.  Then reload by
+- When running Homebridge as a service, add `-D` to the `ExecStart` line of the service definition file, typically `/etc/systemd/system/homebridge.service`.  Then reload by
   ```
   $ sudo systemctl daemon-reload
   $ sudo systemctl restart homebridge
@@ -200,7 +200,7 @@ If you need help, please open an issue on [GitHub](https://github.com/ebaauw/hom
 Please attach a copy of `homebridge.log.gz` (see [**Debug Log File**](#debug-log-file)).
 Please do not copy/paste large amounts of logging.
 
-For questions, you can also post a message to the **#homebridge-zp** channel of the [homebridge workspace on Slack](https://github.com/nfarina/homebridge#community).
+For questions, you can also post a message to the **#zp** channel of the Homebridge community on [Discord](https://discord.gg/hZubhrz).
 
 ### Caveats
 The homebridge-zp plugin is a hobby project of mine, provided as-is, with no warranty whatsoever.  I've been running it successfully at my home for years, but your mileage might vary.  Please report any issues on [GitHub](https://github.com/ebaauw/homebridge-zp/issues).
@@ -211,7 +211,7 @@ Not all HomeKit features are supported by Apple's [Home](https://support.apple.c
 You might want to check out some other HomeKit apps, like [Eve](https://www.evehome.com/en/eve-app) (free) or Matthias Hochgatterer's [Home+ 4](http://selfcoded.com/home/) (paid).
 
 The HomeKit terminology needs some getting used to.  An _accessory_ more or less corresponds to a physical device, accessible from your iOS device over WiFi or Bluetooth.
-A _bridge_ (like homebridge) provides access to multiple bridged accessories.
+A _bridge_ (like Homebridge) provides access to multiple bridged accessories.
 An accessory might provide multiple _services_.
 Each service corresponds to a virtual device (like a lightbulb, switch, motion sensor, ...).
 There is also an accessory information service.
