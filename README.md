@@ -200,7 +200,7 @@ If you need help, please open an issue on [GitHub](https://github.com/ebaauw/hom
 Please attach a copy of `homebridge.log.gz` (see [**Debug Log File**](#debug-log-file)).
 Please do not copy/paste large amounts of logging.
 
-For questions, you can also post a message to the **#zp** channel of the Homebridge community on [Discord](https://discord.gg/hZubhrz).
+For questions, you can also post a message to the **#zp** channel of the Homebridge community on [Discord](https://discord.gg/3qFgFMk).
 
 ### Caveats
 The homebridge-zp plugin is a hobby project of mine, provided as-is, with no warranty whatsoever.  I've been running it successfully at my home for years, but your mileage might vary.  Please report any issues on [GitHub](https://github.com/ebaauw/homebridge-zp/issues).
