@@ -193,7 +193,7 @@ To check whether the listener is reachable from the network, open this URL in yo
 #### Getting Help
 If you have a question, please post a message to the **#zp** channel of the Homebridge community on [Discord](https://discord.gg/3qFgFMk).
 
-If you encounter a problem, please open an issue on [GitHub](https://github.com/ebaauw/homebridge-zp/issues).  
+If you encounter a problem, please open an issue on [GitHub](https://github.com/ebaauw/homebridge-zp/issues).
 Please **attach** a copy of `homebridge.log.gz` to the issue, see [**Debug Log File**](#debug-log-file).
 Please do **not** copy/paste large amounts of log output.
 
