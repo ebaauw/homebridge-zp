@@ -4,8 +4,8 @@
 <span align="center">
 
 # Homebridge ZP
-[![npm](https://img.shields.io/npm/dt/homebridge-zp.svg)](https://www.npmjs.com/package/homebridge-zp)
-[![npm](https://img.shields.io/npm/v/homebridge-zp.svg)](https://www.npmjs.com/package/homebridge-zp)
+[![Downloads](https://img.shields.io/npm/dt/homebridge-zp.svg)](https://www.npmjs.com/package/homebridge-zp)
+[![Version](https://img.shields.io/npm/v/homebridge-zp.svg)](https://www.npmjs.com/package/homebridge-zp)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 [![Homebridge Discord](https://img.shields.io/discord/432663330281226270?color=728ED5&logo=discord&label=discord)](https://discord.gg/3qFgFMk)
 [![GitHub issues](https://img.shields.io/github/issues/ebaauw/homebridge-zp)](https://github.com/ebaauw/homebridge-zp/issues)
@@ -40,7 +40,7 @@ I run Homebridge ZP on a Raspberry Pi 3B+.
 To interact with HomeKit, you need Siri or a HomeKit app on an iPhone, Apple Watch, iPad, iPod Touch, or Apple TV (4th generation or later).
 I recommend to use the latest released versions of iOS, watchOS, and tvOS.  
 Please note that Siri and even Apple's [Home](https://support.apple.com/en-us/HT204893) app still provide only limited HomeKit support.
-To use the full features of Homebridg Zp, you might want to check out some other HomeKit apps, like Elgato's [Eve](https://www.elgato.com/en/eve/eve-app) app (free) or Matthias Hochgatterer's [Home+](https://hochgatterer.me/home/) app (paid).  
+To use the full features of Homebridge Zp, you might want to check out some other HomeKit apps, like the [Eve](https://www.evehome.com/en/eve-app) app (free) or Matthias Hochgatterer's [Home+](https://hochgatterer.me/home/) app (paid).  
 
 As Sonos uses UPnP to discover the ZonePlayers, the server running Homebridge must be on the same subnet as your Sonos ZonePlayers.
 As HomeKit uses Bonjour to discover Homebridge, the server running Homebridge must be on the same subnet as your iDevices running HomeKit.
@@ -98,7 +98,7 @@ Note that `Bass`, `Treble`, and `Loudness` are custom characteristics.  They mig
 Like the *Sonos* service, the type of the *Speakers* service can be changed in `config.json` from the default `Switch`.
 
 ### Command-Line Tool
-Homebridge ZP comes with the `zp` command-line tool to interact with your Sonos Zone Players from the command line.
+Homebridge ZP includes a command-line tool, `zp`, to interact with your Sonos Zone Players from the command line.
 It takes a `-h` or `--help` argument to provide a brief overview of its functionality and command-line arguments.
 
 ### Installation
