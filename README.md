@@ -125,11 +125,11 @@ The following optional parameters can be added to modify Homebridge ZP's behavio
 
 Key | Default | Description
 --- | ------- | -----------
+`address` | _(discovered)_ | The IP address for the web server Homebridge ZP creates to receive notifications from Sonos ZonePlayers.  This must be an IP address of the server running Homebridge ZP, reachable by the ZonePlayers.  You might need to set this on a multi-homed server, if Homebridge ZP binds to the wrong network interface.
 `alarms` | `false` | Flag whether to expose an additional service per Sonos alarm.
 `brightness` | `false` | Flag whether to expose volume as `Brightness` when `service` is `"switch"` or `"speaker"`.  Setting this flag enables volume control from Siri, but not from Apple's Home app.
 `excludeAirPlay` | `false` | Flag whether not to expose ZonePlayers that support Airplay, since they natively show up in Apple's Home app.
 `heartrate` | (disabled) | Interval (in seconds) to poll ZonePlayer when `leds` is set.
-`host` | _(discovered)_ | The hostname or IP address for the web server Homebridge ZP creates to receive notifications from Sonos ZonePlayers.  This must be the hostname or IP address of the server running Homebridge ZP, reachable by the ZonePlayers.  You might need to set this on a multi-homed server, if Homebridge ZP binds to the wrong network interface.
 `leds` | `false` | Flag whether to expose an additional *Lightbulb* service per zone for the status LED.  This also supports locking the physical controls.
 `nameScheme` | `"% Sonos"` | The name scheme for the HomeKit accessories.  `%` is replaced with the player name.  E.g. with the default name scheme, the accessory for the `Kitchen` zone is set to `Kitchen Sonos`.  Note that this does _not_ change the names of the HomeKit services, used by Siri.
 `port` | `0` _(random)_ | The port for the web server Homebridge ZP creates to receive notifications from Sonos ZonePlayers.
