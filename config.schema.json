@@ -13,6 +13,11 @@
         "required": true,
         "default": "Sonos"
       },
+      "address": {
+        "description": "IPv4 address to use for webserver receiving zone player notifications.  Default: automatically discovered.",
+        "type": "string",
+        "format": "ipv4"
+      },
       "alarms": {
         "description": "Create an additional Switch service for each alarm.",
         "type": "boolean"
@@ -29,11 +34,6 @@
       "heartrate": {
         "description": "Interval (in seconds) to poll zone player.  Default: disabled.",
         "type": "integer"
-      },
-      "host": {
-        "description": "IPv4 address to use for webserver receiving zone player notifications.  Default: automatically discovered.",
-        "type": "string",
-        "format": "ipv4"
       },
       "leds": {
         "title": "LEDs",
