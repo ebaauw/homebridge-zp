@@ -31,6 +31,9 @@ const usage = {
   stop: `${b('stop')} [${b('-h')}]`,
   next: `${b('next')} [${b('-h')}]`,
   previous: `${b('previous')} [${b('-h')}]`,
+  crossfade: `${b('crossfade')} [${b('-h')}] [${b('on')}|${b('off')}]`,
+  repeat: `${b('repeat')} [${b('-h')}] [${b('on')}|${b('1')}|${b('off')}]`,
+  shuffle: `${b('shuffle')} [${b('-h')}] [${b('on')}|${b('off')}]`,
   sleepTimer: `${b('sleepTimer')} [${b('-h')}] [${u('time')}|${b('off')}]`,
   groupVolume: `${b('groupVolume')} [${b('-h')}] [${u('volume')}]`,
   groupMute: `${b('groupMute')} [${b('-h')}] [${b('on')}|${b('off')}]`,
@@ -61,6 +64,9 @@ const description = {
   stop: 'Stop.',
   next: 'Go to next track.',
   previous: 'Go to previous track.',
+  crossfade: 'Get/set/clear crossfade.',
+  repeat: 'Get/set repeat.',
+  shuffle: 'Get/set/clear shuffle.',
   sleepTimer: 'Get/set/clear sleep timer.',
   groupVolume: 'Get/set group volume.',
   groupMute: 'Get/set/clear group mute.',
@@ -307,6 +313,48 @@ Usage: ${b('zp')} ${usage.previous}
 Parameters:
   ${b('-h')}, ${b('--help')}
   Print this help and exit.`,
+  crossfade: `${description.crossfade}
+
+Usage: ${b('zp')} ${usage.crossfade}
+
+Parameters:
+  ${b('-h')}, ${b('--help')}
+  Print this help and exit.
+
+  ${b('on')}
+  Set crossfade.
+
+  ${b('off')}
+  Clear crossfade.`,
+  repeat: `${description.repeat}
+
+Usage: ${b('zp')} ${usage.repeat}
+
+Parameters:
+  ${b('-h')}, ${b('--help')}
+  Print this help and exit.
+
+  ${b('on')}
+  Repeat all tracks.
+
+  ${b('1')}
+  Repeat current track.
+
+  ${b('off')}
+  Clear repeat.`,
+  shuffle: `${description.shuffle}
+
+Usage: ${b('zp')} ${usage.shuffle}
+
+Parameters:
+  ${b('-h')}, ${b('--help')}
+  Print this help and exit.
+
+  ${b('on')}
+  Set shuffle.
+
+  ${b('off')}
+  Clear shuffle.`,
   sleepTimer: `${description.sleepTimer}
 
 Usage: ${b('zp')} ${usage.sleepTimer}
@@ -787,6 +835,33 @@ class Main extends homebridgeLib.CommandLineTool {
   async next (...args) { return this.simpleCommand('next', ...args) }
 
   async previous (...args) { return this.simpleCommand('previous', ...args) }
+
+  async crossfade (...args) { return this.onOffCommand('CrossfadeMode', ...args) }
+
+  async repeat (...args) {
+    const parser = new homebridgeLib.CommandLineParser(packageJson)
+    let repeat
+    parser.help('h', 'help', this.help)
+    parser.remaining((list) => {
+      if (list.length > 1) {
+        throw new UsageError('too many arguments')
+      }
+      if (list.length === 1) {
+        if (['on', '1', 'off'].includes(list[0])) {
+          repeat = list[0]
+        } else {
+          throw new UsageError(`${list[0]}: invalid repeat value`)
+        }
+      }
+    })
+    parser.parse(...args)
+    if (repeat != null) {
+      await this.zpClient.setRepeat(repeat)
+    }
+    this.print(await this.zpClient.getRepeat())
+  }
+
+  async shuffle (...args) { return this.onOffCommand('Shuffle', ...args) }
 
   async sleepTimer (...args) {
     const parser = new homebridgeLib.CommandLineParser(packageJson)
