@@ -19,13 +19,13 @@
   },
   "engines": {
     "homebridge": "^1.1.0",
-    "node": "^12.17.0"
+    "node": "^12.18.0"
   },
   "dependencies": {
-    "chalk": "^4.0.0",
+    "chalk": "^4.1.0",
     "debug": "^4.1.1",
     "he": "^1.2.0",
-    "homebridge-lib": "^4.7.7",
+    "homebridge-lib": "^4.7.8",
     "xml2js": "~0.4.23"
   },
   "scripts": {
