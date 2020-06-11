@@ -129,6 +129,7 @@ Key | Default | Description
 `alarms` | `false` | Flag whether to expose an additional service per Sonos alarm.
 `brightness` | `false` | Flag whether to expose volume as `Brightness` when `service` is `"switch"` or `"speaker"`.  Setting this flag enables volume control from Siri, but not from Apple's Home app.
 `excludeAirPlay` | `false` | Flag whether not to expose ZonePlayers that support Airplay, since they natively show up in Apple's Home app.
+`forceS2` | `false` | Flag whether to expose only S2 zone players.  See [**Split Sonos System**](#split-sonos-system) below.
 `heartrate` | (disabled) | Interval (in seconds) to poll ZonePlayer when `leds` is set.
 `leds` | `false` | Flag whether to expose an additional *Lightbulb* service per zone for the status LED.  This also supports locking the physical controls.
 `nameScheme` | `"% Sonos"` | The name scheme for the HomeKit accessories.  `%` is replaced with the player name.  E.g. with the default name scheme, the accessory for the `Kitchen` zone is set to `Kitchen Sonos`.  Note that this does _not_ change the names of the HomeKit services, used by Siri.
@@ -151,6 +152,26 @@ Below is an example `config.json` that exposes the *Sonos* and *Speakers* servic
       "speakers": true
     }
   ]
+```
+
+#### Split Sonos System
+
+If you have a split Sonos system, Homebridge ZP will expose either the S2 or the S1 zone players, depending on which player is quickest to respond during discovery.
+Usually this will be a restored S2 player, but there's no guarantee, especially after clearing the cached accessories.
+This could cause HomeKit to drop accessories, treating them as new accessories when re-exposed, losing any association to HomeKit rooms, groups, scenes, and automations.
+To prevent this, set `forceS2` in `config.json`.
+
+To expose both the S2 and the S1 zone players, create two platform entries:
+```json
+"platforms": [
+  {
+    "platform": "ZP",
+    "forceS2": true
+  },
+  {
+    "platform": "ZPS1"
+  }
+]
 ```
 
 ### Troubleshooting
