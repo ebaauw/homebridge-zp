@@ -956,7 +956,7 @@ class Main extends homebridgeLib.CommandLineTool {
     if (value != null) {
       await this.zpClient['set' + command](value)
     }
-    this.print(await this.zpClient['get' + command]())
+    this.print('' + await this.zpClient['get' + command]())
   }
 
   async onOffCommand (command, ...args) {
