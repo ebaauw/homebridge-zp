@@ -19,13 +19,13 @@
   },
   "engines": {
     "homebridge": "^1.1.0",
-    "node": "^12.18.2"
+    "node": "^12.18.3"
   },
   "dependencies": {
     "chalk": "^4.1.0",
     "debug": "^4.1.1",
     "he": "^1.2.0",
-    "homebridge-lib": "^4.7.12",
+    "homebridge-lib": "^4.7.14",
     "xml2js": "~0.4.23"
   },
   "scripts": {
@@ -39,5 +39,9 @@
   "bugs": {
     "url": "https://github.com/ebaauw/homebridge-zp/issues"
   },
-  "homepage": "https://github.com/ebaauw/homebridge-zp#readme"
+  "homepage": "https://github.com/ebaauw/homebridge-zp#readme",
+  "funding": {
+    "type": "paypal",
+    "url": "https://www.paypal.me/ebaauw/EUR"
+  }
 }
