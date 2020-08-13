@@ -13,6 +13,7 @@
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/ebaauw/homebridge-zp)](https://github.com/ebaauw/homebridge-zp/pulls)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen)](https://standardjs.com)
 [![Contribute](https://img.shields.io/badge/contribute-paypal%20me-brightgreen)](https://www.paypal.me/ebaauw/EUR)
+
 </span>
 
 ## Homebridge plugin for Sonos ZonePlayer
