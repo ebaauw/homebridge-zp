@@ -15,10 +15,10 @@
 
 </span>
 
-## Homebridge plugin for Sonos ZonePlayer
+## Homebridge plugin for Sonos Zone Players
 Copyright © 2016-2020 Erik Baauw. All rights reserved.
 
-This [Homebridge](https://github.com/homebridge/homebridge) plugin exposes [Sonos](http://www.sonos.com) ZonePlayers to Apple's [HomeKit](http://www.apple.com/ios/home/).
+This [Homebridge](https://github.com/homebridge/homebridge) plugin exposes [Sonos](http://www.sonos.com) zone players to Apple's [HomeKit](http://www.apple.com/ios/home/).
 It provides the following features:
 - Automatic discovery of Sonos zones, taking into account stereo pairs and home theatre setup;
 - Support for Sonos groups, created through the Sonos app;
@@ -28,10 +28,10 @@ It provides the following features:
 - Optional control from HomeKit for Sonos zones leaving Sonos groups, and for Sonos zones creating/joining one Sonos group;
 - Optional control from HomeKit to enable/disable Sonos alarms;
 - Real-time monitoring from HomeKit of state per Sonos group and, optionally, per Sonos zone.
-Like the Sonos app, Homebridge ZP subscribes to ZonePlayer events to receive notifications;
-- Optional control from HomeKit for the status LED and child lock per ZonePlayer.
+Like the Sonos app, Homebridge ZP subscribes to zone player events to receive notifications;
+- Optional control from HomeKit for the status LED and child lock per zone player.
 Note that Sonos doesn't support events for these, so Homebridge ZP cannot provide real-time monitoring for this;
-- Includes command-line tools, for controlling Sonos ZonePlayers and for troubleshooting.
+- Includes command-line tools, for controlling Sonos zone players and for troubleshooting.
 
 ### Prerequisites
 You need a server to run Homebridge.
@@ -44,7 +44,7 @@ I recommend to use the latest released versions of iOS, watchOS, and tvOS.
 Please note that Siri and even Apple's [Home](https://support.apple.com/en-us/HT204893) app still provide only limited HomeKit support.
 To use the full features of Homebridge Zp, you might want to check out some other HomeKit apps, like the [Eve](https://www.evehome.com/en/eve-app) app (free) or Matthias Hochgatterer's [Home+](https://hochgatterer.me/home/) app (paid).
 
-As Sonos uses UPnP to discover the ZonePlayers, the server running Homebridge must be on the same subnet as your Sonos ZonePlayers.
+As Sonos uses UPnP to discover the zone players, the server running Homebridge must be on the same subnet as your Sonos zone players.
 As HomeKit uses Bonjour to discover Homebridge, the server running Homebridge must be on the same subnet as your iDevices running HomeKit.
 For remote access and for HomeKit automations, you need to setup an Apple TV (4th generation or later), HomePod, or iPad as [home hub](https://support.apple.com/en-us/HT207057).
 
@@ -61,8 +61,8 @@ No Homebridge plugin can expose speakers that look like AirPlay2 speakers in the
 Also note that these Airplay2 speakers cannot be accessed by other HomeKit apps.
 
 When `"tv": true` is set in `config.json`, Homebridge ZP creates an additional *Television* accessory per zone, allowing input selection from Apple's Home app and control from the *Remote* widget.
-Note that Apple has imposed some technical restrictions on *Television* accessoies:
-- They cannot be bridged; they need to be paired to HomeKit individually (like video cameras).
+Note that Apple has imposed some technical restrictions on *Television* accessories:
+- They cannot be bridged; they need to be paired to HomeKit individually;
 - They cannot be accessed by HomeKit apps; only from Apple's Home app.
 
 ### Groups
@@ -125,20 +125,20 @@ The following optional parameters can be added to modify Homebridge ZP's behavio
 
 Key | Default | Description
 --- | ------- | -----------
-`address` | _(discovered)_ | The IP address for the web server Homebridge ZP creates to receive notifications from Sonos ZonePlayers.  This must be an IP address of the server running Homebridge ZP, reachable by the ZonePlayers.  You might need to set this on a multi-homed server, if Homebridge ZP binds to the wrong network interface.
+`address` | _(discovered)_ | The IP address for the web server Homebridge ZP creates to receive notifications from Sonos zone players.  This must be an IP address of the server running Homebridge ZP, reachable by the zone players.  You might need to set this on a multi-homed server, if Homebridge ZP binds to the wrong network interface.
 `alarms` | `false` | Flag whether to expose an additional service per Sonos alarm.
 `brightness` | `false` | Flag whether to expose volume as `Brightness` when `service` is `"switch"` or `"speaker"`.  Setting this flag enables volume control from Siri, but not from Apple's Home app.
-`excludeAirPlay` | `false` | Flag whether not to expose ZonePlayers that support Airplay, since they natively show up in Apple's Home app.
+`excludeAirPlay` | `false` | Flag whether not to expose zone players that support Airplay, since they natively show up in Apple's Home app.
 `forceS2` | `false` | Flag whether to expose only S2 zone players.  See [**Split Sonos System**](#split-sonos-system) below.
-`heartrate` | (disabled) | Interval (in seconds) to poll ZonePlayer when `leds` is set.
+`heartrate` | (disabled) | Interval (in seconds) to poll zone players when `leds` is set.
 `leds` | `false` | Flag whether to expose an additional *Lightbulb* service per zone for the status LED.  This also supports locking the physical controls.
-`nameScheme` | `"% Sonos"` | The name scheme for the HomeKit accessories.  `%` is replaced with the player name.  E.g. with the default name scheme, the accessory for the `Kitchen` zone is set to `Kitchen Sonos`.  Note that this does _not_ change the names of the HomeKit services, used by Siri.
-`port` | `0` _(random)_ | The port for the web server Homebridge ZP creates to receive notifications from Sonos ZonePlayers.
+`nameScheme` | `"% Sonos"` | The name scheme for the HomeKit accessories.  `%` is replaced with the zone name.  E.g. with the default name scheme, the accessory for the `Kitchen` zone is set to `Kitchen Sonos`.  Note that this does _not_ change the names of the HomeKit services, used by Siri.
+`port` | `0` _(random)_ | The port for the web server Homebridge ZP creates to receive notifications from Sonos zone players.
 `resetTimeout` | `500` | Timeout (in milliseconds) to reset input (e.g. _Change Volume_).
 `service` | `"switch"` | Defines what type of service and volume characteristic Homebridge ZP uses.  Possible values are: `"switch"` for `Switch` and `Volume`; `"speaker"` for `Speaker` and `Volume`; `"light"` for `LightBulb` and `Brightness`; and `"fan"` for `Fan` and `Rotation Speed`.  Selecting `"light"` or `"fan"` enables changing the Sonos volume from Siri and from Apple's Home app.  Selecting `"speaker"` results in a *not supported* accessory in Apple's Home app.
 `speakers` | `false` | Flag whether to expose a second *Speakers* service per zone, in addition to the standard *Sonos* service, see [**Speakers**](#speakers).  You might want to set this if you're using Sonos groups in a configuration of multiple Sonos zones.
-`subscriptionTimeout` | `30` | The duration (in minutes) of the subscriptions Homebridge ZP creates with each ZonePlayer.
-`timeout` | `15` | The timeout (in seconds) to wait for a response from a Sonos ZonePlayer.
+`subscriptionTimeout` | `30` | The duration (in minutes) of the subscriptions Homebridge ZP creates with each zone player.
+`timeout` | `15` | The timeout (in seconds) to wait for a response from a Sonos zone player.
 `tv` | `false` | Create an additional, non-bridged TV accessory for each zone.
 `tvPreFix` | `TV` | Prefix for serial number of TV accessories, to enable multiple instances of Homebridge ZP on the same network.
 
@@ -189,7 +189,7 @@ Make sure to use a different Homebridge `name`, `username`, and (if running on t
 
 #### Debug Log File
 Homebridge ZP outputs an info message for each HomeKit characteristic value it sets and for each HomeKit characteristic value change notification it receives.
-When Homebridge is started with `-D`, Homebridge ZP outputs a debug message for each request it makes to a Sonos ZonePlayer and for each ZonePlayer notification event it receives.
+When Homebridge is started with `-D`, Homebridge ZP outputs a debug message for each request it makes to a Sonos zone player and for each zone player notification event it receives.
 
 To capture these messages into a log file do the following:
 - If you're running Homebridge as a service, stop that service;
@@ -206,11 +206,11 @@ To capture these messages into a log file do the following:
   ```
 
 #### Web Server
-Like the Sonos app, Homebridge ZP subscribes to the ZonePlayer events to be notified in real-time of changes.  It creates a web server to receive these notifications.  The IP address and port number for this listener are logged in a debug message, e.g.
+Like the Sonos app, Homebridge ZP subscribes to the zone player events to be notified in real-time of changes.  It creates a web server to receive these notifications.  The IP address and port number for this listener are logged in a debug message, e.g.
 ```
 [1/1/2020, 11:58:35 AM] [Sonos] listening on http://192.168.x.x:58004/notify
 ```
-To check whether the listener is reachable from the network, open this URL in your web browser.  You should see an overview of the active subscriptions per ZonePlayer.
+To check whether the listener is reachable from the network, open this URL in your web browser.  You should see an overview of the active subscriptions per zone player.
 
 #### Getting Help
 If you have a question, please post a message to the **#zp** channel of the Homebridge community on [Discord](https://discord.gg/3qFgFMk).
@@ -234,8 +234,8 @@ You might want to checkout Apple's [HomeKit Accessory Simulator](https://develop
 
 The Sonos terminology needs some getting used to.
 A _zone_ corresponds to a physical room.
-It consists of a single ZonePlayer, two ZonePlayers configured as a stereo pair, or a home theatre setup (e.g. a PlayBar with separate surround speakers).
-Typically, zone setup is static; you would only change it when physically re-arranging your ZonePlayers between rooms.
+It consists of a single zone player, two zone players configured as a stereo pair, or a home theatre setup (e.g. a PlayBar with separate surround speakers).
+Typically, zone setup is static; you would only change it when physically re-arranging your zone players between rooms.
 A _zone group_ is a collection of one or more zones, playing the same music in sync.
 A zone group is controlled by its _coordinator_ zone.
 Typically, groups are dynamic, you add and/or remove zones to/from a group when listening to your music.
