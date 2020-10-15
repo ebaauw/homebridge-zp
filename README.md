@@ -139,7 +139,7 @@ Key | Default | Description
 `speakers` | `false` | Flag whether to expose a second *Speakers* service per zone, in addition to the standard *Sonos* service, see [**Speakers**](#speakers).  You might want to set this if you're using Sonos groups in a configuration of multiple Sonos zones.
 `subscriptionTimeout` | `30` | The duration (in minutes) of the subscriptions Homebridge ZP creates with each zone player.
 `timeout` | `15` | The timeout (in seconds) to wait for a response from a Sonos zone player.
-`tv` | `false` | Create an additional, non-bridged TV accessory for each zone.
+`tv` | `false` | Create an additional, non-bridged TV accessory for each zone.<br>Note that each TV accessory needs to be paired with HomeKit separately, using the same pin as for Homebridge, as specified in `config.json`.
 `tvPreFix` | `TV` | Prefix for serial number of TV accessories, to enable multiple instances of Homebridge ZP on the same network.
 
 Below is an example `config.json` that exposes the *Sonos* and *Speakers* service as a HomeKit `Speaker` and volume as `Brightness`, so it can be controlled from Siri:
