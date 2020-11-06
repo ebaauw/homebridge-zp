@@ -49,6 +49,12 @@
         "description": "Accessory name (use '%' for Zone name).  Default: '% Sonos'.",
         "type": "string"
       },
+      "maxFavourites": {
+        "description": "Maximum number of favourites supported, between 16 and 96.  Default: 96.",
+        "type": "integer",
+        "minimum": 16,
+        "maximum": 96
+      },
       "port": {
         "description": "Port to use for webserver receiving ZonePlayer notifications.  Default: random.",
         "type": "integer",
@@ -137,6 +143,10 @@
           "condition": { "functionBody": "return model.service === 'switch' || model.service === 'speaker'" }
         },
         "tv",
+        {
+          "key": "maxFavourites",
+          "condition": { "functionBody": "return model.tv" }
+        },
         "nameScheme"
       ]
     },
