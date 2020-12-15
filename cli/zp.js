@@ -47,6 +47,7 @@ const usage = {
   balance: `${b('balance')} [${b('-h')}] [${b('--')}] [${u('balance')}]`,
   nightSound: `${b('nightSound')} [${b('-h')}] [${b('on')}|${b('off')}]`,
   speechEnhancement: `${b('speechEnhancement')} [${b('-h')}] [${b('on')}|${b('off')}]`,
+  subEnable: `${b('subEnable')} [${b('-h')}] [${b('on')}|${b('off')}]`,
   led: `${b('led')} [${b('-h')}] [${b('on')}|${b('off')}]`,
   buttonLock: `${b('buttonLock')} [${b('-h')}] [${b('on')}|${b('off')}]`
 }
@@ -80,6 +81,7 @@ const description = {
   balance: 'Get/set balance.',
   nightSound: 'Get/set/clear nightsound.',
   speechEnhancement: 'Get/set/clear speech enhancement.',
+  subEnable: 'Get/set/clear Sub enabled state.',
   led: 'Get/set/clear LED state.',
   buttonLock: 'Get/set/clear button lock state.'
 }
@@ -175,6 +177,9 @@ Commands:
 
   ${usage.speechEnhancement}
   ${description.speechEnhancement}
+
+  ${usage.subEnable}
+  ${description.subEnable}
 
   ${usage.led}
   ${description.led}
@@ -500,6 +505,19 @@ Parameters:
 
   ${b('off')}
   Clear speech enhancement.`,
+  subEnable: `${description.subEnable}
+
+Usage: ${b('zp')} ${usage.subEnable}
+
+Parameters:
+  ${b('-h')}, ${b('--help')}
+  Print this help and exit.
+
+  ${b('on')}
+  Enable Sub.
+
+  ${b('off')}
+  Disable Sub.`,
   led: `${description.led}
 
 Usage: ${b('zp')} ${usage.led}
@@ -930,6 +948,8 @@ class Main extends homebridgeLib.CommandLineTool {
   async nightSound (...args) { return this.onOffCommand('NightSound', ...args) }
 
   async speechEnhancement (...args) { return this.onOffCommand('SpeechEnhancement', ...args) }
+
+  async subEnable (...args) { return this.onOffCommand('SubEnable', ...args) }
 
   async led (...args) { return this.onOffCommand('LedState', ...args) }
 
