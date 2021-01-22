@@ -1,22 +1,19 @@
 #!/usr/bin/env node
 
 // homebridge-zp/cli/zp.js
-// Copyright © 2019-2020 Erik Baauw. All rights reserved.
+// Copyright © 2019-2021 Erik Baauw. All rights reserved.
 //
 // Homebridge plugin for Sonos ZonePlayer.
 
 'use strict'
 
-const chalk = require('chalk')
 const homebridgeLib = require('homebridge-lib')
 const ZpClient = require('../lib/ZpClient')
 const ZpListener = require('../lib/ZpListener')
 const packageJson = require('../package.json')
 
-const b = chalk.bold
-const u = chalk.underline
-
-class UsageError extends Error {}
+const { b, u } = homebridgeLib.CommandLineTool
+const { UsageError } = homebridgeLib.CommandLineParser
 
 const usage = {
   zp: `${b('zp')} [${b('-hV')}] [${b('-H')} ${u('hostname')}[${b(':')}${u('port')}]] [${b('-t')} ${u('timeout')}] ${u('command')} [${u('argument')} ...]`,
