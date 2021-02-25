@@ -56,7 +56,7 @@
         "maximum": 96
       },
       "port": {
-        "description": "Port to use for webserver receiving ZonePlayer notifications.  Default: random.",
+        "description": "Port to use for webserver receiving zone player notifications.  Default: random.",
         "type": "integer",
         "maximum": 65535
       },
@@ -159,7 +159,7 @@
         "resetTimeout",
         "subscriptionTimeout",
         "timeout",
-        "host",
+        "address",
         "port",
         "tvIdPrefix"
       ]
