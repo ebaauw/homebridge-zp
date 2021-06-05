@@ -16,7 +16,7 @@ const { b, u } = homebridgeLib.CommandLineTool
 const { UsageError } = homebridgeLib.CommandLineParser
 
 const usage = {
-  zp: `${b('zp')} [${b('-hV')}] [${b('-H')} ${u('hostname')}[${b(':')}${u('port')}]] [${b('-t')} ${u('timeout')}] ${u('command')} [${u('argument')} ...]`,
+  zp: `${b('zp')} [${b('-hVD')}] [${b('-H')} ${u('hostname')}[${b(':')}${u('port')}]] [${b('-t')} ${u('timeout')}] ${u('command')} [${u('argument')} ...]`,
   info: `${b('info')} [${b('-hn')}]`,
   description: `${b('description')} [${b('-hnSs')}]`,
   topology: `${b('topology')} [${b('-hnpv')}]`,
@@ -94,6 +94,9 @@ Parameters:
 
   ${b('-V')}, ${b('--version')}
   Print version and exit.
+
+  ${b('-D')}, ${b('--debug')}
+  Print debug messages.
 
   ${b('-H')} ${u('hostname')}[${b(':')}${u('port')}], ${b('--host=')}${u('hostname')}[${b(':')}${u('port')}]
   Connect to ZonePlayer at ${u('hostname')}${b(':1400')} or ${u('hostname')}${b(':')}${u('port')}.
@@ -565,7 +568,80 @@ class Main extends homebridgeLib.CommandLineTool {
         throw new UsageError(`Missing host.  Set ${b('ZP_HOST')} or specify ${b('-H')}.`)
       }
       this.zpClient = new ZpClient(this._clargs.options)
-      this.zpClient.on('error', (error) => { this.error(error) })
+      this.zpClient
+        .on('error', (error) => {
+          if (error.request == null) {
+            this.error(error)
+            return
+          }
+          if (error.request.id !== this.requestId) {
+            if (error.request.body == null) {
+              this.log(
+                '%s: request %d: %s %s', error.request.name, error.request.id,
+                error.request.method, error.request.resource
+              )
+            } else {
+              this.log(
+                '%s: request %d: %s %s %s', error.request.name, error.request.id,
+                error.request.method, error.request.resource, error.request.body
+              )
+            }
+            this.requestId = error.request.id
+          }
+          this.error(
+            '%s: request %d: %s', error.request.name, error.request.id, error
+          )
+        })
+        .on('rebooted', (boot) => {
+          this.debug('%s: rebooted (%s)', boot.name, boot.bootSeq)
+        })
+        .on('request', (request) => {
+          if (request.body == null) {
+            this.debug(
+              '%s: request %d: %s %s', request.name, request.id,
+              request.method, request.resource
+            )
+            this.vdebug(
+              '%s: request %d: %s %s', request.name, request.id,
+              request.method, request.url
+            )
+          } else {
+            this.debug(
+              '%s: request %d: %s %s', request.name, request.id,
+              request.method, request.resource, request.action
+            )
+            this.vdebug(
+              '%s: request %d: %s %s %s %j', request.name, request.id,
+              request.method, request.resource, request.action,
+              request.parsedBody
+            )
+            this.vvdebug(
+              '%s: request %d: %s %s %j %j', request.name, request.id,
+              request.method, request.url, request.headers, request.body
+            )
+          }
+        })
+        .on('response', (response) => {
+          if (response.body == null) {
+            this.debug(
+              '%s: request %d: %d %s', response.request.name,
+              response.request.id, response.statusCode, response.statusMessage
+            )
+          } else {
+            this.vvdebug(
+              '%s: request %d: response: %j', response.request.name,
+              response.request.id, response.body
+            )
+            this.vdebug(
+              '%s: request %d: response: %j', response.request.name,
+              response.request.id, response.parsedBody
+            )
+            this.debug(
+              '%s: request %d: %d %s', response.request.name,
+              response.request.id, response.statusCode, response.statusMessage
+            )
+          }
+        })
       await this.zpClient.init()
       this.name = 'zp ' + this._clargs.command
       this.usage = `${b('zp')} ${usage[this._clargs.command]}`
@@ -584,32 +660,40 @@ class Main extends homebridgeLib.CommandLineTool {
         timeout: 5
       }
     }
-    parser.help('h', 'help', help.zp)
-    parser.version('V', 'version')
-    parser.option('H', 'host', (value) => {
-      homebridgeLib.OptionParser.toHost('host', value, false, true)
-      clargs.options.host = value
-    })
-    parser.option('t', 'timeout', (value) => {
-      clargs.options.timeout = homebridgeLib.OptionParser.toInt(
-        'timeout', value, 1, 60, true
-      )
-    })
-    parser.parameter('command', (value) => {
-      if (usage[value] == null || typeof this[value] !== 'function') {
-        throw new UsageError(`${value}: unknown command`)
-      }
-      clargs.command = value
-    })
-    parser.remaining((list) => { clargs.args = list })
-    parser.parse()
+    parser
+      .help('h', 'help', help.zp)
+      .version('V', 'version')
+      .flag('D', 'debug', () => {
+        if (this.vdebugEnabled) {
+          this.setOptions({ vvdebug: true })
+        } else if (this.debugEnabled) {
+          this.setOptions({ vdebug: true })
+        } else {
+          this.setOptions({ debug: true, chalk: true })
+        }
+      })
+      .option('H', 'host', (value) => {
+        homebridgeLib.OptionParser.toHost('host', value, false, true)
+        clargs.options.host = value
+      })
+      .option('t', 'timeout', (value) => {
+        clargs.options.timeout = homebridgeLib.OptionParser.toInt(
+          'timeout', value, 1, 60, true
+        )
+      })
+      .parameter('command', (value) => {
+        if (usage[value] == null || typeof this[value] !== 'function') {
+          throw new UsageError(`${value}: unknown command`)
+        }
+        clargs.command = value
+      })
+      .remaining((list) => { clargs.args = list })
+      .parse()
     return clargs
   }
 
-  async shutdown (signal) {
-    this.log('Got %s, shutting down', signal)
+  async destroy () {
     await this.zpClient.close()
-    setImmediate(() => { process.exit(0) })
   }
 
   async info (...args) {
@@ -730,22 +814,26 @@ class Main extends homebridgeLib.CommandLineTool {
     parser.parse(...args)
     this.setOptions({ mode: clargs.mode })
     const jsonFormatter = new homebridgeLib.JsonFormatter(clargs.options)
-    process.on('SIGINT', () => { this.shutdown('SIGINT') })
-    process.on('SIGTERM', () => { this.shutdown('SIGTERM') })
     this.zpListener = new ZpListener()
-    this.zpListener.on('listening', (url) => {
-      this.log('listening on %s', url)
-    })
-    this.zpListener.on('close', (url) => {
-      this.log('closed %s', url)
-    })
-    this.zpListener.on('error', (error) => { this.error(error) })
-    this.zpClient.on('event', (device, service, event) => {
-      this.log(
-        '%s: %s %s event: %s', this.zpClient.name,
-        device, service, jsonFormatter.stringify(event)
-      )
-    })
+    this.zpListener
+      .on('listening', (url) => { this.log('listening on %s', url) })
+      .on('close', (url) => { this.log('closed %s', url) })
+      .on('error', (error) => { this.error(error) })
+    this.zpClient
+      .on('message', (message) => {
+        this.vvdebug(
+          '%s: %s %s event: %s', message.name, message.device, message.service,
+          message.body
+        )
+        this.debug(
+          '%s: %s %s event', message.name, message.device, message.service
+        )
+        this.log(
+          '%s: %s %s event: %s', message.name,
+          message.device, message.service,
+          jsonFormatter.stringify(message.parsedBody)
+        )
+      })
     await this.zpClient.open(this.zpListener)
     const description = await this.zpClient.get()
     const deviceList = [description.device].concat(description.device.deviceList)
