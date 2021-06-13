@@ -567,11 +567,17 @@ class Main extends homebridgeLib.CommandLineTool {
       if (this._clargs.options.host == null || this._clargs.options.host === '') {
         throw new UsageError(`Missing host.  Set ${b('ZP_HOST')} or specify ${b('-H')}.`)
       }
+      this.zpListener = new ZpListener()
+      this.zpListener
+        .on('listening', (url) => { this.log('listening on %s', url) })
+        .on('close', (url) => { this.log('closed %s', url) })
+        .on('error', (error) => { this.warn(error) })
+      this._clargs.options.listener = this.zpListener
       this.zpClient = new ZpClient(this._clargs.options)
       this.zpClient
         .on('error', (error) => {
           if (error.request == null) {
-            this.error(error)
+            this.warn(error)
             return
           }
           if (error.request.id !== this.requestId) {
@@ -582,13 +588,13 @@ class Main extends homebridgeLib.CommandLineTool {
               )
             } else {
               this.log(
-                '%s: request %d: %s %s %s', error.request.name, error.request.id,
-                error.request.method, error.request.resource, error.request.body
+                '%s: request %d: %s %s', error.request.name, error.request.id,
+                error.request.method, error.request.resource, error.request.action
               )
             }
             this.requestId = error.request.id
           }
-          this.error(
+          this.warn(
             '%s: request %d: %s', error.request.name, error.request.id, error
           )
         })
@@ -641,6 +647,14 @@ class Main extends homebridgeLib.CommandLineTool {
               response.request.id, response.statusCode, response.statusMessage
             )
           }
+        })
+        .on('message', (message) => {
+          const notify = message.device === 'ZonePlayer'
+            ? message.service
+            : message.device + '/' + message.service
+          this.debug('notify %s/Event', notify)
+          this.vdebug('notify %s/Event: %j', notify, message.parsedBody)
+          this.vvdebug('notify %s/Event: ', notify, message.body)
         })
       await this.zpClient.init()
       this.name = 'zp ' + this._clargs.command
@@ -814,11 +828,6 @@ class Main extends homebridgeLib.CommandLineTool {
     parser.parse(...args)
     this.setOptions({ mode: clargs.mode })
     const jsonFormatter = new homebridgeLib.JsonFormatter(clargs.options)
-    this.zpListener = new ZpListener()
-    this.zpListener
-      .on('listening', (url) => { this.log('listening on %s', url) })
-      .on('close', (url) => { this.log('closed %s', url) })
-      .on('error', (error) => { this.error(error) })
     this.zpClient
       .on('message', (message) => {
         this.vvdebug(
