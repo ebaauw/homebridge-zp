@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "he": "^1.2.0",
-    "homebridge-lib": "~5.1.8",
+    "homebridge-lib": "~5.1.9",
     "xml2js": "~0.4.23"
   },
   "scripts": {
