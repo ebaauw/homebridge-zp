@@ -561,6 +561,95 @@ class Main extends homebridgeLib.CommandLineTool {
     this.clients = []
   }
 
+  createZpClient (options) {
+    const zpClient = new ZpClient(options)
+    zpClient
+      .on('error', (error) => {
+        if (error.request == null) {
+          this.warn(error)
+          return
+        }
+        if (error.request.id !== this.requestId) {
+          if (error.request.body == null) {
+            this.log(
+              '%s: request %d: %s %s', error.request.name, error.request.id,
+              error.request.method, error.request.resource
+            )
+          } else {
+            this.log(
+              '%s: request %d: %s %s', error.request.name, error.request.id,
+              error.request.method, error.request.resource, error.request.action
+            )
+          }
+          this.requestId = error.request.id
+        }
+        this.warn(
+          '%s: request %d: %s', error.request.name, error.request.id, error
+        )
+      })
+      .on('rebooted', (boot) => {
+        this.debug('%s: rebooted (%s)', boot.name, boot.bootSeq)
+      })
+      .on('request', (request) => {
+        this.debug(
+          '%s: request %s: %s %s%s', request.name,
+          request.id, request.method, request.resource,
+          request.action == null ? '' : ' ' + request.action
+        )
+        if (request.parsedBody != null) {
+          this.vdebug(
+            '%s: request %s: %s %s %j', request.name,
+            request.id, request.method, request.url, request.parsedBody
+          )
+          this.vvdebug(
+            '%s: request %s: %s %s (headers: %j) %j', request.name,
+            request.id, request.method, request.url,
+            request.headers, request.body
+          )
+        } else {
+          this.vdebug(
+            '%s: request %s: %s %s', request.name,
+            request.id, request.method, request.url
+          )
+          this.vvdebug(
+            '%s: request %s: %s %s (headers: %j)', request.name,
+            request.id, request.method, request.url, request.headers
+          )
+        }
+      })
+      .on('response', (response) => {
+        if (response.parsedBody != null) {
+          this.vvdebug(
+            '%s: request %d: response (headers: %j): %j', response.request.name,
+            response.request.id, response.headers, response.body
+          )
+          this.vdebug(
+            '%s: request %d: response: %j', response.request.name,
+            response.request.id, response.parsedBody
+          )
+        }
+        this.debug(
+          '%s: request %d: %d %s', response.request.name,
+          response.request.id, response.statusCode, response.statusMessage
+        )
+      })
+      .on('message', (message) => {
+        const notify = message.device === 'ZonePlayer'
+          ? message.service
+          : message.device + '/' + message.service
+        this.vvdebug(
+          '%s: notify %s/Event: %s', this._clargs.options.host,
+          notify, message.body
+        )
+        this.vdebug(
+          '%s: notify %s/Event: %j', this._clargs.options.host,
+          notify, message.parsedBody
+        )
+        this.debug('%s: notify %s/Event', this._clargs.options.host, notify)
+      })
+    return zpClient
+  }
+
   async main () {
     try {
       this._clargs = this.parseArguments()
@@ -573,91 +662,7 @@ class Main extends homebridgeLib.CommandLineTool {
         .on('close', (url) => { this.log('closed %s', url) })
         .on('error', (error) => { this.warn(error) })
       this._clargs.options.listener = this.zpListener
-      this.zpClient = new ZpClient(this._clargs.options)
-      this.zpClient
-        .on('error', (error) => {
-          if (error.request == null) {
-            this.warn(error)
-            return
-          }
-          if (error.request.id !== this.requestId) {
-            if (error.request.body == null) {
-              this.log(
-                '%s: request %d: %s %s', error.request.name, error.request.id,
-                error.request.method, error.request.resource
-              )
-            } else {
-              this.log(
-                '%s: request %d: %s %s', error.request.name, error.request.id,
-                error.request.method, error.request.resource, error.request.action
-              )
-            }
-            this.requestId = error.request.id
-          }
-          this.warn(
-            '%s: request %d: %s', error.request.name, error.request.id, error
-          )
-        })
-        .on('rebooted', (boot) => {
-          this.debug('%s: rebooted (%s)', boot.name, boot.bootSeq)
-        })
-        .on('request', (request) => {
-          this.debug(
-            '%s: request %s: %s %s%s', request.name,
-            request.id, request.method, request.resource,
-            request.action == null ? '' : ' ' + request.action
-          )
-          if (request.parsedBody != null) {
-            this.vdebug(
-              '%s: request %s: %s %s %j', request.name,
-              request.id, request.method, request.url, request.parsedBody
-            )
-            this.vvdebug(
-              '%s: request %s: %s %s (headers: %j) %j', request.name,
-              request.id, request.method, request.url,
-              request.headers, request.body
-            )
-          } else {
-            this.vdebug(
-              '%s: request %s: %s %s', request.name,
-              request.id, request.method, request.url
-            )
-            this.vvdebug(
-              '%s: request %s: %s %s (headers: %j)', request.name,
-              request.id, request.method, request.url, request.headers
-            )
-          }
-        })
-        .on('response', (response) => {
-          if (response.parsedBody != null) {
-            this.vvdebug(
-              '%s: request %d: response (headers: %j): %j', response.request.name,
-              response.request.id, response.headers, response.body
-            )
-            this.vdebug(
-              '%s: request %d: response: %j', response.request.name,
-              response.request.id, response.parsedBody
-            )
-          }
-          this.debug(
-            '%s: request %d: %d %s', response.request.name,
-            response.request.id, response.statusCode, response.statusMessage
-          )
-        })
-        .on('message', (message) => {
-          const notify = message.device === 'ZonePlayer'
-            ? message.service
-            : message.device + '/' + message.service
-          this.vvdebug(
-            '%s: notify %s/Event: %s', this._clargs.options.host,
-            notify, message.body
-          )
-          this.vdebug(
-            '%s: notify %s/Event: %j', this._clargs.options.host,
-            notify, message.parsedBody
-          )
-          this.debug('%s: notify %s/Event', this._clargs.options.host, notify)
-        })
+      this.zpClient = await this.createZpClient(this._clargs.options)
       await this.zpClient.init()
       this.debug(
         '%s: reached using local address %s', this._clargs.options.host,
@@ -786,7 +791,7 @@ class Main extends homebridgeLib.CommandLineTool {
             this.error('%s: zone player not found', id)
             continue
           }
-          const zpClient = new ZpClient({
+          const zpClient = this.createZpClient({
             host: zonePlayer.address,
             id: zonePlayer.id,
             timeout: this._clargs.options.timeout
@@ -836,13 +841,6 @@ class Main extends homebridgeLib.CommandLineTool {
     const jsonFormatter = new homebridgeLib.JsonFormatter(clargs.options)
     this.zpClient
       .on('message', (message) => {
-        const notify = message.device === 'ZonePlayer'
-          ? message.service
-          : message.device + '/' + message.service
-        this.vvdebug(
-          '%s: notify %s/Event: %s', this._clargs.options.host,
-          notify, message.body
-        )
         this.log(
           '%s: %s %s event: %s', message.name,
           message.device, message.service,
