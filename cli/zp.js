@@ -649,12 +649,14 @@ class Main extends homebridgeLib.CommandLineTool {
             ? message.service
             : message.device + '/' + message.service
           this.vvdebug(
-            '%s: notify %s/Event: %s', message.name, notify, message.body
+            '%s: notify %s/Event: %s', this._clargs.options.host,
+            notify, message.body
           )
           this.vdebug(
-            '%s: notify %s/Event: %j', message.name, notify, message.parsedBody
+            '%s: notify %s/Event: %j', this._clargs.options.host,
+            notify, message.parsedBody
           )
-          this.debug('%s: notify %s/Event', message.name, notify)
+          this.debug('%s: notify %s/Event', this._clargs.options.host, notify)
         })
       await this.zpClient.init()
       this.debug(
@@ -838,7 +840,8 @@ class Main extends homebridgeLib.CommandLineTool {
           ? message.service
           : message.device + '/' + message.service
         this.vvdebug(
-          '%s: notify %s/Event: %s', message.name, notify, message.body
+          '%s: notify %s/Event: %s', this._clargs.options.host,
+          notify, message.body
         )
         this.log(
           '%s: %s %s event: %s', message.name,
