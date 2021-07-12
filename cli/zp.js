@@ -796,16 +796,11 @@ class Main extends homebridgeLib.CommandLineTool {
             id: zonePlayer.id,
             timeout: this._clargs.options.timeout
           })
-          zpClient.on('error', (error, id, method, resource, body, url) => {
-            this.log('request %d: %s %s', id, method, resource)
-            this.error('request %d: error %s', id, error)
-          })
           jobs.push(zpClient.init()
             .then(() => {
               result[id] = zpClient.info
-            }).catch((error) => {
+            }).catch(() => {
               delete result[id]
-              this.error('%s: %s', zonePlayer.address, error)
             })
           )
         }
