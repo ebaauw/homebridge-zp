@@ -17,9 +17,9 @@ const { UsageError } = homebridgeLib.CommandLineParser
 
 const usage = {
   zp: `${b('zp')} [${b('-hVD')}] [${b('-H')} ${u('hostname')}[${b(':')}${u('port')}]] [${b('-t')} ${u('timeout')}] ${u('command')} [${u('argument')} ...]`,
-  info: `${b('info')} [${b('-hn')}]`,
+  info: `${b('info')} [${b('-hnv')}]`,
   description: `${b('description')} [${b('-hnSs')}]`,
-  topology: `${b('topology')} [${b('-hnpv')}]`,
+  topology: `${b('topology')} [${b('-hn')}] [${b('-pv')}|${b('-r')}]`,
   eventlog: `${b('eventlog')} [${b('-hns')}]`,
   browse: `${b('browse')} [${b('-hn')}] [${u('object')}]`,
   play: `${b('play')} [${b('-h')}] [${u('uri')} [${u('meta')}]]`,
@@ -197,7 +197,10 @@ Parameters:
   Print this help and exit.
 
   ${b('-n')}, ${b('--noWhiteSpace')}
-  Do not include spaces nor newlines in JSON output.`,
+  Do not include spaces nor newlines in JSON output.
+
+  ${b('-v')}. ${b('--verbose')}
+  Verbose.  Include topology info.`,
   description: `${description.description}
 
 Usage: ${b('zp')} ${usage.description}
@@ -228,10 +231,12 @@ Parameters:
   ${b('-p')}, ${b('--playersOnly')}
   Do not include zones in the output.
 
+  ${b('-r')}, ${b('--raw')}
+  Output the raw zone group state.
+
   ${b('-v')}, ${b('--verify')}
   Verify that each zone player can be reached.
-  Include the device description information for reachable zone players.
-  Unreachable zone player are omitted from the output.`,
+  Include the device description information for reachable zone players.`,
   eventlog: `${description.eventlog}
 
 Usage: ${b('zp')} ${usage.eventlog}
@@ -730,8 +735,12 @@ class Main extends homebridgeLib.CommandLineTool {
     parser.flag('n', 'noWhiteSpace', () => {
       clargs.options.noWhiteSpace = true
     })
+    parser.flag('v', 'verbose', () => { clargs.verbose = true })
     parser.parse(...args)
     const jsonFormatter = new homebridgeLib.JsonFormatter(clargs.options)
+    if (clargs.verbose) {
+      await this.zpClient.initTopology()
+    }
     const json = jsonFormatter.stringify(this.zpClient.info)
     this.print(json)
   }
@@ -749,7 +758,7 @@ class Main extends homebridgeLib.CommandLineTool {
     parser.flag('s', 'sortKeys', () => { clargs.options.sortKeys = true })
     parser.parse(...args)
     const jsonFormatter = new homebridgeLib.JsonFormatter(clargs.options)
-    const response = await this.zpClient.get()
+    const response = this.zpClient.description
     if (clargs.scpd) {
       const devices = [response.device]
         .concat(response.device.deviceList)
@@ -763,6 +772,17 @@ class Main extends homebridgeLib.CommandLineTool {
     this.print(json)
   }
 
+  async _getInfo (zonePlayer) {
+    const zpClient = this.createZpClient({
+      host: zonePlayer.address,
+      id: zonePlayer.id,
+      timeout: this._clargs.options.timeout
+    })
+    await zpClient.init()
+    await zpClient.initTopology(this.zpClient)
+    return zpClient.info
+  }
+
   async topology (...args) {
     const parser = new homebridgeLib.CommandLineParser(packageJson)
     const clargs = {
@@ -773,9 +793,11 @@ class Main extends homebridgeLib.CommandLineTool {
       clargs.options.noWhiteSpace = true
     })
     parser.flag('p', 'playersOnly', () => { clargs.players = true })
+    parser.flag('r', 'raw', () => { clargs.raw = true })
     parser.flag('v', 'verify', () => { clargs.verify = true })
     parser.parse(...args)
     const jsonFormatter = new homebridgeLib.JsonFormatter(clargs.options)
+    await this.zpClient.initTopology()
     let result = {}
     if (clargs.verify) {
       const zonePlayers = this.zpClient.zonePlayers
@@ -791,16 +813,11 @@ class Main extends homebridgeLib.CommandLineTool {
             this.error('%s: zone player not found', id)
             continue
           }
-          const zpClient = this.createZpClient({
-            host: zonePlayer.address,
-            id: zonePlayer.id,
-            timeout: this._clargs.options.timeout
-          })
-          jobs.push(zpClient.init()
-            .then(() => {
-              result[id] = zpClient.info
+          jobs.push(this._getInfo(zonePlayer)
+            .then((info) => {
+              result[id] = info
             }).catch(() => {
-              delete result[id]
+              // delete result[id]
             })
           )
         }
@@ -813,6 +830,8 @@ class Main extends homebridgeLib.CommandLineTool {
       }
     } else if (clargs.players) {
       result = this.zpClient.zonePlayers
+    } else if (clargs.raw) {
+      result = this.zpClient.zoneGroupState
     } else {
       result = this.zpClient.zones
     }
@@ -842,6 +861,7 @@ class Main extends homebridgeLib.CommandLineTool {
           jsonFormatter.stringify(message.parsedBody)
         )
       })
+    await this.zpClient.initTopology()
     await this.zpClient.open(this.zpListener)
     const description = await this.zpClient.get()
     const deviceList = [description.device].concat(description.device.deviceList)
