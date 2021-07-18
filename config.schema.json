@@ -26,11 +26,6 @@
         "description": "Exclude AirPlay 2 zone players that are already exposed to Apple's Home app.",
         "type": "boolean"
       },
-      "forceS2": {
-        "title": "Expose only S2 players",
-        "description": "Set in a Split Sonos System to prevent accidentally exposing the S1 players.",
-        "type": "boolean"
-      },
       "heartrate": {
         "description": "Interval (in seconds) to poll zone player.  Default: disabled.",
         "type": "integer"
