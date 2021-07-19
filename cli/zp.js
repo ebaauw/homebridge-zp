@@ -20,7 +20,7 @@ const usage = {
   info: `${b('info')} [${b('-hnv')}]`,
   description: `${b('description')} [${b('-hnSs')}]`,
   topology: `${b('topology')} [${b('-hn')}] [${b('-pv')}|${b('-r')}]`,
-  eventlog: `${b('eventlog')} [${b('-hns')}]`,
+  eventlog: `${b('eventlog')} [${b('-hnst')}]`,
   browse: `${b('browse')} [${b('-hn')}] [${u('object')}]`,
   play: `${b('play')} [${b('-h')}] [${u('uri')} [${u('meta')}]]`,
   queue: `${b('queue')} [${b('-h')}] ${u('uri')} [${u('meta')}]`,
@@ -249,7 +249,10 @@ Parameters:
   Do not include spaces nor newlines in JSON output.
 
   ${b('-s')}, ${b('--service')}
-  Do not output timestamps (useful when running as service).`,
+  Do not output timestamps (useful when running as service).
+
+  ${b('-t')}, ${b('--topology')}
+  Show only parsed ZoneGroupTopology events, to monitor topology changes.`,
   browse: `${description.browse}
 Returns a list of media items with ${u('object')} for browsing or ${u('uri')} for playing.
 
@@ -592,8 +595,18 @@ class Main extends homebridgeLib.CommandLineTool {
           '%s: request %d: %s', error.request.name, error.request.id, error
         )
       })
-      .on('rebooted', (boot) => {
-        this.debug('%s: rebooted (%s)', boot.name, boot.bootSeq)
+      // TODO: never called, since no UPnP listener is active
+      .on('rebooted', (oldBootSeq) => {
+        this.debug(
+          '%s: rebooted (%d -> %d)', zpClient.name,
+          oldBootSeq, zpClient.bootSeq
+        )
+      })
+      .on('addressChanged', (oldAddress) => {
+        this.debug(
+          '%s: IP address changed (%s -> %s)', zpClient.name,
+          oldAddress, zpClient.address
+        )
       })
       .on('request', (request) => {
         this.debug(
@@ -850,31 +863,49 @@ class Main extends homebridgeLib.CommandLineTool {
       clargs.options.noWhiteSpace = true
     })
     parser.flag('s', 'service', () => { clargs.mode = 'service' })
+    parser.flag('t', 'topology', () => { clargs.topology = true })
     parser.parse(...args)
     this.setOptions({ mode: clargs.mode })
     const jsonFormatter = new homebridgeLib.JsonFormatter(clargs.options)
     this.zpClient
       .on('message', (message) => {
-        this.log(
-          '%s: %s %s event: %s', message.name,
-          message.device, message.service,
-          jsonFormatter.stringify(message.parsedBody)
-        )
+        if (clargs.topology) {
+          if (message.service === 'ZoneGroupTopology') {
+            this.log(
+              '%s: topology %s', message.name,
+              jsonFormatter.stringify(this.zpClient.zones)
+            )
+          }
+        } else {
+          this.log(
+            '%s: %s %s event: %s', message.name,
+            message.device, message.service,
+            jsonFormatter.stringify(message.parsedBody)
+          )
+        }
       })
     await this.zpClient.initTopology()
     await this.zpClient.open(this.zpListener)
-    const description = await this.zpClient.get()
-    const deviceList = [description.device].concat(description.device.deviceList)
-    for (const device of deviceList) {
-      for (const service of device.serviceList) {
-        const serviceName = service.serviceId.split(':')[3]
-        if (unsupportedServices.includes(serviceName)) {
-          continue
-        }
-        try {
-          await this.zpClient.subscribe(service.eventSubUrl)
-        } catch (error) {
-          this.error(error)
+    if (clargs.topology) {
+      try {
+        await this.zpClient.subscribe('/ZoneGroupTopology/Event')
+      } catch (error) {
+        this.error(error)
+      }
+    } else {
+      const description = this.zpClient.description
+      const deviceList = [description.device].concat(description.device.deviceList)
+      for (const device of deviceList) {
+        for (const service of device.serviceList) {
+          const serviceName = service.serviceId.split(':')[3]
+          if (unsupportedServices.includes(serviceName)) {
+            continue
+          }
+          try {
+            await this.zpClient.subscribe(service.eventSubUrl)
+          } catch (error) {
+            this.error(error)
+          }
         }
       }
     }
