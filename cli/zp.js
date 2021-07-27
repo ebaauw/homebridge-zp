@@ -558,8 +558,7 @@ const unsupportedServices = [
   'ConnectionManager', // No useful information.
   'MusicServices', // Not supported by homebridge-zp.
   'QPlay', // Doesn't support SUBSCRIBE.
-  'Queue', // Not supported by homebridge-zp.
-  'SystemProperties' // No useful information.
+  'Queue' // Not supported by homebridge-zp.
 ]
 
 class Main extends homebridgeLib.CommandLineTool {
@@ -754,8 +753,7 @@ class Main extends homebridgeLib.CommandLineTool {
     if (clargs.verbose) {
       await this.zpClient.initTopology()
     }
-    const json = jsonFormatter.stringify(this.zpClient.info)
-    this.print(json)
+    this.print(jsonFormatter.stringify(this.zpClient.info))
   }
 
   async description (...args) {
@@ -872,20 +870,19 @@ class Main extends homebridgeLib.CommandLineTool {
         if (clargs.topology) {
           if (message.service === 'ZoneGroupTopology') {
             this.log(
-              '%s: topology %s', message.name,
+              '%s: topology %s', this._clargs.options.host,
               jsonFormatter.stringify(this.zpClient.zones)
             )
           }
         } else {
           this.log(
-            '%s: %s %s event: %s', message.name,
+            '%s: %s %s event: %s', this._clargs.options.host,
             message.device, message.service,
             jsonFormatter.stringify(message.parsedBody)
           )
         }
       })
-    await this.zpClient.initTopology()
-    await this.zpClient.open(this.zpListener)
+    await this.zpClient.open()
     if (clargs.topology) {
       try {
         await this.zpClient.subscribe('/ZoneGroupTopology/Event')
