@@ -635,6 +635,10 @@ class Main extends homebridgeLib.CommandLineTool {
         }
       })
       .on('response', (response) => {
+        this.debug(
+          '%s: request %d: %d %s', response.request.name,
+          response.request.id, response.statusCode, response.statusMessage
+        )
         if (response.parsedBody != null) {
           this.vvdebug(
             '%s: request %d: response (headers: %j): %j', response.request.name,
@@ -645,10 +649,6 @@ class Main extends homebridgeLib.CommandLineTool {
             response.request.id, response.parsedBody
           )
         }
-        this.debug(
-          '%s: request %d: %d %s', response.request.name,
-          response.request.id, response.statusCode, response.statusMessage
-        )
       })
       .on('message', (message) => {
         const notify = message.device === 'ZonePlayer'
