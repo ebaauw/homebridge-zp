@@ -1064,6 +1064,7 @@ class Main extends homebridgeLib.CommandLineTool {
       coordinator = value
     })
     parser.parse(...args)
+    await this.zpClient.initTopology()
     for (const id in this.zpClient.zones) {
       if (this.zpClient.zones[id].zoneName === coordinator) {
         return this.zpClient.setAvTransportUri('x-rincon:' + id)
