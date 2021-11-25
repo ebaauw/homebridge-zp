@@ -675,8 +675,8 @@ class Main extends homebridgeLib.CommandLineTool {
       }
       this.zpListener = new ZpListener()
       this.zpListener
-        .on('listening', (url) => { this.log('listening on %s', url) })
-        .on('close', (url) => { this.log('closed %s', url) })
+        .on('listening', (url) => { this.debug('listening on %s', url) })
+        .on('close', (url) => { this.debug('closed %s', url) })
         .on('error', (error) => { this.warn(error) })
       this._clargs.options.listener = this.zpListener
       this.zpClient = await this.createZpClient(this._clargs.options)
@@ -923,6 +923,7 @@ class Main extends homebridgeLib.CommandLineTool {
     })
     parser.parse(...args)
     const jsonFormatter = new homebridgeLib.JsonFormatter(clargs.options)
+    await this.zpClient.initTopology()
     let result
     if (clargs.object == null) {
       result = {
