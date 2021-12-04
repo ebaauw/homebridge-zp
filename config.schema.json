@@ -8,7 +8,7 @@
     "type": "object",
     "properties": {
       "name": {
-        "description": "Plugin name as displayed in the homebridge log.",
+        "description": "Plugin name as displayed in the Homebridge log.",
         "type": "string",
         "required": true,
         "default": "Sonos"
@@ -62,24 +62,32 @@
         "oneOf": [
           {
             "title": "Switch",
-            "enum": [ "switch" ]
+            "enum": [
+              "switch"
+            ]
           },
           {
             "title": "Lightbulb",
-            "enum": [ "light" ]
+            "enum": [
+              "light"
+            ]
           },
           {
             "title": "Speaker",
-            "enum": [ "speaker" ]
+            "enum": [
+              "speaker"
+            ]
           },
           {
             "title": "Fan",
-            "enum": [ "fan" ]
+            "enum": [
+              "fan"
+            ]
           }
         ]
       },
       "speakers": {
-	      "description": "Create an additional Speaker service for each zone.",
+        "description": "Create an additional Speaker service for each zone.",
         "type": "boolean"
       },
       "subscriptionTimeout": {
@@ -93,7 +101,7 @@
       "tv": {
         "title": "TV",
         "description": "Create an additional, non-bridged TV accessory for each zone.",
-      	"type": "boolean"
+        "type": "boolean"
       },
       "tvIdPrefix": {
         "title": "TV ID Prefix",
@@ -116,7 +124,9 @@
         "leds",
         {
           "key": "heartrate",
-          "condition": { "functionBody": "return model.leds" }
+          "condition": {
+            "functionBody": "return model.leds"
+          }
         },
         "excludeAirPlay"
       ]
@@ -128,14 +138,18 @@
       "description": "Select how to expose a zone to HomeKit.",
       "items": [
         "service",
-	      {
+        {
           "key": "brightness",
-          "condition": { "functionBody": "return model.service === 'switch' || model.service === 'speaker'" }
+          "condition": {
+            "functionBody": "return model.service === 'switch' || model.service === 'speaker'"
+          }
         },
         "tv",
         {
           "key": "maxFavourites",
-          "condition": { "functionBody": "return model.tv" }
+          "condition": {
+            "functionBody": "return model.tv"
+          }
         },
         "nameScheme"
       ]
