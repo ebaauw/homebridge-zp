@@ -4,7 +4,7 @@
   "displayName": "Homebridge ZP",
   "author": "Erik Baauw",
   "license": "Apache-2.0",
-  "version": "1.4.16",
+  "version": "1.4.17",
   "keywords": [
     "homebridge-plugin",
     "homekit",
