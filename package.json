@@ -4,7 +4,7 @@
   "displayName": "Homebridge ZP",
   "author": "Erik Baauw",
   "license": "Apache-2.0",
-  "version": "1.4.22",
+  "version": "1.4.23",
   "keywords": [
     "homebridge-plugin",
     "homekit",
@@ -42,7 +42,8 @@
     {
       "type": "github",
       "url": "https://github.com/sponsors/ebaauw"
-    }, {
+    },
+    {
       "type": "paypal",
       "url": "https://www.paypal.me/ebaauw/EUR"
     }
