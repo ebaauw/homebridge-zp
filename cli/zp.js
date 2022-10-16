@@ -45,6 +45,7 @@ const usage = {
   nightSound: `${b('nightSound')} [${b('-h')}] [${b('on')}|${b('off')}]`,
   speechEnhancement: `${b('speechEnhancement')} [${b('-h')}] [${b('on')}|${b('off')}]`,
   subEnable: `${b('subEnable')} [${b('-h')}] [${b('on')}|${b('off')}]`,
+  subLevel: `${b('subLevel')} [${b('-h')}] [${b('--')}] [${u('level')}]`,
   led: `${b('led')} [${b('-h')}] [${b('on')}|${b('off')}]`,
   buttonLock: `${b('buttonLock')} [${b('-h')}] [${b('on')}|${b('off')}]`
 }
@@ -79,6 +80,7 @@ const description = {
   nightSound: 'Get/set/clear nightsound.',
   speechEnhancement: 'Get/set/clear speech enhancement.',
   subEnable: 'Get/set/clear Sub enabled state.',
+  subLevel: 'Get/set Sub level.',
   led: 'Get/set/clear LED state.',
   buttonLock: 'Get/set/clear button lock state.'
 }
@@ -180,6 +182,9 @@ Commands:
 
   ${usage.subEnable}
   ${description.subEnable}
+
+  ${usage.subLevel}
+  ${description.subLevel}
 
   ${usage.led}
   ${description.led}
@@ -463,7 +468,7 @@ Parameters:
   Print this help and exit.
 
   ${u('treble')}
-  Set treble to ${u('treble')}.`,
+  Set treble to ${u('treble')} (from -10 to 10).`,
   loudness: `${description.loudness}
 
 Usage: ${b('zp')} ${usage.loudness}
@@ -486,7 +491,7 @@ Parameters:
   Print this help and exit.
 
   ${u('balance')}
-  Set treble to ${u('balance')}.`,
+  Set balance to ${u('balance')} (from -100 to 100).`,
   nightSound: `${description.nightSound}
 
 Usage: ${b('zp')} ${usage.nightSound}
@@ -526,6 +531,16 @@ Parameters:
 
   ${b('off')}
   Disable Sub.`,
+  subLevel: `${description.subLevel}
+
+Usage: ${b('zp')} ${usage.subLevel}
+
+Parameters:
+  ${b('-h')}, ${b('--help')}
+  Print this help and exit.
+
+  ${u('level')}
+  Set Sub level to ${u('level')} (from -15 to 15).`,
   led: `${description.led}
 
 Usage: ${b('zp')} ${usage.led}
@@ -1093,6 +1108,8 @@ class Main extends homebridgeLib.CommandLineTool {
   async speechEnhancement (...args) { return this.onOffCommand('SpeechEnhancement', ...args) }
 
   async subEnable (...args) { return this.onOffCommand('SubEnable', ...args) }
+
+  async subLevel (...args) { return this.valueCommand('SubLevel', -15, 15, ...args) }
 
   async led (...args) { return this.onOffCommand('LedState', ...args) }
 
