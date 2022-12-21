@@ -155,24 +155,9 @@ Below is an example `config.json` that exposes the *Sonos* and *Speakers* servic
 ```
 
 #### Split Sonos System
-
-If you have a split Sonos system, Homebridge ZP will expose either the S2 or the S1 zone players, depending on which player is quickest to respond during discovery.
-Usually this will be a restored S2 player, but there's no guarantee, especially after clearing the cached accessories.
-This could cause HomeKit to drop accessories, treating them as new accessories when re-exposed, losing any association to HomeKit rooms, groups, scenes, and automations.
-To prevent this, set `forceS2` in `config.json`.
-
-To expose both the S2 and the S1 zone players, create two platform entries:
-```json
-"platforms": [
-  {
-    "platform": "ZP",
-    "forceS2": true
-  },
-  {
-    "platform": "ZPS1"
-  }
-]
-```
+If you have a split Sonos system, Homebridge ZP will expose both the S2 and the S1 zone players.
+Of course you can only group S2 zone players with other S2 zone players; and S1 zone players with other S1 zone players.  
+The same restriction applies when you have multiple Sonos households on your network: you can only group zone players with other zone players in the same household.
 
 ### Troubleshooting
 
