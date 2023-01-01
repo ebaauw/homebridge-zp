@@ -1,5 +1,5 @@
 // homebridge-zp/index.js
-// Copyright © 2016-2022 Erik Baauw. All rights reserved.
+// Copyright © 2016-2023 Erik Baauw. All rights reserved.
 //
 // Homebridge plugin for Sonos ZonePlayer.
 
