@@ -44,6 +44,10 @@ const usage = {
   balance: `${b('balance')} [${b('-h')}] [${b('--')}] [${u('balance')}]`,
   nightSound: `${b('nightSound')} [${b('-h')}] [${b('on')}|${b('off')}]`,
   speechEnhancement: `${b('speechEnhancement')} [${b('-h')}] [${b('on')}|${b('off')}]`,
+  surroundEnable: `${b('surroundEnable')} [${b('-h')}] [${b('on')}|${b('off')}]`,
+  tvLevel: `${b('tvLevel')} [${b('-h')}] [${b('--')}] [${u('level')}]`,
+  musicLevel: `${b('musicLevel')} [${b('-h')}] [${b('--')}] [${u('level')}]`,
+  musicPlaybackFull: `${b('musicPlaybackFull')} [${b('-h')}] [${b('on')}|${b('off')}]`,
   subEnable: `${b('subEnable')} [${b('-h')}] [${b('on')}|${b('off')}]`,
   subLevel: `${b('subLevel')} [${b('-h')}] [${b('--')}] [${u('level')}]`,
   led: `${b('led')} [${b('-h')}] [${b('on')}|${b('off')}]`,
@@ -79,6 +83,10 @@ const description = {
   balance: 'Get/set balance.',
   nightSound: 'Get/set/clear nightsound.',
   speechEnhancement: 'Get/set/clear speech enhancement.',
+  surroundEnable: 'Get/set/clear surround enabled state.',
+  tvLevel: 'Get/set TV surround level.',
+  musicLevel: 'Get/set music surround level.',
+  musicPlaybackFull: 'Get/set/clear full music playback.',
   subEnable: 'Get/set/clear Sub enabled state.',
   subLevel: 'Get/set Sub level.',
   led: 'Get/set/clear LED state.',
@@ -179,6 +187,18 @@ Commands:
 
   ${usage.speechEnhancement}
   ${description.speechEnhancement}
+
+  ${usage.surroundEnable}
+  ${description.surroundEnable}
+
+  ${usage.tvLevel}
+  ${description.tvLevel}
+
+  ${usage.musicLevel}
+  ${description.musicLevel}
+
+  ${usage.musicPlaybackFull}
+  ${description.musicPlaybackFull}
 
   ${usage.subEnable}
   ${description.subEnable}
@@ -518,6 +538,52 @@ Parameters:
 
   ${b('off')}
   Clear speech enhancement.`,
+  surroundEnable: `${description.surroundEnable}
+
+Usage: ${b('zp')} ${usage.surroundEnable}
+
+Parameters:
+  ${b('-h')}, ${b('--help')}
+  Print this help and exit.
+
+  ${b('on')}
+  Enable surround speakers.
+
+  ${b('off')}
+  Disable surround speakers.`,
+  tvLevel: `${description.tvLevel}
+
+Usage: ${b('zp')} ${usage.tvLevel}
+
+Parameters:
+  ${b('-h')}, ${b('--help')}
+  Print this help and exit.
+
+  ${u('level')}
+  Set TV surround level to ${u('level')} (from -15 to 15).`,
+  musicLevel: `${description.musicLevel}
+
+Usage: ${b('zp')} ${usage.musicLevel}
+
+Parameters:
+  ${b('-h')}, ${b('--help')}
+  Print this help and exit.
+
+  ${u('level')}
+  Set music surround level to ${u('level')} (from -15 to 15).`,
+  musicPlaybackFull: `${description.musicPlaybackFull}
+
+Usage: ${b('zp')} ${usage.musicPlaybackFull}
+
+Parameters:
+  ${b('-h')}, ${b('--help')}
+  Print this help and exit.
+
+  ${b('on')}
+  Set music playback to full.
+
+  ${b('off')}
+  Set music playback to ambient.`,
   subEnable: `${description.subEnable}
 
 Usage: ${b('zp')} ${usage.subEnable}
@@ -1106,6 +1172,14 @@ class Main extends homebridgeLib.CommandLineTool {
   async nightSound (...args) { return this.onOffCommand('NightSound', ...args) }
 
   async speechEnhancement (...args) { return this.onOffCommand('SpeechEnhancement', ...args) }
+
+  async surroundEnable (...args) { return this.onOffCommand('SurroundEnable', ...args) }
+
+  async tvLevel (...args) { return this.valueCommand('TvLevel', -15, 15, ...args) }
+
+  async musicLevel (...args) { return this.valueCommand('MusicLevel', -15, 15, ...args) }
+
+  async musicPlaybackFull (...args) { return this.onOffCommand('MusicPlaybackFull', ...args) }
 
   async subEnable (...args) { return this.onOffCommand('SubEnable', ...args) }
 
