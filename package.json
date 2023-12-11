@@ -18,12 +18,12 @@
     "zp": "cli/zp.js"
   },
   "engines": {
-    "homebridge": "^1.6.1",
-    "node": "20.8.0||^20||^18"
+    "homebridge": "^1.7.0",
+    "node": "20.10.0||^20||^18"
   },
   "dependencies": {
     "he": "^1.2.0",
-    "homebridge-lib": "~6.6.1",
+    "homebridge-lib": "~6.7.2",
     "xml2js": "~0.6.2"
   },
   "scripts": {
