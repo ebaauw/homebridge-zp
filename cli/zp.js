@@ -48,6 +48,7 @@ const usage = {
   tvLevel: `${b('tvLevel')} [${b('-h')}] [${b('--')}] [${u('level')}]`,
   musicLevel: `${b('musicLevel')} [${b('-h')}] [${b('--')}] [${u('level')}]`,
   musicPlaybackFull: `${b('musicPlaybackFull')} [${b('-h')}] [${b('on')}|${b('off')}]`,
+  heightLevel: `${b('heightLevel')} [${b('-h')}] [${b('--')}] [${u('level')}]`,
   subEnable: `${b('subEnable')} [${b('-h')}] [${b('on')}|${b('off')}]`,
   subLevel: `${b('subLevel')} [${b('-h')}] [${b('--')}] [${u('level')}]`,
   led: `${b('led')} [${b('-h')}] [${b('on')}|${b('off')}]`,
@@ -87,6 +88,7 @@ const description = {
   tvLevel: 'Get/set TV surround level.',
   musicLevel: 'Get/set music surround level.',
   musicPlaybackFull: 'Get/set/clear full music playback.',
+  heightLevel: 'Get/set height channel level.',
   subEnable: 'Get/set/clear Sub enabled state.',
   subLevel: 'Get/set Sub level.',
   led: 'Get/set/clear LED state.',
@@ -199,6 +201,9 @@ Commands:
 
   ${usage.musicPlaybackFull}
   ${description.musicPlaybackFull}
+
+  ${usage.heightLevel}
+  ${description.heightLevel}
 
   ${usage.subEnable}
   ${description.subEnable}
@@ -584,6 +589,16 @@ Parameters:
 
   ${b('off')}
   Set music playback to ambient.`,
+  heightLevel: `${description.heightLevel}
+
+Usage: ${b('zp')} ${usage.heightLevel}
+
+Parameters:
+  ${b('-h')}, ${b('--help')}
+  Print this help and exit.
+
+  ${u('level')}
+  Set height channel level to ${u('level')} (from -10 to 10).`,
   subEnable: `${description.subEnable}
 
 Usage: ${b('zp')} ${usage.subEnable}
@@ -1180,6 +1195,8 @@ class Main extends homebridgeLib.CommandLineTool {
   async musicLevel (...args) { return this.valueCommand('MusicLevel', -15, 15, ...args) }
 
   async musicPlaybackFull (...args) { return this.onOffCommand('MusicPlaybackFull', ...args) }
+
+  async heightLevel (...args) { return this.valueCommand('HeightLevel', -10, 10, ...args) }
 
   async subEnable (...args) { return this.onOffCommand('SubEnable', ...args) }
 
