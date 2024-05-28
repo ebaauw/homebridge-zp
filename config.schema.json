@@ -23,8 +23,19 @@
       },
       "excludeAirPlay": {
         "title": "Exclude AirPlay 2",
-        "description": "Exclude AirPlay 2 zone players that are already exposed to Apple's Home app.",
+        "description": "Exclude AirPlay 2 zone players that are already exposed to Apple's Home app.  (Please Note: If your system is S2 only, enabling this option will remove all zones from Homebridge. Use with caution.)",
         "type": "boolean"
+      },
+      "filterFavorites": {
+        "title": "Filter Favorites",
+        "description": "Filter out non-favorite audio inputs (AirPlay, Line In, TV, etc.) from the favorites list.",
+        "type": "boolean",
+        "default": false
+      },
+      "forceS2": {
+        "description": "Force S2 compatibility.",
+        "type": "boolean",
+        "default": false
       },
       "heartrate": {
         "description": "Interval (in seconds) to poll zone player.  Default: disabled.",
@@ -124,7 +135,8 @@
             "functionBody": "return model.leds"
           }
         },
-        "excludeAirPlay"
+        "excludeAirPlay",
+        "filterFavorites"
       ]
     },
     {
@@ -143,6 +155,7 @@
         "tv",
         {
           "key": "maxFavourites",
+          "type": "text",
           "condition": {
             "functionBody": "return model.tv"
           }
