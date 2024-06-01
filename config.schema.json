@@ -23,8 +23,19 @@
       },
       "excludeAirPlay": {
         "title": "Exclude AirPlay 2",
-        "description": "Exclude AirPlay 2 zone players that are already exposed to Apple's Home app.",
+        "description": "Exclude AirPlay 2 zone players that are already exposed to Apple's Home app.  (Please Note: If your system is S2 only, enabling this option will remove all zones from Homebridge. Use with caution.)",
         "type": "boolean"
+      },
+      "filterFavourites": {
+        "title": "Filter Favorites",
+        "description": "Hide non-favorite audio inputs, (AirPlay, Line In etc.) from the favorites/TV Input list in Homekit.",
+        "type": "boolean",
+        "default": false
+      },
+      "forceS2": {
+        "description": "Force S2 compatibility.",
+        "type": "boolean",
+        "default": false
       },
       "heartrate": {
         "description": "Interval (in seconds) to poll zone player.  Default: disabled.",
@@ -103,6 +114,12 @@
         "title": "TV ID Prefix",
         "description": "Prefix for serial number of TV accessories.  Default: 'TV'",
         "type": "string"
+      },
+      "tvEnabledZones": {
+        "title": "TV-Enabled Zones",
+        "description": "Specify which zones have a TV connected.",
+        "type": "object",
+        "properties": {}
       }
     }
   },
@@ -124,7 +141,15 @@
             "functionBody": "return model.leds"
           }
         },
-        "excludeAirPlay"
+        "excludeAirPlay",
+        "filterFavourites",
+        {
+          "type": "fieldset",
+          "expandable": true,
+          "title": "TV-Enabled Zones",
+          "description": "Specify which zones have a TV connected.",
+          "items": []
+        }
       ]
     },
     {
@@ -143,6 +168,7 @@
         "tv",
         {
           "key": "maxFavourites",
+          "type": "text",
           "condition": {
             "functionBody": "return model.tv"
           }
