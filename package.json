@@ -5,6 +5,7 @@
   "author": "Erik Baauw",
   "license": "Apache-2.0",
   "version": "1.4.46-0",
+  "type": "module",
   "keywords": [
     "homebridge-plugin",
     "homekit",
@@ -18,12 +19,12 @@
     "zp": "cli/zp.js"
   },
   "engines": {
-    "homebridge": "^1.7.0",
+    "homebridge": "^1.8.2",
     "node": "^20||^18"
   },
   "dependencies": {
     "he": "^1.2.0",
-    "homebridge-lib": "~6.7.5",
+    "homebridge-lib": "~7.0.3",
     "xml2js": "~0.6.2"
   },
   "scripts": {
