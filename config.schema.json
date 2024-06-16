@@ -26,6 +26,11 @@
         "description": "Exclude AirPlay 2 zone players that are already exposed to Apple's Home app.",
         "type": "boolean"
       },
+      "forceS2": {
+        "description": "Force S2 compatibility.",
+        "type": "boolean",
+        "default": false
+      },
       "heartrate": {
         "description": "Interval (in seconds) to poll zone player.  Default: disabled.",
         "type": "integer"
@@ -37,9 +42,7 @@
       },
       "maxFavourites": {
         "description": "Maximum number of favourites supported, between 16 and 96.  Default: 96.",
-        "type": "integer",
-        "minimum": 16,
-        "maximum": 96
+        "type": "integer"
       },
       "port": {
         "description": "Port to use for webserver receiving zone player notifications.  Default: random.",
