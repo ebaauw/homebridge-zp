@@ -5,15 +5,21 @@
 //
 // Homebridge plugin for Sonos ZonePlayer.
 
-'use strict'
+import { createRequire } from 'node:module'
 
-const homebridgeLib = require('homebridge-lib')
-const ZpClient = require('../lib/ZpClient')
-const ZpListener = require('../lib/ZpListener')
+import { CommandLineTool } from 'homebridge-lib/CommandLineTool'
+import { CommandLineParser } from 'homebridge-lib/CommandLineParser'
+import { JsonFormatter } from 'homebridge-lib/JsonFormatter'
+import { OptionParser } from 'homebridge-lib/OptionParser'
+
+import { ZpClient } from '../lib/ZpClient.js'
+import { ZpListener } from '../lib/ZpListener.js'
+
+const require = createRequire(import.meta.url)
 const packageJson = require('../package.json')
 
-const { b, u } = homebridgeLib.CommandLineTool
-const { UsageError } = homebridgeLib.CommandLineParser
+const { b, u } = CommandLineTool
+const { UsageError } = CommandLineParser
 
 const usage = {
   zp: `${b('zp')} [${b('-hVD')}] [${b('-H')} ${u('hostname')}[${b(':')}${u('port')}]] [${b('-t')} ${u('timeout')}] ${u('command')} [${u('argument')} ...]`,
@@ -657,7 +663,7 @@ const unsupportedServices = [
   'Queue' // Not supported by homebridge-zp.
 ]
 
-class Main extends homebridgeLib.CommandLineTool {
+class Main extends CommandLineTool {
   constructor () {
     super()
     this.usage = usage.zp
@@ -791,7 +797,7 @@ class Main extends homebridgeLib.CommandLineTool {
   }
 
   parseArguments () {
-    const parser = new homebridgeLib.CommandLineParser(packageJson)
+    const parser = new CommandLineParser(packageJson)
     const clargs = {
       options: {
         host: process.env.ZP_HOST,
@@ -811,11 +817,11 @@ class Main extends homebridgeLib.CommandLineTool {
         }
       })
       .option('H', 'host', (value) => {
-        homebridgeLib.OptionParser.toHost('host', value, false, true)
+        OptionParser.toHost('host', value, false, true)
         clargs.options.host = value
       })
       .option('t', 'timeout', (value) => {
-        clargs.options.timeout = homebridgeLib.OptionParser.toInt(
+        clargs.options.timeout = OptionParser.toInt(
           'timeout', value, 1, 60, true
         )
       })
@@ -835,7 +841,7 @@ class Main extends homebridgeLib.CommandLineTool {
   }
 
   async info (...args) {
-    const parser = new homebridgeLib.CommandLineParser(packageJson)
+    const parser = new CommandLineParser(packageJson)
     const clargs = {
       options: { sortKeys: true }
     }
@@ -845,7 +851,7 @@ class Main extends homebridgeLib.CommandLineTool {
     })
     parser.flag('v', 'verbose', () => { clargs.verbose = true })
     parser.parse(...args)
-    const jsonFormatter = new homebridgeLib.JsonFormatter(clargs.options)
+    const jsonFormatter = new JsonFormatter(clargs.options)
     if (clargs.verbose) {
       await this.zpClient.initTopology()
     }
@@ -853,7 +859,7 @@ class Main extends homebridgeLib.CommandLineTool {
   }
 
   async description (...args) {
-    const parser = new homebridgeLib.CommandLineParser(packageJson)
+    const parser = new CommandLineParser(packageJson)
     const clargs = {
       options: {}
     }
@@ -864,7 +870,7 @@ class Main extends homebridgeLib.CommandLineTool {
     parser.flag('S', 'scpd', () => { clargs.scpd = true })
     parser.flag('s', 'sortKeys', () => { clargs.options.sortKeys = true })
     parser.parse(...args)
-    const jsonFormatter = new homebridgeLib.JsonFormatter(clargs.options)
+    const jsonFormatter = new JsonFormatter(clargs.options)
     const response = this.zpClient.description
     if (clargs.scpd) {
       const devices = [response.device]
@@ -891,7 +897,7 @@ class Main extends homebridgeLib.CommandLineTool {
   }
 
   async topology (...args) {
-    const parser = new homebridgeLib.CommandLineParser(packageJson)
+    const parser = new CommandLineParser(packageJson)
     const clargs = {
       options: {}
     }
@@ -903,7 +909,7 @@ class Main extends homebridgeLib.CommandLineTool {
     parser.flag('r', 'raw', () => { clargs.raw = true })
     parser.flag('v', 'verify', () => { clargs.verify = true })
     parser.parse(...args)
-    const jsonFormatter = new homebridgeLib.JsonFormatter(clargs.options)
+    const jsonFormatter = new JsonFormatter(clargs.options)
     await this.zpClient.initTopology()
     let result = {}
     if (clargs.verify) {
@@ -947,7 +953,7 @@ class Main extends homebridgeLib.CommandLineTool {
   }
 
   async eventlog (...args) {
-    const parser = new homebridgeLib.CommandLineParser(packageJson)
+    const parser = new CommandLineParser(packageJson)
     const clargs = {
       mode: 'daemon',
       options: {}
@@ -960,7 +966,7 @@ class Main extends homebridgeLib.CommandLineTool {
     parser.flag('t', 'topology', () => { clargs.topology = true })
     parser.parse(...args)
     this.setOptions({ mode: clargs.mode })
-    const jsonFormatter = new homebridgeLib.JsonFormatter(clargs.options)
+    const jsonFormatter = new JsonFormatter(clargs.options)
     this.zpClient
       .on('message', (message) => {
         if (clargs.topology) {
@@ -1006,7 +1012,7 @@ class Main extends homebridgeLib.CommandLineTool {
 
   async browse (...args) {
     const clargs = { options: {} }
-    const parser = new homebridgeLib.CommandLineParser(packageJson)
+    const parser = new CommandLineParser(packageJson)
     parser.help('h', 'help', this.help)
     parser.flag('n', 'noWhiteSpace', () => {
       clargs.options.noWhiteSpace = true
@@ -1018,7 +1024,7 @@ class Main extends homebridgeLib.CommandLineTool {
       clargs.object = list[0]
     })
     parser.parse(...args)
-    const jsonFormatter = new homebridgeLib.JsonFormatter(clargs.options)
+    const jsonFormatter = new JsonFormatter(clargs.options)
     await this.zpClient.initTopology()
     let result
     if (clargs.object == null) {
@@ -1054,7 +1060,7 @@ class Main extends homebridgeLib.CommandLineTool {
   async play (...args) {
     let uri
     let meta
-    const parser = new homebridgeLib.CommandLineParser(packageJson)
+    const parser = new CommandLineParser(packageJson)
     parser.help('h', 'help', this.help)
     parser.remaining((list) => {
       if (list.length > 2) {
@@ -1073,7 +1079,7 @@ class Main extends homebridgeLib.CommandLineTool {
   async queue (...args) {
     let uri
     let meta
-    const parser = new homebridgeLib.CommandLineParser(packageJson)
+    const parser = new CommandLineParser(packageJson)
     parser.help('h', 'help', this.help)
     parser.parameter('uri', (value) => {
       uri = value
@@ -1099,7 +1105,7 @@ class Main extends homebridgeLib.CommandLineTool {
   async crossfade (...args) { return this.onOffCommand('CrossfadeMode', ...args) }
 
   async repeat (...args) {
-    const parser = new homebridgeLib.CommandLineParser(packageJson)
+    const parser = new CommandLineParser(packageJson)
     let repeat
     parser.help('h', 'help', this.help)
     parser.remaining((list) => {
@@ -1124,7 +1130,7 @@ class Main extends homebridgeLib.CommandLineTool {
   async shuffle (...args) { return this.onOffCommand('Shuffle', ...args) }
 
   async sleepTimer (...args) {
-    const parser = new homebridgeLib.CommandLineParser(packageJson)
+    const parser = new CommandLineParser(packageJson)
     let duration
     parser.help('h', 'help', this.help)
     parser.remaining((list) => {
@@ -1155,7 +1161,7 @@ class Main extends homebridgeLib.CommandLineTool {
 
   async join (...args) {
     let coordinator
-    const parser = new homebridgeLib.CommandLineParser(packageJson)
+    const parser = new CommandLineParser(packageJson)
     parser.help('h', 'help', this.help)
     parser.parameter('zone', (value) => {
       coordinator = value
@@ -1207,14 +1213,14 @@ class Main extends homebridgeLib.CommandLineTool {
   async buttonLock (...args) { return this.onOffCommand('ButtonLockState', ...args) }
 
   async simpleCommand (command, ...args) {
-    const parser = new homebridgeLib.CommandLineParser(packageJson)
+    const parser = new CommandLineParser(packageJson)
     parser.help('h', 'help', this.help)
     parser.parse(...args)
     return this.zpClient[command]()
   }
 
   async valueCommand (command, min, max, ...args) {
-    const parser = new homebridgeLib.CommandLineParser(packageJson)
+    const parser = new CommandLineParser(packageJson)
     let value
     parser.help('h', 'help', this.help)
     parser.remaining((list) => {
@@ -1222,7 +1228,7 @@ class Main extends homebridgeLib.CommandLineTool {
         throw new UsageError('too many arguments')
       }
       if (list.length === 1) {
-        value = homebridgeLib.OptionParser.toInt(
+        value = OptionParser.toInt(
           command.toLowerCase(), list[0], min, max, true
         )
       }
@@ -1235,7 +1241,7 @@ class Main extends homebridgeLib.CommandLineTool {
   }
 
   async onOffCommand (command, ...args) {
-    const parser = new homebridgeLib.CommandLineParser(packageJson)
+    const parser = new CommandLineParser(packageJson)
     let value
     if (args.length > 1) {
       throw new UsageError('too many arguments')
@@ -1246,7 +1252,7 @@ class Main extends homebridgeLib.CommandLineTool {
         throw new UsageError('too many arguments')
       }
       if (list.length === 1) {
-        value = homebridgeLib.OptionParser.toBool(
+        value = OptionParser.toBool(
           command.toLowerCase(), list[0], true
         )
       }

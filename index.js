@@ -3,11 +3,15 @@
 //
 // Homebridge plugin for Sonos ZonePlayer.
 
-'use strict'
+import { createRequire } from 'node:module'
 
-const ZpPlatform = require('./lib/ZpPlatform')
+import { ZpPlatform } from './lib/ZpPlatform.js'
+
+const require = createRequire(import.meta.url)
 const packageJson = require('./package.json')
 
-module.exports = (homebridge) => {
+function main (homebridge) {
   ZpPlatform.loadPlatform(homebridge, packageJson, 'ZP', ZpPlatform)
 }
+
+export { main as default }
