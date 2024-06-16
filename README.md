@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="homebridge-zp.png" height="200px">  
+  <img src="homebridge-zp.png" height="200px" alt="Homebridge ZP Logo">
 </p>
 <span align="center">
 
@@ -20,18 +20,30 @@ Copyright © 2016-2024 Erik Baauw. All rights reserved.
 
 This [Homebridge](https://github.com/homebridge/homebridge) plugin exposes [Sonos](http://www.sonos.com) zone players to Apple's [HomeKit](http://www.apple.com/ios/home/).
 It provides the following features:
-- Automatic discovery of Sonos zones, taking into account stereo pairs and home theatre setup;
-- Support for Sonos groups, created through the Sonos app;
+- Automatic discovery of [Sonos zones](#zones), taking into account stereo pairs and home theatre setup;
+- Support for [Sonos groups](#groups), created through the Sonos app;
 - Control from HomeKit of play/pause, sleep timer, next/previous track, volume, and mute per Sonos group;
-- Control from HomeKit of input selection per group, from Sonos favourites and local sources, like LineIn, Airplay;
-- Optional control from HomeKit of volume, mute, balance, bass, treble, loudness, night sound, and speech enhancement per Sonos zone;
+- Control from HomeKit of input selection per group, from Sonos favourites and local sources, like Airplay, Line-In, TV;
+- Optional control from HomeKit of volume, mute, balance, bass, treble, loudness, and home theatre audio settings per Sonos zone;
 - Optional control from HomeKit for Sonos zones leaving Sonos groups, and for Sonos zones creating/joining one Sonos group;
 - Optional control from HomeKit to enable/disable Sonos alarms;
 - Real-time monitoring from HomeKit of state per Sonos group and, optionally, per Sonos zone.
 Like the Sonos app, Homebridge ZP subscribes to zone player events to receive notifications;
 - Optional control from HomeKit for the status LED and child lock per zone player.
 Note that Sonos doesn't support events for these, so Homebridge ZP cannot provide real-time monitoring for this;
-- Includes command-line tools, for controlling Sonos zone players and for troubleshooting.
+- Includes a [command-line tool](#command-line-tool), for controlling Sonos zone players and for troubleshooting.
+
+## Contents
+
+* [Prerequisites](#prerequisites)
+* [Zones](#zones)
+* [Groups](#groups)
+* [Speakers](#speakers)
+* [Command-Line Tool](#command-line-tool)
+* [Installation](#installation)
+* [Configuration](#configuration)
+* [Troubleshooting](#troubleshooting)
+* [Caveats](#caveats)
 
 ### Prerequisites
 You need a server to run Homebridge.
@@ -66,7 +78,7 @@ Note that Apple has imposed some technical restrictions on *Television* accessor
 - They cannot be accessed by HomeKit apps; only from Apple's Home app.
 
 ### Groups
-When multiple Sonos zones, e.g. *Living Room* and *Kitchen*, are grouped into one Sonos group, the Sonos app shows them as a single room, e.g. *Living Room + 1*, with shared control for play/pause, music source, and (group) volume and mute.
+When you combine multiple Sonos zones into one Sonos group, e.g. *Living Room* and *Kitchen*, the Sonos app shows them as a single room, like *Living Room + 1*, with shared control for play/pause, music source, and (group) volume and mute.
 When this group is broken, each zone forms a separate standalone group, containing only that zone.
 The Sonos app shows each standalone group as a separate room, with separate control per room for play/pause, music source, and (zone) volume and mute.
 
@@ -76,11 +88,10 @@ Consequently, you would have to reconfigure HomeKit each time you group or ungro
 To overcome this, Homebridge ZP creates an accessory and corresponding service for each Sonos zone.  This service actually controls the Sonos *group* the zone is in rather than the zone.
 When separated, the *Living Room Sonos* service controls the standalone *Living Room* group, consisting of only the *Living Room* zone; and the *Kitchen Sonos* service controls the standalone *Kitchen* group, consisting of only the *Kitchen* zone.
 When grouped, both the *Living Room Sonos* service and the *Kitchen Sonos* service control the multi-zone *Living Room + 1* group, containing both the *Living Room* and *Kitchen* zones.
-The `Sonos Group` characteristic shows which group the zone belongs to, or rather: the name of the group coordinator zone, in this example: *Living Room*.
+The `Sonos Group` characteristic indicates which group the zone belongs to, by showing the name of the group coordinator zone, like: *Living Room*.
 
-So when grouped, changing the *Living Room Sonos* `Volume` changes the volume of both the *Living Room* zone and the *Kitchen* zone.
-So does changing the *Kitchen Sonos* `Volume`.
-When ungrouped, changing the *Living Room Sonos* `Volume` only changes the volume of the *Living Room* zone; and changing the *Kitchen Sonos* `Volume` only changes the volume of the *Kitchen* zone.
+So, when grouped, adjusting the volume of the *Living Room Sonos* service changes the volume on both the *Living Room* and *Kitchen* zones. The same happens if you adjust the volume of the *Kitchen Sonos* service.
+When ungrouped, changing the volume of the *Living Room Sonos* accessory only affects the *Living Room* zone, and changing the volume of the *Kitchen Sonos* service only affects the the *Kitchen* zone.
 
 ### Speakers
 To change the volume of an individual zone in a multi-zone group, an additional `Volume` characteristic is needed for the zone, next to the `Volume` characteristic for the group.
@@ -89,15 +100,15 @@ By specifying `"speakers": true` in `config.json`, Homebridge ZP creates an addi
 
 The *Speakers* service `On` characteristic is used to join, or leave a Sonos group.
 `On` is set, when the zone is a member of other zone's group.
-It is clear, when the zone is the coordinator of it's own group (either standalone or with other zones as member).
+It is cleared, when the zone is the coordinator of it's own group (either standalone or with other zones as member).
 By setting `On`, the zone will join groups with the target coordinator.
 The target coordinator is set using the `Sonos Coordinator` characteristic in the *Sonos* service.
 By clearing `On`, the zone will leave the group and become coordinator of a standalone group.
 
-Additional characteristics for `Volume`, `Mute`, `Bass`, `Treble`, and `Loudness` control the corresponding zone attributes.
-Note that `Bass`, `Treble`, and `Loudness` are custom characteristics.  They might not be supported by all HomeKit apps, see **Caveats** below.
+Additional characteristics for `Volume`, `Mute`, `Bass`, `Treble`, `Loudness`, and home theatre audio control the corresponding zone attributes.
+Note that these are custom characteristics, except for `Volume`.  They might not be supported by all HomeKit apps, see [Caveats](#caveats).
 
-Like the *Sonos* service, the type of the *Speakers* service can be changed in `config.json` from the default `Switch`.
+Like the *Sonos* service, the type of the *Speakers* service can be changed in `config.json` from the default `Switch`, as well as the type of characteristic used for volume, see [Configuration](#configuration).
 
 ### Command-Line Tool
 Homebridge ZP includes a command-line tool, `zp`, to interact with your Sonos Zone Players from the command line.
@@ -128,15 +139,15 @@ Key | Default | Description
 `address` | _(discovered)_ | The IP address for the web server Homebridge ZP creates to receive notifications from Sonos zone players.  This must be an IP address of the server running Homebridge ZP, reachable by the zone players.  You might need to set this on a multi-homed server, if Homebridge ZP binds to the wrong network interface.
 `alarms` | `false` | Flag whether to expose an additional service per Sonos alarm.
 `brightness` | `false` | Flag whether to expose volume as `Brightness` when `service` is `"switch"` or `"speaker"`.  Setting this flag enables volume control from Siri, but not from Apple's Home app.
-`excludeAirPlay` | `false` | Flag whether not to expose zone players that support Airplay, since they natively show up in Apple's Home app.
-`forceS2` | `false` | Flag whether to expose only S2 zone players.  See [**Split Sonos System**](#split-sonos-system) below.
+`excludeAirPlay` | `false` | Flag whether not to expose zone players that support Airplay, since they natively show up in Apple's Home app.<br>Note that if you only have newer zome players that support Airplay, enabling this option will essentially disable the plugin, as all zones will be hidden from Homekit.
+`forceS2` | `false` | Flag whether to expose only S2 zone players.  See [Split Sonos System](#split-sonos-system) below.
 `heartrate` | (disabled) | Interval (in seconds) to poll zone players when `leds` is set.
 `leds` | `false` | Flag whether to expose an additional *Lightbulb* service per zone for the status LED.  This also supports locking the physical controls.
 `nameScheme` | `"% Sonos"` | The name scheme for the HomeKit accessories.  `%` is replaced with the zone name.  E.g. with the default name scheme, the accessory for the `Kitchen` zone is set to `Kitchen Sonos`.  Note that this does _not_ change the names of the HomeKit services, used by Siri.
 `port` | `0` _(random)_ | The port for the web server Homebridge ZP creates to receive notifications from Sonos zone players.
 `resetTimeout` | `500` | Timeout (in milliseconds) to reset input (e.g. _Change Volume_).
 `service` | `"switch"` | Defines what type of service and volume characteristic Homebridge ZP uses.  Possible values are: `"switch"` for `Switch` and `Volume`; `"speaker"` for `Speaker` and `Volume`; `"light"` for `LightBulb` and `Brightness`; and `"fan"` for `Fan` and `Rotation Speed`.  Selecting `"light"` or `"fan"` enables changing the Sonos volume from Siri and from Apple's Home app.  Selecting `"speaker"` results in a *not supported* accessory in Apple's Home app.
-`speakers` | `false` | Flag whether to expose a second *Speakers* service per zone, in addition to the standard *Sonos* service, see [**Speakers**](#speakers).  You might want to set this if you're using Sonos groups in a configuration of multiple Sonos zones.
+`speakers` | `false` | Flag whether to expose a second *Speakers* service per zone, in addition to the standard *Sonos* service, see [Speakers](#speakers).  You might want to set this if you're using Sonos groups in a configuration of multiple Sonos zones.
 `subscriptionTimeout` | `30` | The duration (in minutes) of the subscriptions Homebridge ZP creates with each zone player.
 `timeout` | `15` | The timeout (in seconds) to wait for a response from a Sonos zone player.
 `tv` | `false` | Create an additional, non-bridged TV accessory for each zone.<br>Note that each TV accessory needs to be paired with HomeKit separately, using the same pin as for Homebridge, as specified in `config.json`.
