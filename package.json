@@ -5,7 +5,6 @@
   "author": "Erik Baauw",
   "license": "Apache-2.0",
   "version": "1.4.46-0",
-  "type": "module",
   "keywords": [
     "homebridge-plugin",
     "homekit",
@@ -14,6 +13,7 @@
     "sonos-zp",
     "sonos-zoneplayer"
   ],
+  "type": "module",
   "main": "index.js",
   "bin": {
     "zp": "cli/zp.js"
@@ -23,12 +23,13 @@
     "node": "^20||^18"
   },
   "dependencies": {
+    "hb-zp-tools": "~0.0.1",
     "he": "^1.2.0",
     "homebridge-lib": "~7.0.3",
     "xml2js": "~0.6.2"
   },
   "scripts": {
-    "prepare": "standard && rm -rf out && jsdoc -c jsdoc.json",
+    "prepare": "standard",
     "test": "standard && echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
