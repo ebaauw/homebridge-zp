@@ -3,6 +3,9 @@
   "description": "Homebridge plugin for Sonos Zone Players",
   "displayName": "Homebridge ZP",
   "author": "Erik Baauw",
+  "maintainers": [
+    "ebaauw"
+  ],
   "license": "Apache-2.0",
   "version": "1.4.47-2",
   "keywords": [
