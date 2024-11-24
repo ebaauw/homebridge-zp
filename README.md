@@ -143,7 +143,6 @@ Key | Default | Description
 `forceS2` | `false` | Flag whether to expose only S2 zone players.  See [Split Sonos System](#split-sonos-system) below.
 `heartrate` | (disabled) | Interval (in seconds) to poll zone players when `leds` is set.
 `leds` | `false` | Flag whether to expose an additional *Lightbulb* service per zone for the status LED.  This also supports locking the physical controls.
-`nameScheme` | `"% Sonos"` | The name scheme for the HomeKit accessories.  `%` is replaced with the zone name.  E.g. with the default name scheme, the accessory for the `Kitchen` zone is set to `Kitchen Sonos`.  Note that this does _not_ change the names of the HomeKit services, used by Siri.
 `port` | `0` _(random)_ | The port for the web server Homebridge ZP creates to receive notifications from Sonos zone players.
 `resetTimeout` | `500` | Timeout (in milliseconds) to reset input (e.g. _Change Volume_).
 `service` | `"switch"` | Defines what type of service and volume characteristic Homebridge ZP uses.  Possible values are: `"switch"` for `Switch` and `Volume`; `"speaker"` for `Speaker` and `Volume`; `"light"` for `LightBulb` and `Brightness`; and `"fan"` for `Fan` and `Rotation Speed`.  Selecting `"light"` or `"fan"` enables changing the Sonos volume from Siri and from Apple's Home app.  Selecting `"speaker"` results in a *not supported* accessory in Apple's Home app.
