@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // homebridge-zp/cli/zp.js
-// Copyright © 2019-2024 Erik Baauw. All rights reserved.
+// Copyright © 2019-2025 Erik Baauw. All rights reserved.
 //
 // Homebridge plugin for Sonos ZonePlayer.
 
