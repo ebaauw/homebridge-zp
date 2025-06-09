@@ -136,13 +136,13 @@ The following optional parameters can be added to modify Homebridge ZP's behavio
 
 Key | Default | Description
 --- | ------- | -----------
-`address` | _(discovered)_ | The IP address for the web server Homebridge ZP creates to receive notifications from Sonos zone players.  This must be an IP address of the server running Homebridge ZP, reachable by the zone players.  You might need to set this on a multi-homed server, if Homebridge ZP binds to the wrong network interface.
 `alarms` | `false` | Flag whether to expose an additional service per Sonos alarm.
 `brightness` | `false` | Flag whether to expose volume as `Brightness` when `service` is `"switch"` or `"speaker"`.  Setting this flag enables volume control from Siri, but not from Apple's Home app.
 `excludeAirPlay` | `false` | Flag whether not to expose zone players that support Airplay, since they natively show up in Apple's Home app.<br>Note that if you only have newer zome players that support Airplay, enabling this option will essentially disable the plugin, as all zones will be hidden from Homekit.
-`forceS2` | `false` | Flag whether to expose only S2 zone players.  See [Split Sonos System](#split-sonos-system) below.
 `heartrate` | (disabled) | Interval (in seconds) to poll zone players when `leds` is set.
 `leds` | `false` | Flag whether to expose an additional *Lightbulb* service per zone for the status LED.  This also supports locking the physical controls.
+`maxFavourites` | 96 | The number of preconfigured stations for a TV accessory, to be mapped to Sonos favourites.
+`mdns` | `true` | Enable zone player discovery through mDNS.
 `port` | `0` _(random)_ | The port for the web server Homebridge ZP creates to receive notifications from Sonos zone players.
 `resetTimeout` | `500` | Timeout (in milliseconds) to reset input (e.g. _Change Volume_).
 `service` | `"switch"` | Defines what type of service and volume characteristic Homebridge ZP uses.  Possible values are: `"switch"` for `Switch` and `Volume`; `"speaker"` for `Speaker` and `Volume`; `"light"` for `LightBulb` and `Brightness`; and `"fan"` for `Fan` and `Rotation Speed`.  Selecting `"light"` or `"fan"` enables changing the Sonos volume from Siri and from Apple's Home app.  Selecting `"speaker"` results in a *not supported* accessory in Apple's Home app.
