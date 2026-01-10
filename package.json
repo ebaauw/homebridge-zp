@@ -28,7 +28,7 @@
   "dependencies": {
     "hb-zp-tools": "~1.0.16",
     "he": "^1.2.0",
-    "homebridge-lib": "~7.2.1"
+    "homebridge-lib": "~7.2.2"
   },
   "scripts": {
     "prepare": "standard",
