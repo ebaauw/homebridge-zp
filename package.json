@@ -26,9 +26,9 @@
     "node": "^24||^22||^20"
   },
   "dependencies": {
-    "hb-zp-tools": "~1.0.15",
+    "hb-zp-tools": "~1.0.16",
     "he": "^1.2.0",
-    "homebridge-lib": "~7.1.13"
+    "homebridge-lib": "~7.2.1"
   },
   "scripts": {
     "prepare": "standard",
