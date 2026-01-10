@@ -16,7 +16,7 @@
 </span>
 
 ## Homebridge plugin for Sonos Zone Players
-Copyright © 2016-2025 Erik Baauw. All rights reserved.
+Copyright © 2016-2026 Erik Baauw. All rights reserved.
 
 This [Homebridge](https://github.com/homebridge/homebridge) plugin exposes [Sonos](http://www.sonos.com) zone players to Apple's [HomeKit](http://www.apple.com/ios/home/).
 It provides the following features:
