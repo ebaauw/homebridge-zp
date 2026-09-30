@@ -1,0 +1,175 @@
+<!--
+homebridge-zp/homebridge-ui/public/index.html
+Copyright © 2016-2026 Erik Baauw. All rights reserved.
+
+Homebridge plugin for Sonos ZonePlayer.
+
+Renders the standard settings form from config.schema.json, with an
+additional Zones section under What, to select the input sources per zone.
+The input sources are set directly in the running plugin, which persists
+them in cachedAccessories; they are not stored in config.json.
+-->
+
+<p id="status" role="status"></p>
+
+<script>
+  const statusElement = document.getElementById('status')
+  const zonesKey = 'zoneInputSources'
+
+  function setStatus (text) {
+    statusElement.textContent = text
+  }
+
+  async function findUiPort () {
+    const accessories = await homebridge.getCachedAccessories()
+    for (const accessory of accessories) {
+      if (accessory.context != null && accessory.context.uiPort != null) {
+        return accessory.context.uiPort
+      }
+    }
+  }
+
+  async function getZones (uiPort) {
+    if (uiPort == null) {
+      return {}
+    }
+    try {
+      const zones = await homebridge.request('get', { uiPort, path: '/zones' })
+      return zones == null ? {} : zones
+    } catch (error) {
+      return {}
+    }
+  }
+
+  // Add the Zones section to the schema and the form data.
+  function addZones (schema, data, zones) {
+    const ids = Object.keys(zones).sort((a, b) => {
+      return zones[a].name.localeCompare(zones[b].name)
+    })
+    const map = {} // zone key -> { id, name, inputs: { input key -> source } }
+    const properties = {}
+    const zoneItems = []
+    data[zonesKey] = {}
+    ids.forEach((id, zoneIndex) => {
+      const zone = zones[id]
+      const zoneKey = 'zone' + zoneIndex
+      map[zoneKey] = { id, name: zone.name, inputs: {} }
+      properties[zoneKey] = { type: 'object', properties: {} }
+      data[zonesKey][zoneKey] = {}
+      const items = []
+      zone.inputSources.forEach((inputSource, inputIndex) => {
+        const inputKey = 'input' + inputIndex
+        map[zoneKey].inputs[inputKey] = inputSource
+        properties[zoneKey].properties[inputKey] = {
+          title: inputSource.name,
+          type: 'boolean'
+        }
+        data[zonesKey][zoneKey][inputKey] = inputSource.visible
+        items.push(zonesKey + '.' + zoneKey + '.' + inputKey)
+      })
+      zoneItems.push({
+        type: 'fieldset',
+        expandable: true,
+        title: zone.name,
+        items
+      })
+    })
+    if (zoneItems.length === 0) {
+      zoneItems.push({
+        type: 'help',
+        helpvalue: 'Save with TV enabled and restart Homebridge to select the inputs per zone.'
+      })
+    }
+    schema.schema.properties[zonesKey] = { type: 'object', properties }
+    const zonesSection = {
+      type: 'fieldset',
+      expandable: true,
+      title: 'Zones',
+      description: 'Select the inputs each zone offers in HomeKit.  Deselected inputs are hidden in the Home app and skipped when changing input.  Changes take effect immediately.',
+      condition: { functionBody: 'return model.tv' },
+      items: zoneItems
+    }
+    const what = schema.form.find((item) => {
+      return item != null && item.type === 'fieldset' && item.title === 'What'
+    })
+    if (what != null) {
+      what.items.push(zonesSection)
+    } else {
+      schema.form.push(zonesSection)
+    }
+    return map
+  }
+
+  async function init () {
+    try {
+      const schema = JSON.parse(JSON.stringify(
+        await homebridge.getPluginConfigSchema()
+      ))
+      const pluginConfig = await homebridge.getPluginConfig()
+      const config = pluginConfig[0] ?? { platform: schema.pluginAlias }
+      const uiPort = await findUiPort()
+      const zones = await getZones(uiPort)
+      const data = JSON.parse(JSON.stringify(config))
+      const map = addZones(schema, data, zones)
+      const current = JSON.parse(JSON.stringify(data[zonesKey]))
+
+      const form = homebridge.createForm(
+        { schema: schema.schema, layout: schema.form }, data
+      )
+      form.onChange(async (change) => {
+        // Input sources: send changes to the running plugin.
+        const zoneInputs = change[zonesKey] ?? {}
+        for (const zoneKey in map) {
+          for (const inputKey in map[zoneKey].inputs) {
+            const visible = !!(zoneInputs[zoneKey] ?? {})[inputKey]
+            if (visible === current[zoneKey][inputKey]) {
+              continue
+            }
+            current[zoneKey][inputKey] = visible
+            const inputSource = map[zoneKey].inputs[inputKey]
+            try {
+              const response = await homebridge.request('put', {
+                uiPort,
+                path: '/zones/' + map[zoneKey].id,
+                body: { [inputSource.uri]: visible }
+              })
+              if (response == null) {
+                throw new Error('no response')
+              }
+              setStatus('')
+            } catch (error) {
+              setStatus(
+                'Could not change ' + inputSource.name + ' for ' +
+                map[zoneKey].name + ': Homebridge ZP is not responding.'
+              )
+            }
+          }
+        }
+
+        // Other settings: update config.json, keeping keys not in the schema.
+        const newConfig = {}
+        for (const key in config) {
+          if (schema.schema.properties[key] == null) {
+            newConfig[key] = config[key]
+          }
+        }
+        for (const key in change) {
+          if (key !== zonesKey && schema.schema.properties[key] != null) {
+            newConfig[key] = change[key]
+          }
+        }
+        await homebridge.updatePluginConfig([newConfig])
+      })
+      if (uiPort == null) {
+        setStatus(
+          'Homebridge ZP is not running.  Start Homebridge to select the inputs per zone.'
+        )
+      }
+    } catch (error) {
+      setStatus('Could not load the settings: ' + error.message)
+      homebridge.showSchemaForm()
+    }
+  }
+
+  init()
+</script>

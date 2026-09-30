@@ -2,6 +2,7 @@
   "pluginAlias": "ZP",
   "pluginType": "platform",
   "singular": true,
+  "customUi": true,
   "headerDisplay": "Homebridge plugin for Sonos ZonePlayer",
   "footerDisplay": "",
   "schema": {

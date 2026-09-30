@@ -77,6 +77,11 @@ Note that Apple has imposed some technical restrictions on *Television* accessor
 - They cannot be bridged; they need to be paired to HomeKit individually;
 - They cannot be accessed by HomeKit apps; only from Apple's Home app.
 
+Homebridge ZP shows the input sources a zone supports, e.g. *TV* for a zone player with an HDMI input, even when nothing is connected.
+To hide an input source, de-select it under *Inputs* in the accessory settings in Apple's Home app.
+Homebridge ZP persists this per zone, across Homebridge restarts.
+Hidden input sources are skipped when changing input from the *Remote* widget.
+
 ### Groups
 When you combine multiple Sonos zones into one Sonos group, e.g. *Living Room* and *Kitchen*, the Sonos app shows them as a single room, like *Living Room + 1*, with shared control for play/pause, music source, and (group) volume and mute.
 When this group is broken, each zone forms a separate standalone group, containing only that zone.
