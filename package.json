@@ -23,12 +23,12 @@
   },
   "engines": {
     "homebridge": "^2.4.0",
-    "node": "^24||^22"
+    "node": "^26||^24||^22"
   },
   "dependencies": {
-    "hb-zp-tools": "~2.0.7",
+    "hb-zp-tools": "~2.0.8-0",
     "he": "^1.2.0",
-    "homebridge-lib": "~8.1.5"
+    "homebridge-lib": "~9.0.0-0"
   },
   "scripts": {
     "prepare": "standard",
