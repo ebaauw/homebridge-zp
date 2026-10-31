@@ -5,10 +5,9 @@
 //
 // Homebridge plugin for Sonos ZonePlayer.
 
-import { createRequire } from 'node:module'
-
 import { ZpTool } from 'hb-zp-tools/ZpTool'
 
+import { createRequire } from 'node:module'
 const require = createRequire(import.meta.url)
 const packageJson = require('../package.json')
 
